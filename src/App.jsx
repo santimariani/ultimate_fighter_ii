@@ -73,18 +73,20 @@ function App ()
     return (
         <div id="app">
             <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
-            <div>
+            <div id="ui-menu">
                 <div>
-                    <button className="button" onClick={changeScene}>Change Scene</button>
+                    <button className="button" onClick={changeScene}>CHANGE SCENE</button>
                 </div>
+                <p></p>
                 <div>
-                    <button disabled={canMoveSprite} className="button" onClick={moveSprite}>Toggle Movement</button>
+                    <button disabled={canMoveSprite} className="button" onClick={moveSprite}>ANIMATE LOGO</button>
                 </div>
-                <div className="spritePosition">Sprite Position:
-                    <pre>{`{\n  x: ${spritePosition.x}\n  y: ${spritePosition.y}\n}`}</pre>
+                <div className="spritePosition">sprite position:
+                    <pre>{`x: ${spritePosition.x}\n  y: ${spritePosition.y}\n`}</pre>
                 </div>
+                <p></p>
                 <div>
-                    <button className="button" onClick={addSprite}>Add New Sprite</button>
+                    <button className="button" onClick={addSprite}>ADD STAR</button>
                 </div>
             </div>
         </div>
