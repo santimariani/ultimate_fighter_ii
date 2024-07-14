@@ -3,8 +3,6 @@ import Phaser from "phaser";
 import { PhaserGame } from "./game/PhaserGame";
 
 function App() {
-    const [canMoveSprite, setCanMoveSprite] = useState(true);
-
     const [currentScene, setCurrentScene] = useState("MainMenu");
 
     const [currentFeedback, setFeedback] = useState(`CHOOSE YOUR NEXT ACTION`);
@@ -16,7 +14,6 @@ function App() {
     ];
 
     const phaserRef = useRef();
-    const [spritePosition, setSpritePosition] = useState({ x: 0, y: 0 });
 
     const triggerPhaserEvent = (eventName) => {
         const scene = phaserRef.current?.scene;
@@ -37,39 +34,8 @@ function App() {
         setFeedback(feedbackMessages[index]);
     };
 
-    const moveSprite = () => {
-        const scene = phaserRef.current.scene;
-        if (scene && scene.scene.key === "MainMenu") {
-            scene.moveLogo(({ x, y }) => {
-                setSpritePosition({ x, y });
-            });
-        }
-    };
 
-    const addSprite = () => {
-        const scene = phaserRef.current.scene;
-        if (scene) {
-            // Add more stars
-            const x = Phaser.Math.Between(64, scene.scale.width - 64);
-            const y = Phaser.Math.Between(64, scene.scale.height - 64);
-
-            // `add.sprite` is a Phaser GameObjectFactory method and it returns a Sprite Game Object instance
-            const star = scene.add.sprite(x, y, "star");
-
-            // Create a Phaser Tween to fade the star sprite in and out.
-            scene.add.tween({
-                targets: star,
-                duration: 500 + Math.random() * 1000,
-                alpha: 0,
-                yoyo: true,
-                repeat: 2,
-            });
-        }
-    };
-
-    // Event emitted from the PhaserGame component
     const handleCurrentScene = (scene) => {
-        setCanMoveSprite(scene.scene.key !== "MainMenu");
         setCurrentScene(scene.scene.key); // Update the current scene
     };
 
@@ -94,17 +60,6 @@ function App() {
                         <button className="button" onClick={changeScene}>
                             CHANGE SCENE
                         </button>
-                        <p></p>
-                        <button
-                            disabled={canMoveSprite}
-                            className="button"
-                            onClick={moveSprite}
-                        >
-                            ANIMATE LOGO
-                            <p>sprite position:</p>
-                            <pre>{`x: ${spritePosition.x} y: ${spritePosition.y}\n`}</pre>
-                        </button>
-                        <div className="spritePosition"></div>
                     </div>
                 )}
                 {currentScene === "Spar" && (
@@ -135,14 +90,10 @@ function App() {
                 )}
                 {currentScene === "GameOver" && (
                     <div id="game-over">
-                        {/* Add GameOver-specific UI here */}
                         <button className="button" onClick={changeScene}>
                             CHANGE SCENE
                         </button>
-                        <p>{currentFeedback}</p>
-                        <button className="button" onClick={addSprite}>
-                            ADD STAR
-                        </button>
+
                     </div>
                 )}
             </div>

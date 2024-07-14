@@ -1,3 +1,5 @@
+import { EventBus } from "../EventBus";
+
 export class RoundStateMachine {
     static ROUND_STEP_STATES = {
       DETERMINE_FIRST_ACTOR: 'DETERMINE_FIRST_ACTOR',
@@ -28,7 +30,6 @@ export class RoundStateMachine {
           this.secondAction();
           break;
         case RoundStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE:
-          // Round complete logic
           break;
       }
     }
@@ -45,17 +46,17 @@ export class RoundStateMachine {
     }
   
     determineFirstActor() {
-      // Logic to determine who acts first
+      console.log('first actor chosen')
       this.setState(RoundStateMachine.ROUND_STEP_STATES.FIRST_ACTION);
     }
   
     firstAction() {
-      // Logic for the first player's action
+      console.log('first action taken')
       this.setState(RoundStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
     }
   
     secondAction() {
-      // Logic for the second player's action
+      console.log('second action chosen')
       this.setState(RoundStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
     }
   }

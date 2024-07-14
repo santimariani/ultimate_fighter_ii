@@ -12,6 +12,7 @@ export class FightStateMachine {
     this.roundStateMachine = null;
     this.roundNumber = 0;
     this.maxRounds = 10;
+    this.currentState = null;
   }
 
   start() {
@@ -19,6 +20,7 @@ export class FightStateMachine {
   }
 
   setState(state) {
+    this.currentState = state;
     switch (state) {
       case FightStateMachine.ROUND_STATES.START:
         this.roundNumber = 0;
@@ -34,13 +36,16 @@ export class FightStateMachine {
         }
         break;
       case FightStateMachine.ROUND_STATES.END:
-        // Handle the end of the fight
         console.log("Fight Ended");
         break;
     }
   }
 
   update() {
+    if (this.currentState === FightStateMachine.ROUND_STATES.END) {
+      return;
+    }
+
     if (this.roundStateMachine) {
       this.roundStateMachine.update();
       if (this.roundStateMachine.isRoundComplete()) {
