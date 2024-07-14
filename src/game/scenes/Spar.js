@@ -9,7 +9,6 @@ export class Spar extends Scene {
   }
 
   init(data) {
-    // Initialize or reset stats here
     this.hero = this.registry.get('hero');
     this.sean = this.registry.get('sean');
   }
@@ -39,8 +38,9 @@ export class Spar extends Scene {
     this.events.on('special', this.specialMove, this);
     this.events.on('guard', this.guardMove, this);
 
-    this.events.on('heroAction', this.heroAction, this);
+    this.events.on('heroAction', this.enablePlayerInput, this);
     this.events.on('enemyAction', this.enemyAction, this);
+    this.events.on('roundComplete', this.onRoundComplete, this);
 
     this.fightStateMachine = new FightRoundsStateMachine(this);
     this.fightStateMachine.start();
@@ -52,37 +52,58 @@ export class Spar extends Scene {
     this.fightStateMachine.update();
   }
 
+  enablePlayerInput() {
+    this.events.emit('enablePlayerInput');
+  }
+
   heroPunch() {
-    this.sean.updateHealth(-10);
-    this.hero.updateStamina(-10);
-    this.enemyHealthText.setText(`Enemy Health: ${this.sean.currentHealth}`);
-    this.playerStaminaText.setText(`Player Stamina: ${this.hero.currentStamina}`);
+    if (this.sean.currentHealth > 0 && this.hero.currentStamina >= 10) {
+      const damage = 10;
+      this.sean.updateHealth(-damage);
+      this.hero.updateStamina(-10);
+      this.enemyHealthText.setText(`Enemy Health: ${this.sean.currentHealth}`);
+      this.playerStaminaText.setText(`Player Stamina: ${this.hero.currentStamina}`);
+      this.events.emit('heroActionComplete');
+    }
   }
 
   heroKick() {
-    this.sean.updateHealth(-20);
-    this.hero.updateStamina(-20);
-    this.enemyHealthText.setText(`Enemy Health: ${this.sean.currentHealth}`);
-    this.playerStaminaText.setText(`Player Stamina: ${this.hero.currentStamina}`);
+    if (this.sean.currentHealth > 0 && this.hero.currentStamina >= 20) {
+      const damage = 20;
+      this.sean.updateHealth(-damage);
+      this.hero.updateStamina(-20);
+      this.enemyHealthText.setText(`Enemy Health: ${this.sean.currentHealth}`);
+      this.playerStaminaText.setText(`Player Stamina: ${this.hero.currentStamina}`);
+      this.events.emit('heroActionComplete');
+    }
   }
 
   specialMove() {
     // Special move logic
+    this.events.emit('heroActionComplete');
   }
 
   guardMove() {
     // Guard move logic
-  }
-
-  heroAction() {
-    this.heroPunch(); // Example action, can be more complex
-    console.log('Hero action performed');
+    this.events.emit('heroActionComplete');
   }
 
   enemyAction() {
-    this.hero.updateHealth(-10); // Example action, can be more complex
-    this.playerHealthText.setText(`Player Health: ${this.hero.currentHealth}`);
-    console.log('Enemy action performed');
+    if (this.hero.currentHealth > 0) {
+      const damage = 10;
+      this.hero.updateHealth(-damage);
+      this.playerHealthText.setText(`Player Health: ${this.hero.currentHealth}`);
+      console.log('Enemy action performed');
+      this.events.emit('enemyActionComplete');
+    }
+  }
+
+  onRoundComplete() {
+    if (this.hero.currentHealth <= 0 || this.sean.currentHealth <= 0) {
+      this.scene.start("GameOver");
+    } else {
+      this.fightStateMachine.setState(FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS);
+    }
   }
 
   changeScene() {

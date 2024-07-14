@@ -33,14 +33,12 @@ export class FightStepsStateMachine {
         break;
       case FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE:
         console.log('Round Complete');
+        this.scene.events.emit('roundComplete');
         break;
     }
   }
 
   update() {
-    if (this.currentStep === FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE) {
-      return true;
-    }
     // Update logic for the current step
   }
 
@@ -69,19 +67,37 @@ export class FightStepsStateMachine {
 
   firstAction() {
     if (this.firstActor === 'hero') {
+      console.log('Hero to take action');
       this.scene.events.emit('heroAction');
+      this.scene.events.once('heroActionComplete', () => {
+        console.log('Hero has acted. Now the enemy takes his turn.');
+        this.setState(FightStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
+      });
     } else {
+      console.log('Enemy to take action');
       this.scene.events.emit('enemyAction');
+      this.scene.events.once('enemyActionComplete', () => {
+        console.log('Enemy has acted. Now the hero takes his turn.');
+        this.setState(FightStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
+      });
     }
-    this.setState(FightStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
   }
 
   secondAction() {
     if (this.secondActor === 'hero') {
+      console.log('Hero goes next');
       this.scene.events.emit('heroAction');
+      this.scene.events.once('heroActionComplete', () => {
+        console.log('Hero has acted. Round is complete.');
+        this.setState(FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
+      });
     } else {
+      console.log('Enemy goes next');
       this.scene.events.emit('enemyAction');
+      this.scene.events.once('enemyActionComplete', () => {
+        console.log('Enemy has acted. Round is complete.');
+        this.setState(FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
+      });
     }
-    this.setState(FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
   }
 }
