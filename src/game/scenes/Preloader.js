@@ -38,8 +38,8 @@ export class Preloader extends Scene {
             reflexes: 5,
         });
 
-        const sean = new Character({
-            name: "Sean",
+        const enemy = new Character({
+            name: "Enemy",
             totalHealth: 100,
             currentHealth: 100,
             totalStamina: 100,
@@ -51,7 +51,7 @@ export class Preloader extends Scene {
         });
 
         this.registry.set("hero", hero);
-        this.registry.set("sean", sean);
+        this.registry.set("enemy", enemy);
 
         this.scene.start("MainMenu");
     }

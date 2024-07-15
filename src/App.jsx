@@ -1,10 +1,10 @@
-import { useRef, useState, useEffect } from "react";
-import Phaser from "phaser";
+import { useRef, useState } from "react";
 import { PhaserGame } from "./game/PhaserGame";
+import { EventBus } from "./game/EventBus";
 
 function App() {
     const [currentScene, setCurrentScene] = useState("MainMenu");
-
+    const [buttonDisabled, setButtonDisabled] = useState(true);
     const [currentFeedback, setFeedback] = useState(`CHOOSE YOUR NEXT ACTION`);
     const feedbackMessages = [
         "You missed because YOU SUCK!",
@@ -16,15 +16,13 @@ function App() {
     const phaserRef = useRef();
 
     const triggerPhaserEvent = (eventName) => {
-        const scene = phaserRef.current?.scene;
-        if (scene) {
-            console.log(`Emitting event: ${eventName}`);
-            scene.events.emit(eventName);
-        }
+        console.log(`Emitting player action: ${eventName}`);
+        EventBus.emit('playerAction', eventName);
+        setButtonDisabled(true);
     };
 
     const changeScene = () => {
-        const scene = phaserRef.current.scene;
+        const scene = phaserRef.current?.scene;
         if (scene) {
             scene.changeScene();
         }
@@ -34,6 +32,12 @@ function App() {
         setFeedback(feedbackMessages[index]);
     };
 
+    const switchButton = () => {
+        setButtonDisabled(prevState => !prevState);
+    };
+
+    // Register EventBus listeners
+    EventBus.on("enableInput", switchButton);
 
     const handleCurrentScene = (scene) => {
         setCurrentScene(scene.scene.key); // Update the current scene
@@ -70,21 +74,21 @@ function App() {
                             </button>
                         </div>
                         <div id="fight-options">
-                            <button className="button" onClick={() => triggerPhaserEvent('punch')}>
+                            <button className="button" disabled={buttonDisabled} onClick={() => triggerPhaserEvent('punch')}>
                                 PUNCH
                             </button>
-                            <button className="button" onClick={() => triggerPhaserEvent('kick')}>
+                            <button className="button" disabled={buttonDisabled} onClick={() => triggerPhaserEvent('kick')}>
                                 KICK
                             </button>
-                            <button className="button" onClick={() => triggerPhaserEvent('special')}>
+                            <button className="button" disabled={buttonDisabled} onClick={() => triggerPhaserEvent('special')}>
                                 SPECIAL
                             </button>
-                            <button className="button" onClick={() => triggerPhaserEvent('guard')}>
+                            <button className="button" disabled={buttonDisabled} onClick={() => triggerPhaserEvent('guard')}>
                                 GUARD
                             </button>
                         </div>
                         <div id="fight-feedback">
-                            <p>`{currentFeedback}`</p>
+                            <p>{currentFeedback}</p>
                         </div>
                     </>
                 )}
@@ -93,7 +97,6 @@ function App() {
                         <button className="button" onClick={changeScene}>
                             CHANGE SCENE
                         </button>
-
                     </div>
                 )}
             </div>
@@ -102,4 +105,3 @@ function App() {
 }
 
 export default App;
-
