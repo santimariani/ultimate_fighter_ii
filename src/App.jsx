@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect } from "react";
-import Phaser from "phaser";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import Phaser, { Scene } from "phaser";
 import { PhaserGame } from "./game/PhaserGame";
+import { EventBus } from "./game/EventBus";
 
 function App() {
     const [currentScene, setCurrentScene] = useState("MainMenu");
@@ -14,76 +15,36 @@ function App() {
     ];
 
     const phaserRef = useRef();
+    console.log("M phaserRef", phaserRef);
+    //const refScene = phaserRef.current.scene;
 
-    const triggerPhaserEvent = (eventName) => {
-        const scene = phaserRef.current?.scene;
-        if (scene) {
-            console.log(`Emitting event: ${eventName}`);
-            scene.events.emit(eventName);
+    const triggerPhaserEvent = (x) => {
+        // Maybe here use EventBus to emit x
+
+        console.log("triggerPhaserEvent", x);
+        console.log("phaserRef.current.scene", phaserRef.current);
+        if (phaserRef.current) {
+            console.log(`Emitting event: ${x}`);
+            phaserRef.current.scene.events.emit(x);
             setButtonsDisabled(true);
         }
     };
 
-    const changeScene = () => {
-        const scene = phaserRef.current.scene;
-        if (scene) {
-            scene.changeScene();
+    const changeScene = (x) => {
+        console.log("M changeScene refScene", phaserRef);
+        if (x.current.scene) {
+            x.current.scene.changeScene();
         }
     };
 
-    const handleCurrentScene = (scene) => {
-        setCurrentScene(scene.scene.key);
-        if (scene.scene.key === "Spar") {
+    const handleCurrentScene = (refScene) => {
+        setCurrentScene(refScene.scene.key);
+        if (refScene.scene.key === "Spar") {
             setButtonsDisabled(false);
         } else {
             setButtonsDisabled(true);
         }
     };
-
-    useEffect(() => {
-        const setupEventListeners = () => {
-            const scene = phaserRef.current?.scene;
-            if (scene) {
-                scene.events.on('enablePlayerInput', handleEnablePlayerInput);
-                scene.events.on('heroActionComplete', handleHeroActionComplete);
-                scene.events.on('enemyActionComplete', handleEnemyActionComplete);
-            }
-        };
-
-        const handleEnablePlayerInput = () => {
-            setButtonsDisabled(false);
-            console.log('Player input enabled');
-        };
-
-        const handleHeroActionComplete = () => {
-            console.log('Hero action complete, waiting for enemy action');
-            const scene = phaserRef.current?.scene;
-            if (scene) {
-                setButtonsDisabled(true);
-                scene.events.emit('enemyAction');
-            }
-        };
-
-        const handleEnemyActionComplete = () => {
-            console.log('Enemy action complete, enabling player input');
-            const scene = phaserRef.current?.scene;
-            if (scene) {
-                setButtonsDisabled(false);
-                scene.events.emit('enablePlayerInput');
-            }
-        };
-
-        setupEventListeners();
-
-        return () => {
-            const scene = phaserRef.current?.scene;
-            if (scene) {
-                scene.events.off('enablePlayerInput', handleEnablePlayerInput);
-                scene.events.off('heroActionComplete', handleHeroActionComplete);
-                scene.events.off('enemyActionComplete', handleEnemyActionComplete);
-            }
-        };
-    }, [phaserRef.current?.scene]);
 
     if (window.innerWidth < 480) {
         return (
@@ -94,6 +55,79 @@ function App() {
         );
     }
 
+    console.log("M pre useEffect phaserRef", phaserRef);
+
+    useEffect(() => {
+        console.log("UE phaserRef.current?.scene", phaserRef.current?.scene);
+        if (phaserRef.current?.scene) {
+            const useEffectScene = phaserRef.current?.scene;
+
+            const setupEventListeners = () => {
+                if (useEffectScene) {
+                    useEffectScene.events.on(
+                        "enablePlayerInput",
+                        handleEnablePlayerInput
+                    );
+                    useEffectScene.events.on(
+                        "heroActionComplete",
+                        handleHeroActionComplete
+                    );
+                    useEffectScene.events.on(
+                        "enemyActionComplete",
+                        handleEnemyActionComplete
+                    );
+                }
+            };
+
+            const handleEnablePlayerInput = () => {
+                setButtonsDisabled(false);
+                console.log("UE Player input enabled");
+            };
+
+            const handleHeroActionComplete = () => {
+                console.log(
+                    "UE Hero action complete, waiting for enemy action"
+                );
+                if (useEffectScene) {
+                    setButtonsDisabled(true);
+                    useEffectScene.events.emit("enemyAction");
+                }
+            };
+
+            const handleEnemyActionComplete = () => {
+                console.log("UE Enemy action complete, enabling player input");
+                if (useEffectScene) {
+                    setButtonsDisabled(false);
+                    useEffectScene.events.emit("enablePlayerInput");
+                }
+            };
+
+            setupEventListeners();
+
+            return () => {
+                console.log("UE return");
+                if (useEffectScene) {
+                    console.log("UE return if");
+                    useEffectScene.events.off(
+                        "enablePlayerInput",
+                        handleEnablePlayerInput
+                    );
+                    useEffectScene.events.off(
+                        "heroActionComplete",
+                        handleHeroActionComplete
+                    );
+                    useEffectScene.events.off(
+                        "enemyActionComplete",
+                        handleEnemyActionComplete
+                    );
+                }
+            };
+        }
+    }, [phaserRef.current?.scene]);
+
+    // We have to use EventBus to emit and listen
+
+    console.log("after UE phaserRef", phaserRef);
     return (
         <div id="app">
             <PhaserGame
@@ -103,7 +137,10 @@ function App() {
             <div id="ui-menus">
                 {currentScene === "MainMenu" && (
                     <div id="main-menu">
-                        <button className="button" onClick={changeScene}>
+                        <button
+                            className="button"
+                            onClick={() => changeScene(phaserRef)}
+                        >
                             CHANGE SCENE
                         </button>
                     </div>
@@ -119,28 +156,28 @@ function App() {
                             <button
                                 className="button"
                                 disabled={buttonsDisabled}
-                                onClick={() => triggerPhaserEvent('punch')}
+                                onClick={() => triggerPhaserEvent("punch")}
                             >
                                 PUNCH
                             </button>
                             <button
                                 className="button"
                                 disabled={buttonsDisabled}
-                                onClick={() => triggerPhaserEvent('kick')}
+                                onClick={() => triggerPhaserEvent("kick")}
                             >
                                 KICK
                             </button>
                             <button
                                 className="button"
                                 disabled={buttonsDisabled}
-                                onClick={() => triggerPhaserEvent('special')}
+                                onClick={() => triggerPhaserEvent("special")}
                             >
                                 SPECIAL
                             </button>
                             <button
                                 className="button"
                                 disabled={buttonsDisabled}
-                                onClick={() => triggerPhaserEvent('guard')}
+                                onClick={() => triggerPhaserEvent("guard")}
                             >
                                 GUARD
                             </button>
@@ -163,3 +200,4 @@ function App() {
 }
 
 export default App;
+

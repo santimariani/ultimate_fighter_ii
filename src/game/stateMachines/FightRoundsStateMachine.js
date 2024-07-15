@@ -40,6 +40,8 @@ export class FightRoundsStateMachine {
       case FightRoundsStateMachine.ROUND_STATES.END:
         console.log('Fight Ended');
         break;
+      default:
+        console.log('FightRoundsStateMachine default')
     }
   }
 
