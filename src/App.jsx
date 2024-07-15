@@ -16,7 +16,7 @@ function App() {
     const phaserRef = useRef();
 
     const triggerPhaserEvent = (eventName) => {
-        console.log(`Emitting player action: ${eventName}`);
+        // console.log(`Emitting player action: ${eventName}`);
         EventBus.emit('playerAction', eventName);
         setButtonDisabled(true);
     };

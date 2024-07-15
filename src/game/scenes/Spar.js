@@ -9,8 +9,8 @@ export class Spar extends Scene {
     }
 
     init(data) {
-        this.hero = this.registry.get('hero');
-        this.enemy = this.registry.get('enemy');
+        this.hero = this.registry.get("hero");
+        this.enemy = this.registry.get("enemy");
     }
 
     create() {
@@ -28,58 +28,95 @@ export class Spar extends Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
-        this.playerHealthText = this.add.text(16, 16, `Player Health: ${this.hero.currentHealth}`, { fontSize: '32px', fill: 'black' });
-        this.enemyHealthText = this.add.text(685, 16, `Enemy Health: ${this.enemy.currentHealth}`, { fontSize: '32px', fill: 'black' });
-        this.playerStaminaText = this.add.text(16, 48, `Player Stamina: ${this.hero.currentStamina}`, { fontSize: '32px', fill: 'black' });
-        this.enemyStaminaText = this.add.text(667, 48, `Enemy Stamina: ${this.enemy.currentStamina}`, { fontSize: '32px', fill: 'black' });
+        this.playerHealthText = this.add.text(
+            16,
+            16,
+            `Player Health: ${this.hero.currentHealth}`,
+            { fontSize: "32px", fill: "black" }
+        );
+        this.enemyHealthText = this.add.text(
+            685,
+            16,
+            `Enemy Health: ${this.enemy.currentHealth}`,
+            { fontSize: "32px", fill: "black" }
+        );
+        this.playerStaminaText = this.add.text(
+            16,
+            48,
+            `Player Stamina: ${this.hero.currentStamina}`,
+            { fontSize: "32px", fill: "black" }
+        );
+        this.enemyStaminaText = this.add.text(
+            667,
+            48,
+            `Enemy Stamina: ${this.enemy.currentStamina}`,
+            { fontSize: "32px", fill: "black" }
+        );
 
-        this.events.on('punch', this.heroPunch, this);
-        this.events.on('kick', this.heroKick, this);
-        this.events.on('special', this.specialMove, this);
-        this.events.on('guard', this.guardMove, this);
+        this.events.on("punch", this.heroPunch, this);
+        this.events.on("kick", this.heroKick, this);
+        this.events.on("special", this.specialMove, this);
+        this.events.on("guard", this.guardMove, this);
 
-        this.events.on('heroAction', () => {
-            EventBus.emit("enableInput"); // Enable player input
-        }, this);
-        this.events.on('enemyAction', this.enemyAction, this);
+        this.events.on(
+            "heroAction",
+            () => {
+                EventBus.emit("enableInput");
+            },
+            this
+        );
+        this.events.on("enemyAction", this.enemyAction, this);
 
         this.fightStateMachine = new FightRoundsStateMachine(this);
         this.fightStateMachine.start();
 
+        this.events.on("fightEnded", this.changePostFightScene, this);
+
+        EventBus.on("playerAction", this.heroAction.bind(this));
+
         EventBus.emit("current-scene-ready", this);
-        EventBus.on("playerAction", this.heroAction.bind(this));  // Listen for player action events
     }
 
     update() {
         this.fightStateMachine.update();
-    }
-    
-        heroAction(action) {
-            switch(action) {
-                case 'punch':
-                    this.heroPunch();
-                    break;
-                case 'kick':
-                    this.heroKick();
-                    break;
-                case 'special':
-                    this.specialMove();
-                    break;
-                case 'guard':
-                    this.guardMove();
-                    break;
-                default:
-                    console.log('Unknown action:', action);
-            }
-            console.log('Hero action performed:', action);
+        if (this.hero.currentHealth < 0) {
+            this.changeKOScene();
         }
+    }
+
+    heroAction(action) {
+        switch (action) {
+            case "punch":
+                this.heroPunch();
+                console.log("Hero punched the Enemy!");
+                break;
+            case "kick":
+                this.heroKick();
+                console.log("Hero kicked the Enemey!");
+                break;
+            case "special":
+                this.specialMove();
+                console.log("Nothing happened!");
+                break;
+            case "guard":
+                this.guardMove();
+                console.log("You guarded!");
+                break;
+            default:
+                console.log("Unknown action:", action);
+        }
+    }
 
     heroPunch() {
         if (this.enemy.currentHealth > 0 && this.hero.currentStamina >= 10) {
             this.enemy.updateHealth(-10);
             this.hero.updateStamina(-10);
-            this.enemyHealthText.setText(`Enemy Health: ${this.enemy.currentHealth}`);
-            this.playerStaminaText.setText(`Player Stamina: ${this.hero.currentStamina}`);
+            this.enemyHealthText.setText(
+                `Enemy Health: ${this.enemy.currentHealth}`
+            );
+            this.playerStaminaText.setText(
+                `Player Stamina: ${this.hero.currentStamina}`
+            );
             this.events.emit("heroActionComplete");
         }
     }
@@ -88,8 +125,12 @@ export class Spar extends Scene {
         if (this.enemy.currentHealth > 0 && this.hero.currentStamina >= 20) {
             this.enemy.updateHealth(-20);
             this.hero.updateStamina(-20);
-            this.enemyHealthText.setText(`Enemy Health: ${this.enemy.currentHealth}`);
-            this.playerStaminaText.setText(`Player Stamina: ${this.hero.currentStamina}`);
+            this.enemyHealthText.setText(
+                `Enemy Health: ${this.enemy.currentHealth}`
+            );
+            this.playerStaminaText.setText(
+                `Player Stamina: ${this.hero.currentStamina}`
+            );
             this.events.emit("heroActionComplete");
         }
     }
@@ -107,13 +148,20 @@ export class Spar extends Scene {
     enemyAction() {
         setTimeout(() => {
             this.hero.updateHealth(-50); // Example action, can be more complex
-            this.playerHealthText.setText(`Player Health: ${this.hero.currentHealth}`);
-            console.log('Enemy action performed');
+            this.playerHealthText.setText(
+                `Player Health: ${this.hero.currentHealth}`
+            );
+            console.log("Enemy punched the Hero!");
             this.events.emit("enemyActionComplete");
         }, 1000); // 1 second delay
     }
 
-    changeScene() {
-        this.scene.start("GameOver");
+    changePostFightScene() {
+        this.scene.start("MainMenu");
+    }
+
+    changeKOScene() {
+        this.scene.start("GameOver")
     }
 }
+

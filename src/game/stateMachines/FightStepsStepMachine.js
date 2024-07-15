@@ -64,7 +64,6 @@ export class FightStepsStateMachine {
     }
 
     determineFirstActor() {
-        console.log("Deciding who goes first", this.scene.events);
         let heroAgility, enemyAgility;
         do {
             heroAgility = Phaser.Math.Between(1, this.hero.agility);
@@ -74,17 +73,16 @@ export class FightStepsStateMachine {
         if (heroAgility > enemyAgility) {
             this.firstActor = "hero";
             this.secondActor = "enemy";
-            console.log("Hero goes first!");
+            console.log("Hero takes the initiative!");
         } else {
             this.firstActor = "enemy";
             this.secondActor = "hero";
-            console.log("Enemy goes first!");
+            console.log("Enemy takes the initiative!");
         }
         this.setState(FightStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION);
     }
 
     firstAction() {
-        console.log("First action", this.scene.events);
         if (this.firstActor === "hero") {
             this.scene.events.emit("heroAction");
             this.scene.events.once(
@@ -102,7 +100,6 @@ export class FightStepsStateMachine {
     }
 
     secondAction() {
-        console.log("Second action", this.scene.events);
         if (this.secondActor === "hero") {
             this.scene.events.emit("heroAction");
             this.scene.events.once(
