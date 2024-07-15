@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import Phaser, { Scene } from "phaser";
+import Phaser, { Scene, Events } from "phaser";
 import { PhaserGame } from "./game/PhaserGame";
 import { EventBus } from "./game/EventBus";
+//import Phaser from "phaser";
 
 function App() {
     const [currentScene, setCurrentScene] = useState("MainMenu");
@@ -25,8 +26,10 @@ function App() {
         console.log("phaserRef.current.scene", phaserRef.current);
         if (phaserRef.current) {
             console.log(`Emitting event: ${x}`);
-            phaserRef.current.scene.events.emit(x);
+            //phaserRef.current.scene.events.emit(x);
+            console.log(">>>>> DISABLE AND EMIT ACTION");
             setButtonsDisabled(true);
+            EventBus.emit(x, phaserRef.current.scene.events.emit(x));
         }
     };
 
@@ -126,6 +129,13 @@ function App() {
     }, [phaserRef.current?.scene]);
 
     // We have to use EventBus to emit and listen
+    EventBus.on("kick", (data) => {
+        console.log("!!!>>>>>", data);
+        if (data) {
+            console.log(">>>>> ENABLE ACTIONS");
+            setButtonsDisabled(false);
+        }
+    });
 
     console.log("after UE phaserRef", phaserRef);
     return (
@@ -148,7 +158,10 @@ function App() {
                 {currentScene === "Spar" && (
                     <>
                         <div id="game">
-                            <button className="button" onClick={changeScene}>
+                            <button
+                                className="button"
+                                onClick={() => changeScene(phaserRef)}
+                            >
                                 CHANGE SCENE
                             </button>
                         </div>
