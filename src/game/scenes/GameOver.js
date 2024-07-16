@@ -21,4 +21,8 @@ export class GameOver extends Scene
 
         EventBus.emit('current-scene-ready', this);
     }
+
+changeScene() {
+    this.scene.start("MainMenu")
+}
 }

@@ -28,10 +28,10 @@ export class Preloader extends Scene {
     create() {
         const hero = new Character({
             name: "Hero",
-            totalHealth: 100,
             currentHealth: 100,
-            totalStamina: 100,
+            totalHealth: 100,
             currentStamina: 100,
+            totalStamina: 100,
             strength: 5,
             defense: 5,
             agility: 5,
@@ -40,10 +40,10 @@ export class Preloader extends Scene {
 
         const enemy = new Character({
             name: "Enemy",
-            totalHealth: 100,
             currentHealth: 100,
-            totalStamina: 100,
+            totalHealth: 100,
             currentStamina: 100,
+            totalStamina: 100,
             strength: 5,
             defense: 5,
             agility: 5,
