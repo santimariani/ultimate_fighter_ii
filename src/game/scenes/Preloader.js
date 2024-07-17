@@ -32,10 +32,10 @@ export class Preloader extends Scene {
             totalHealth: 100,
             currentStamina: 100,
             totalStamina: 100,
-            strength: 5,
-            defense: 5,
-            agility: 5,
-            reflexes: 5,
+            strength: 10,
+            defense: 10,
+            agility: 10,
+            reflexes: 10,
         });
 
         const enemy = new Character({
@@ -44,10 +44,10 @@ export class Preloader extends Scene {
             totalHealth: 100,
             currentStamina: 100,
             totalStamina: 100,
-            strength: 5,
-            defense: 5,
-            agility: 5,
-            reflexes: 5,
+            strength: 10,
+            defense: 10,
+            agility: 10,
+            reflexes: 10,
         });
 
         this.registry.set("hero", hero);
