@@ -459,7 +459,10 @@ export class Spar extends Scene {
             if (enemyAgility > heroReflexes) {
                 console.log("Enemy finds an opening...");
                 let enemyStrength = Math.ceil(
-                    Phaser.Math.Between(1, this.enemy.strength) * attackBoost
+                    Phaser.Math.Between(
+                        this.enemy.strength / 2,
+                        this.enemy.strength
+                    ) * attackBoost
                 );
                 console.log(`Enemy — offensive power: ${enemyStrength}`);
                 let heroDefense = Phaser.Math.Between(1, this.hero.defense);
