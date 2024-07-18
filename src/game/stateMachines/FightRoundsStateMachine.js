@@ -27,7 +27,7 @@ export class FightRoundsStateMachine {
         this.currentState = state;
         switch (state) {
             case FightRoundsStateMachine.ROUND_STATES.START:
-                console.log("Fight begins!")
+                console.log("FIGHT BEGINS!")
                 this.roundNumber = 1;
                 this.setState(
                     FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS
@@ -35,7 +35,7 @@ export class FightRoundsStateMachine {
                 break;
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
-                    console.log("Round", this.roundNumber)
+                    console.log("—ROUND", this.roundNumber, "—")
                     this.roundNumber++;
                     this.roundStateMachine = new FightStepsStateMachine(
                         this.scene,
@@ -48,7 +48,7 @@ export class FightRoundsStateMachine {
                 }
                 break;
             case FightRoundsStateMachine.ROUND_STATES.END:
-                console.log("Fight Ended");
+                console.log("FIGHT ENDED");
                 this.scene.events.emit("fightEnded");
                 break;
         }

@@ -40,7 +40,7 @@ export class FightStepsStateMachine {
                 this.secondAction();
                 break;
             case FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE:
-                console.log("Round Complete");
+                console.log("ROUND COMPLETE");
                 // Emit an event to signal that the round is complete
                 this.scene.events.emit("roundComplete");
                 break;
@@ -90,10 +90,10 @@ export class FightStepsStateMachine {
             this.scene.events.once(
                 "heroActionComplete",
                 this.handleHeroActionComplete);
-            console.log("Enemy goes next!")
         }
         if (this.firstActor === "enemy") {
             this.scene.events.emit("enemyAction");
+            console.log("HERO GOES NEXT");
             this.scene.events.once(
                 "enemyActionComplete",
                 this.handleEnemyActionComplete);
@@ -122,7 +122,6 @@ export class FightStepsStateMachine {
             this.currentStep ===
             FightStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION
         ) {
-            console.log("Enemy goes next!");
             this.setState(
                 FightStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
             );
@@ -141,7 +140,6 @@ export class FightStepsStateMachine {
             this.currentStep ===
             FightStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION
         ) {
-            console.log("Hero goes next!");
             this.setState(
                 FightStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
             );

@@ -77,7 +77,7 @@ body {
     height: 7vw;
     width: 7vw;
     z-index: 5;
-    top: 15vh;
+    top: 35vh;
     left: 3.5vw;
     justify-content: center;
     align-items: center;
@@ -112,8 +112,8 @@ body {
         0% 70%
     );
     z-index: 5;
-    top: 40vh;
-    left: 3.5vw;
+    top: 15vh;
+    left: 3.6vw;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -123,6 +123,7 @@ body {
     height: 6vw;
     width: 6vw;
     background-color: rgb(53, 49, 49);
+    border: 0.1vw solid white;
     clip-path: polygon(
         0% 35%,
         35% 35%,
@@ -137,7 +138,127 @@ body {
         35% 65%,
         0% 65%
     );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial Black;
+    font-size: 1.75vh;
+
 }
+
+#leftStickText {
+    position: absolute;
+    z-index: 5;
+    top: 48.1vh;
+    left: 4.5vw;
+    margin: 0;
+    color: rgb(7, 7, 7);
+    font-family: Arial Black;
+    font-size: 2vh;
+}
+
+#rightStickText {
+    position: absolute;
+    z-index: 5;
+    top: 28vh;
+    right: 4vw;
+    margin: 0;
+    color: rgb(7, 7, 7);
+    font-family: Arial Black;
+    font-size: 2vh;
+}
+
+#keyPadText {
+    position: absolute;
+    z-index: 5;
+    top: 28vh;
+    left: 3.75vw;
+    margin: 0;
+    color: rgb(7, 7, 7);
+    font-family: Arial Black;
+    font-size: 2vh;
+}
+
+/* #gridContainerLeft {
+    position: absolute;
+    background-color: blue;
+    height: 7vw;
+    width: 10vw;
+    z-index: 5;
+    bottom: 10vh;
+    left: 2.25vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1;
+    border-radius: 5%;
+} */
+
+#sound {
+    position: absolute;
+    z-index: 5;
+    background-color: rgb(53, 49, 49);
+    border: .3vh solid rgba(0, 0, 0, 0.696);
+    text-align: center;
+    font-size: 1.5em;
+    height: 3.5vh;
+    width: 5vw;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial Black;
+    font-size: 1.5vh;
+    bottom: 15vh;
+    left: 4.5vw;
+}
+
+#pause {
+    position: absolute;
+    z-index: 5;
+    background-color: rgb(53, 49, 49);
+    border: .3vh solid rgba(0, 0, 0, 0.696);
+    text-align: center;
+    font-size: 1.5em;
+    height: 3.5vh;
+    width: 5vw;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial Black;
+    font-size: 1.5vh;
+    bottom: 10vh;
+    left: 4.5vw;
+}
+
+#accountLeft {
+    position: absolute;
+    z-index: 5;
+    background-color: rgb(53, 49, 49);
+    border: .3vh solid rgba(0, 0, 0, 0.696);
+    text-align: center;
+    font-size: 1.5em;
+    height: 3.5vh;
+    width: 7vw;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial Black;
+    font-size: 1.5vh;
+    bottom: 15vh;
+    left: 3.5vw;
+}
+
+/* .gridTextLeft {
+    display: inline-block;
+    margin: 0;
+    color: rgb(7, 7, 7);
+    font-family: Arial Black;
+    font-size: 2vh;
+    transform: translateY(-.5vh)
+} */
+
 
 #center {
     height: 96.5vh;
@@ -229,7 +350,7 @@ body {
     height: 8vw;
     width: 8vw;
     z-index: 5;
-    top: 39vh;
+    top: 36vh;
     right: 3vw;
     border-radius: 20%;
     transform: rotate(45deg);
@@ -252,6 +373,7 @@ body {
     transform: translate(19%, 19%);
     display: flex;
     justify-content: center;
+    border: 0.05vw solid white;
     align-items: center;
 }
 
@@ -265,6 +387,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 0.05vw solid white;
+
 }
 
 #square3 {
@@ -277,6 +401,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 0.05vw solid white;
+
 }
 
 #square4 {
@@ -289,11 +415,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 0.05vw solid white;
+
 }
 
-
-
-#grid-container {
+#gridContainerRight {
     position: absolute;
     height: 7vw;
     width: 10vw;
@@ -306,7 +432,7 @@ body {
     border-radius: 5%;
 }
 
-.grid-item {
+.gridItemRight {
     background-color: rgba(0, 0, 0, 0.696);
     border: .3vh solid rgb(53, 49, 49);
     text-align: center;
@@ -316,14 +442,13 @@ body {
     border-radius: 30%;
 }
 
-.rightDescriptionText {
+.gridTextRight {
     display: inline-block;
     margin: 0;
     color: rgb(7, 7, 7);
     font-family: Arial Black;
     font-size: 2vh;
     transform: translateY(-.5vh)
-    
 }
 
 #leftShoulderHole {
