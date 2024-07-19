@@ -86,7 +86,7 @@ function App() {
                 <p id="rightStickText">SIGN OUT</p>
                 <div id="fourButtons">
                     <div id="square1">
-                        <p className="buttonText">A</p>
+                        <p className="buttonText">R</p>
                     </div>
                     <div id="square2">
                         <p className="buttonText">L</p>
@@ -95,7 +95,7 @@ function App() {
                         <p className="buttonText">S</p>
                     </div>
                     <div id="square4">
-                        <p className="buttonText">R</p>
+                        <p className="buttonText">D</p>
                     </div>
                 </div>
                 <div id="gridContainerRight">
@@ -103,10 +103,10 @@ function App() {
                     <div className="gridItemRight" style={{ gridArea: '4 / 2' }}></div>
                     <div className="gridItemRight" style={{ gridArea: '6 / 2' }}></div>
                     <div className="gridItemRight" style={{ gridArea: '8 / 2' }}></div>
-                    <div className="gridTextRight" style={{ gridArea: '2 / 4' }}>ACCOUNT</div>
+                    <div className="gridTextRight" style={{ gridArea: '2 / 4' }}>RESTART</div>
                     <div className="gridTextRight" style={{ gridArea: '4 / 4' }}>SAVE</div>
                     <div className="gridTextRight" style={{ gridArea: '6 / 4' }}>LOAD</div>
-                    <div className="gridTextRight" style={{ gridArea: '8 / 4' }}>REFRESH</div>
+                    <div className="gridTextRight" style={{ gridArea: '8 / 4' }}>DELETE</div>
                 </div>
                 <div id="rightShoulderHole"></div>
             </div>
