@@ -1,4 +1,4 @@
-import { FightStepsStateMachine } from "./FightStepsStateMachine";
+import { CombatStepsStateMachine } from "./CombatStepsStateMachine";
 import { Scene } from "phaser";
 
 export class FightRoundsStateMachine {
@@ -35,7 +35,7 @@ export class FightRoundsStateMachine {
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
                     console.log("—ROUND", this.roundNumber, "—");
-                    this.roundStateMachine = new FightStepsStateMachine(
+                    this.roundStateMachine = new CombatStepsStateMachine(
                         this.scene,
                         this.hero,
                         this.enemy
@@ -47,8 +47,9 @@ export class FightRoundsStateMachine {
                 }
                 break;
             case FightRoundsStateMachine.ROUND_STATES.END:
-                console.log("FIGHT ENDED");
-                this.scene.events.emit("fightEnded");
+                console.log("END OF FIGHT!");
+                const tie = true;
+                this.scene.events.emit("fightEnded", tie);
                 break;
         }
     }

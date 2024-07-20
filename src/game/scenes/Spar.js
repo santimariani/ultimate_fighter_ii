@@ -91,7 +91,7 @@ export class Spar extends Scene {
 
         this.events.on("punch", this.heroCombatActions.punch.bind(this.heroCombatActions));
         this.events.on("kick", this.heroCombatActions.kick.bind(this.heroCombatActions));
-        this.events.on("special", this.heroCombatActions.specialMove.bind(this.heroCombatActions));
+        this.events.on("special", this.heroCombatActions.special.bind(this.heroCombatActions));
         this.events.on("guard", this.heroCombatActions.guard.bind(this.heroCombatActions));
 
         this.events.on(
@@ -157,7 +157,7 @@ export class Spar extends Scene {
                 this.heroCombatActions.kick();
                 break;
             case "special":
-                this.heroCombatActions.specialMove();
+                this.heroCombatActions.special();
                 break;
             case "guard":
                 this.heroCombatActions.guard();
@@ -193,7 +193,7 @@ export class Spar extends Scene {
                     this.enemyCombatActions.kick();
                     break;
                 case "special":
-                    this.enemyCombatActions.specialMove();
+                    this.enemyCombatActions.special();
                     break;
                 case "guard":
                     this.enemyCombatActions.guard();
