@@ -1,6 +1,5 @@
 import { FightStepsStateMachine } from "./FightStepsStateMachine";
 import { Scene } from "phaser";
-import { MainMenu } from "../scenes/MainMenu";
 
 export class FightRoundsStateMachine {
     static ROUND_STATES = {
@@ -27,7 +26,7 @@ export class FightRoundsStateMachine {
         this.currentState = state;
         switch (state) {
             case FightRoundsStateMachine.ROUND_STATES.START:
-                console.log("FIGHT BEGINS!")
+                console.log("FIGHT BEGINS!");
                 this.roundNumber = 1;
                 this.setState(
                     FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS
@@ -35,14 +34,14 @@ export class FightRoundsStateMachine {
                 break;
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
-                    console.log("—ROUND", this.roundNumber, "—")
-                    this.roundNumber++;
+                    console.log("—ROUND", this.roundNumber, "—");
                     this.roundStateMachine = new FightStepsStateMachine(
                         this.scene,
                         this.hero,
                         this.enemy
                     );
                     this.roundStateMachine.startRound();
+                    this.roundNumber++;
                 } else {
                     this.setState(FightRoundsStateMachine.ROUND_STATES.END);
                 }
@@ -69,8 +68,7 @@ export class FightRoundsStateMachine {
         }
     }
 
-    changeScene () {
-        this.scene.start('MainMenu');
+    changeScene() {
+        this.scene.start("MainMenu");
     }
 }
-

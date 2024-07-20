@@ -65,11 +65,9 @@ export class FightStepsStateMachine {
 
     determineFirstActor() {
         let heroAgility, enemyAgility;
-        do {
-            heroAgility = Phaser.Math.Between(1, this.hero.agility);
-            enemyAgility = Phaser.Math.Between(1, this.enemy.agility);
-        } while (heroAgility === enemyAgility);
-
+        heroAgility = Phaser.Math.Between(1, this.hero.agility);
+        enemyAgility = Phaser.Math.Between(1, this.enemy.agility);
+        
         if (heroAgility > enemyAgility) {
             this.firstActor = "hero";
             this.secondActor = "enemy";
@@ -84,7 +82,7 @@ export class FightStepsStateMachine {
 
     firstAction() {
         if (this.firstActor === "hero") {
-            console.log("Hero considers his options...")
+            console.log("Hero considers his options...");
             this.scene.events.emit("heroAction");
             this.scene.events.once(
                 "heroActionComplete",
@@ -92,7 +90,7 @@ export class FightStepsStateMachine {
             );
         }
         if (this.firstActor === "enemy") {
-            console.log("ENEMY considers his options...")
+            console.log("Enemy considers his options...");
             this.scene.events.emit("enemyAction");
             this.scene.events.once(
                 "enemyActionComplete",
@@ -103,7 +101,7 @@ export class FightStepsStateMachine {
 
     secondAction() {
         if (this.secondActor === "hero") {
-            console.log("Hero considers his options...")
+            console.log("Hero considers his options...");
             this.scene.events.emit("heroAction");
             this.scene.events.once(
                 "heroActionComplete",
@@ -111,7 +109,7 @@ export class FightStepsStateMachine {
             );
         }
         if (this.secondActor === "enemy") {
-            console.log("Enemy considers his options...")
+            console.log("Enemy considers his options...");
             this.scene.events.emit("enemyAction");
             this.scene.events.once(
                 "enemyActionComplete",
@@ -156,4 +154,3 @@ export class FightStepsStateMachine {
         }
     }
 }
-

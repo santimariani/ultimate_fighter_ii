@@ -26,12 +26,28 @@ export class Character {
         if (this.currentHealth > this.totalHealth) {
             this.currentHealth = this.totalHealth;
         }
+        if (this.currentHealth <= 0) {
+            this.currentHealth = 0;
+        }
     }
 
     updateStamina(amount) {
         this.currentStamina += amount;
         if (this.currentStamina > this.totalStamina) {
-          this.currentStamina = this.totalStamina;
-      }
+            this.currentStamina = this.totalStamina;
+        }
+        if (this.currentStamina <= 0) {
+            this.currentStamina = 0;
+        }
+    }
+
+    get powerBoost() {
+        return this.currentHealth / this.totalHealth + 1;
+    }
+
+    get swiftnessBoost() {
+        return this.currentStamina / this.totalStamina + 1;
     }
 }
+
+export default Character;
