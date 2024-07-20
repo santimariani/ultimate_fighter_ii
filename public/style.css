@@ -68,6 +68,9 @@ body {
     color: white;
     font-family: Arial Black;
     font-size: 2.5vh;
+    &:hover {
+        font-size: 2.65vh; 
+        color: #5eacd5;}
 }
 
 #outerCircleLeft {
@@ -90,6 +93,8 @@ body {
     border: 0.1vw solid white;
     height: 5.5vw;
     width: 5.5vw;
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #outerKeyPad {
@@ -143,7 +148,8 @@ body {
     align-items: center;
     font-family: Arial Black;
     font-size: 1.75vh;
-
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #leftStickText {
@@ -179,27 +185,12 @@ body {
     font-size: 2vh;
 }
 
-/* #gridContainerLeft {
-    position: absolute;
-    background-color: blue;
-    height: 7vw;
-    width: 10vw;
-    z-index: 5;
-    bottom: 10vh;
-    left: 2.25vw;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1;
-    border-radius: 5%;
-} */
-
 #sound {
     position: absolute;
     z-index: 5;
     background-color: rgb(53, 49, 49);
     border: .3vh solid rgba(0, 0, 0, 0.696);
     text-align: center;
-    font-size: 1.5em;
     height: 3.5vh;
     width: 5vw;
     border-radius: 20%;
@@ -210,6 +201,9 @@ body {
     font-size: 1.5vh;
     bottom: 15vh;
     left: 4.5vw;
+    &:hover {
+        font-size: 1.6vh; 
+        color: #5eacd5;}
 }
 
 #pause {
@@ -218,7 +212,6 @@ body {
     background-color: rgb(53, 49, 49);
     border: .3vh solid rgba(0, 0, 0, 0.696);
     text-align: center;
-    font-size: 1.5em;
     height: 3.5vh;
     width: 5vw;
     border-radius: 20%;
@@ -229,6 +222,9 @@ body {
     font-size: 1.5vh;
     bottom: 10vh;
     left: 4.5vw;
+    &:hover {
+        font-size: 1.6vh; 
+        color: #5eacd5;}
 }
 
 #accountLeft {
@@ -315,6 +311,9 @@ body {
     color: white;
     font-family: Arial Black;
     font-size: 2.5vh;
+    &:hover {
+        font-size: 2.65vh; 
+        color: #5eacd5;}
 }
 
 #outerCircleRight {
@@ -339,6 +338,8 @@ body {
     width: 5.5vw;
     justify-content: center;
     align-items: center;
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #fourButtons {
@@ -373,8 +374,10 @@ body {
     transform: translate(19%, 19%);
     display: flex;
     justify-content: center;
-    border: 0.05vw solid white;
     align-items: center;
+    border: 0.1vw solid white;
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #square2 {
@@ -387,8 +390,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 0.05vw solid white;
-
+    border: 0.1vw solid white;
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #square3 {
@@ -401,8 +405,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 0.05vw solid white;
-
+    border: 0.1vw solid white;
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #square4 {
@@ -415,8 +420,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 0.05vw solid white;
-
+    border: 0.1vw solid white;
+    &:hover {
+        border: .2vw solid #5eacd5;}
 }
 
 #gridContainerRight {
@@ -448,7 +454,7 @@ body {
     color: rgb(7, 7, 7);
     font-family: Arial Black;
     font-size: 2vh;
-    transform: translateY(-.5vh)
+    transform: translateY(-.5vh);
 }
 
 #leftShoulderHole {
