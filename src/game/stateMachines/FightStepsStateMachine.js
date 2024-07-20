@@ -40,7 +40,7 @@ export class FightStepsStateMachine {
                 this.secondAction();
                 break;
             case FightStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE:
-                console.log("ROUND COMPLETE");
+                console.log("Round Complete");
                 // Emit an event to signal that the round is complete
                 this.scene.events.emit("roundComplete");
                 break;
@@ -67,9 +67,7 @@ export class FightStepsStateMachine {
         let heroAgility, enemyAgility;
         do {
             heroAgility = Phaser.Math.Between(1, this.hero.agility);
-            console.log(`Hero initiative score:" ${heroAgility}`)
             enemyAgility = Phaser.Math.Between(1, this.enemy.agility);
-            console.log(`Enemy initiative score:" ${enemyAgility}`)
         } while (heroAgility === enemyAgility);
 
         if (heroAgility > enemyAgility) {
@@ -86,22 +84,26 @@ export class FightStepsStateMachine {
 
     firstAction() {
         if (this.firstActor === "hero") {
+            console.log("Hero considers his options...")
             this.scene.events.emit("heroAction");
             this.scene.events.once(
                 "heroActionComplete",
-                this.handleHeroActionComplete);
+                this.handleHeroActionComplete
+            );
         }
         if (this.firstActor === "enemy") {
+            console.log("ENEMY considers his options...")
             this.scene.events.emit("enemyAction");
-            console.log("HERO GOES NEXT");
             this.scene.events.once(
                 "enemyActionComplete",
-                this.handleEnemyActionComplete);
+                this.handleEnemyActionComplete
+            );
         }
     }
 
     secondAction() {
         if (this.secondActor === "hero") {
+            console.log("Hero considers his options...")
             this.scene.events.emit("heroAction");
             this.scene.events.once(
                 "heroActionComplete",
@@ -109,6 +111,7 @@ export class FightStepsStateMachine {
             );
         }
         if (this.secondActor === "enemy") {
+            console.log("Enemy considers his options...")
             this.scene.events.emit("enemyAction");
             this.scene.events.once(
                 "enemyActionComplete",

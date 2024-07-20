@@ -1,4 +1,4 @@
-import { FightStepsStateMachine } from "./FightStepsStepMachine";
+import { FightStepsStateMachine } from "./FightStepsStateMachine";
 import { Scene } from "phaser";
 import { MainMenu } from "../scenes/MainMenu";
 

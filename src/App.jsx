@@ -30,9 +30,6 @@ function App() {
         setScores(data);
     }
 
-    console.log("scores", scores);
-    console.log("session", session);
-
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);

@@ -79,6 +79,18 @@ export class Spar extends Scene {
 
     update() {
         this.fightStateMachine.update();
+        this.playerHealthText.setText(
+            `Player Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`
+        );
+        this.playerStaminaText.setText(
+            `Player Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
+        );
+        this.enemyHealthText.setText(
+            `Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
+        );
+        this.enemyStaminaText.setText(
+            `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
+        );
         if (this.hero.currentHealth <= 0) {
             this.changeKOScene();
         }
@@ -108,24 +120,17 @@ export class Spar extends Scene {
         if (this.enemy.currentHealth > 0 && this.hero.currentStamina >= 10) {
             const swiftnessBoost =
                 this.hero.currentStamina / this.hero.totalStamina + 1;
-            console.log(`Hero - swiftness boost: ${swiftnessBoost}`);
             const attackBoost =
                 this.hero.currentHealth / this.hero.totalHealth + 1;
-            console.log(`Hero - attack boost: ${attackBoost}`);
             this.hero.updateStamina(-10);
-            this.playerStaminaText.setText(
-                `Player Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
-            );
+
 
             let heroAgility, enemyReflexes;
 
             do {
                 console.log(`Hero moves in for the attack...`);
                 heroAgility = Math.ceil(
-                    Phaser.Math.Between(
-                        this.hero.agility / 2,
-                        this.hero.agility
-                    ) * swiftnessBoost
+                    Phaser.Math.Between((this.hero.agility / 2), this.hero.agility) * swiftnessBoost
                 );
                 console.log(`Hero — offensive agility: ${heroAgility}`);
                 enemyReflexes = Phaser.Math.Between(1, this.enemy.reflexes);
@@ -133,20 +138,14 @@ export class Spar extends Scene {
             } while (heroAgility === enemyReflexes);
 
             if (heroAgility > enemyReflexes) {
-                console.log("He finds an opening...");
+                console.log("He prepares to attack...");
                 let heroStrength = Math.ceil(
-                    Phaser.Math.Between(
-                        this.hero.strength / 2,
-                        this.hero.strength
-                    ) * attackBoost
+                    Phaser.Math.Between((this.hero.strength / 2), this.hero.strength) * attackBoost
                 );
                 console.log(`Hero — offensive power: ${heroStrength}`);
-                let enemyDefense = Phaser.Math.Between(
-                    1,
-                    this.enemy.defense / 2
-                );
-                if (enemyDefense > this.enemy.currentStamina) {
-                    enemyDefense = this.enemy.currentStamina;
+                let enemyDefense = Phaser.Math.Between(1, this.enemy.defense);
+                if (enemyDefense > this.enemy.stamina) {
+                    enemyDefense = this.enemy.stamina
                 }
                 console.log(`Enemy — defensive power: ${enemyDefense}`);
 
@@ -174,14 +173,8 @@ export class Spar extends Scene {
                         this.enemy.updateHealth(totalDamage * -1);
                     }
                 }
-                this.enemyHealthText.setText(
-                    `Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
-                );
                 const damageBlocked = heroStrength - basicDamage;
                 this.enemy.updateStamina(damageBlocked * -1);
-                this.enemyStaminaText.setText(
-                    `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
-                );
                 console.log(
                     `Enemy used up ${damageBlocked} stamina from blocking the attack.`
                 );
@@ -199,24 +192,16 @@ export class Spar extends Scene {
         if (this.enemy.currentHealth > 0 && this.hero.currentStamina >= 20) {
             const swiftnessBoost =
                 this.hero.currentStamina / this.hero.totalStamina + 1;
-            console.log(`Hero - swiftness boost: ${swiftnessBoost}`);
             const attackBoost =
                 this.hero.currentHealth / this.hero.totalHealth + 1;
-            console.log(`Hero - attack boost: ${attackBoost}`);
             this.hero.updateStamina(-20);
-            this.playerStaminaText.setText(
-                `Player Health: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
-            );
 
             let heroAgility, enemyReflexes;
 
             do {
                 console.log(`Hero moves in for the attack...`);
                 heroAgility = Math.ceil(
-                    Phaser.Math.Between(
-                        this.hero.agility / 2,
-                        this.hero.agility
-                    ) * swiftnessBoost
+                    Phaser.Math.Between((this.hero.agility / 2), this.hero.agility) * swiftnessBoost
                 );
                 console.log(`Hero — offensive agility: ${heroAgility}`);
                 enemyReflexes = Phaser.Math.Between(1, this.enemy.reflexes);
@@ -224,20 +209,14 @@ export class Spar extends Scene {
             } while (heroAgility === enemyReflexes);
 
             if (heroAgility > enemyReflexes) {
-                console.log("He finds an opening...");
+                console.log("He prepares to attack...");
                 let heroStrength = Math.ceil(
-                    Phaser.Math.Between(
-                        this.hero.strength / 2,
-                        this.hero.strength
-                    ) * attackBoost
+                    Phaser.Math.Between((this.hero.strength /2 ), this.hero.strength) * attackBoost
                 );
                 console.log(`Hero — offensive power: ${heroStrength}`);
-                let enemyDefense = Phaser.Math.Between(
-                    1,
-                    this.enemy.defense / 2
-                );
-                if (enemyDefense > this.enemy.currentStamina) {
-                    enemyDefense = this.enemy.currentStamina;
+                let enemyDefense = Phaser.Math.Between(1, this.enemy.defense);
+                if (enemyDefense > this.enemy.stamina) {
+                    enemyDefense = this.enemy.stamina
                 }
                 console.log(`Enemy — defensive power: ${enemyDefense}`);
 
@@ -265,13 +244,9 @@ export class Spar extends Scene {
                         this.enemy.updateHealth(totalDamage * -1);
                     }
                 }
-                this.enemyHealthText.setText(
-                    `Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
-                );
+
                 this.enemy.updateStamina(enemyDefense * -1);
-                this.enemyStaminaText.setText(
-                    `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
-                );
+
                 console.log(
                     `Enemy used up ${enemyDefense} stamina from blocking the attack.`
                 );
@@ -292,19 +267,19 @@ export class Spar extends Scene {
 
     guardMove() {
         console.log("Player defends!");
-        const healthIncrease = this.hero.defense * 2;
-        const staminaIncrease = this.hero.reflexes * 2;
+        const healthIncrease = Math.ceil(
+            this.hero.strength + this.hero.defense
+        );
+        const staminaIncrease = Math.ceil(
+            this.hero.agility + this.hero.reflexes
+        );
         console.log(
             `Hero's health increased ${healthIncrease} and stamina ${staminaIncrease}`
         );
         this.hero.updateHealth(healthIncrease * 1);
-        this.playerHealthText.setText(
-            `Player Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`
-        );
+
         this.hero.updateStamina(staminaIncrease * 1);
-        this.playerStaminaText.setText(
-            `Player Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
-        );
+
         this.events.emit("heroActionComplete");
     }
 
@@ -347,24 +322,16 @@ export class Spar extends Scene {
         if (this.hero.currentHealth > 0 && this.enemy.currentStamina >= 10) {
             const swiftnessBoost =
                 this.enemy.currentStamina / this.enemy.totalStamina + 1;
-            console.log(`Enemy - swiftness boost: ${swiftnessBoost}`);
             const attackBoost =
                 this.enemy.currentHealth / this.enemy.totalHealth + 1;
-            console.log(`Enemy - attack boost: ${attackBoost}`);
             this.enemy.updateStamina(-10);
-            this.enemyStaminaText.setText(
-                `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
-            );
 
             let enemyAgility, heroReflexes;
 
             do {
                 console.log(`Enemy moves in for the attack...`);
                 enemyAgility = Math.ceil(
-                    Phaser.Math.Between(
-                        this.enemy.agility / 2,
-                        this.enemy.agility
-                    ) * swiftnessBoost
+                    Phaser.Math.Between((this.enemy.agility / 2), this.enemy.agility) * swiftnessBoost
                 );
                 console.log(`Enemy — offensive agility: ${enemyAgility}`);
                 heroReflexes = Phaser.Math.Between(1, this.hero.reflexes);
@@ -372,17 +339,14 @@ export class Spar extends Scene {
             } while (enemyAgility === heroReflexes);
 
             if (enemyAgility > heroReflexes) {
-                console.log("Enemy finds an opening...");
+                console.log("Enemy prepares to attack...");
                 let enemyStrength = Math.ceil(
-                    Phaser.Math.Between(
-                        this.enemy.strength / 2,
-                        this.enemy.strength
-                    ) * attackBoost
+                    Phaser.Math.Between((this.enemy.strength / 2), this.enemy.strength) * attackBoost
                 );
                 console.log(`Enemy — offensive power: ${enemyStrength}`);
                 let heroDefense = Phaser.Math.Between(1, this.hero.defense);
-                if (heroDefense > this.hero.currentStamina) {
-                    heroDefense = this.hero.currentStamina;
+                if (heroDefense > this.hero.stamina) {
+                    enemyDefense = this.enemy.stamina
                 }
                 console.log(`Hero — defensive power: ${heroDefense}`);
 
@@ -408,14 +372,10 @@ export class Spar extends Scene {
                         this.hero.updateHealth(totalDamage * -1);
                     }
                 }
-                this.playerHealthText.setText(
-                    `Player Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`
-                );
+
                 const damageBlocked = enemyStrength - basicDamage;
                 this.hero.updateStamina(damageBlocked * -1);
-                this.playerStaminaText.setText(
-                    `Player Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
-                );
+
                 console.log(
                     `Hero used up ${damageBlocked} stamina from blocking the attack.`
                 );
@@ -432,24 +392,17 @@ export class Spar extends Scene {
         if (this.hero.currentHealth > 0 && this.enemy.currentStamina >= 20) {
             const swiftnessBoost =
                 this.enemy.currentStamina / this.enemy.totalStamina + 1;
-            console.log(`Enemy - swiftness boost: ${swiftnessBoost}`);
             const attackBoost =
                 this.enemy.currentHealth / this.enemy.totalHealth + 1;
-            console.log(`Enemy - attack boost: ${attackBoost}`);
             this.enemy.updateStamina(-20);
-            this.enemyStaminaText.setText(
-                `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
-            );
+
 
             let enemyAgility, heroReflexes;
 
             do {
                 console.log(`Enemy moves in for the attack...`);
                 enemyAgility = Math.ceil(
-                    Phaser.Math.Between(
-                        this.enemy.agility / 2,
-                        this.enemy.agility
-                    ) * swiftnessBoost
+                    Phaser.Math.Between((this.enemy.agility / 2), this.enemy.agility) * swiftnessBoost
                 );
                 console.log(`Enemy — offensive agility: ${enemyAgility}`);
                 heroReflexes = Phaser.Math.Between(1, this.hero.reflexes);
@@ -457,18 +410,12 @@ export class Spar extends Scene {
             } while (enemyAgility === heroReflexes);
 
             if (enemyAgility > heroReflexes) {
-                console.log("Enemy finds an opening...");
+                console.log("Enemy prepares to attack...");
                 let enemyStrength = Math.ceil(
-                    Phaser.Math.Between(
-                        this.enemy.strength / 2,
-                        this.enemy.strength
-                    ) * attackBoost
+                    Phaser.Math.Between(1, this.enemy.strength) * attackBoost
                 );
                 console.log(`Enemy — offensive power: ${enemyStrength}`);
                 let heroDefense = Phaser.Math.Between(1, this.hero.defense);
-                if (heroDefense > this.hero.currentStamina) {
-                    heroDefense = this.hero.currentStamina;
-                }
                 console.log(`Hero — defensive power: ${heroDefense}`);
 
                 let basicDamage = enemyStrength - heroDefense;
@@ -493,13 +440,9 @@ export class Spar extends Scene {
                         this.hero.updateHealth(totalDamage * -1);
                     }
                 }
-                this.playerHealthText.setText(
-                    `Player Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`
-                );
+
                 this.hero.updateStamina(heroDefense * -1);
-                this.playerStaminaText.setText(
-                    `Player Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
-                );
+
                 console.log(
                     `Hero used up ${heroDefense} stamina from blocking the attack.`
                 );
@@ -524,13 +467,9 @@ export class Spar extends Scene {
             `Enemy's health increased ${healthIncrease} and stamina ${staminaIncrease}`
         );
         this.enemy.updateHealth(healthIncrease * 1);
-        this.enemyHealthText.setText(
-            `Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
-        );
+
         this.enemy.updateStamina(staminaIncrease * 1);
-        this.enemyStaminaText.setText(
-            `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
-        );
+
     }
 
     changePostFightScene() {
