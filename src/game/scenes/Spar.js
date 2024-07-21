@@ -144,8 +144,8 @@ export class Spar extends Scene {
                 (action === "kick" && this.enemy.currentStamina < this.enemyCombatActions.attackTypes.kick.requiredStamina) ||
                 (action === "guard" &&
                     !(
-                        this.enemy.currentHealth < this.enemy.totalHealth / 2 ||
-                        this.enemy.currentStamina < this.enemy.totalStamina / 2
+                        this.enemy.currentHealth < (this.enemy.totalHealth * .5) ||
+                        this.enemy.currentStamina < (this.enemy.totalStamina * .5)
                     ))
             );
 

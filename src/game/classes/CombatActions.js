@@ -45,21 +45,10 @@ class CombatActions {
     }
 
     attackHits() {
-        let characterAgility, opponentReflexes;
-        console.log(`${this.character.name} moves in for the attack...`);
-        characterAgility = Math.ceil(
-            Phaser.Math.Between(
-                this.character.agility / 2,
-                this.character.agility
-            ) * this.character.swiftnessBoost
+        let characterAgility = Math.ceil(
+            Math.random() * (this.character.agility / 2) + this.character.agility / 2 * this.character.swiftnessBoost
         );
-        console.log(
-            `${this.character.name} — offensive agility: ${characterAgility}`
-        );
-        opponentReflexes = Phaser.Math.Between(1, this.opponent.reflexes);
-        console.log(
-            `${this.opponent.name} — defensive reflexes: ${opponentReflexes}`
-        );
+        let opponentReflexes = Math.ceil(Math.random() * this.opponent.reflexes);
 
         return characterAgility > opponentReflexes;
     }
@@ -67,59 +56,37 @@ class CombatActions {
     calculateDamage(damageMultiplier, luckFactor, attackType) {
         console.log(`${this.character.name} prepares to attack...`);
         let characterStrength = Math.ceil(
-            Phaser.Math.Between(
-                this.character.strength / 2,
-                this.character.strength
-            ) * this.character.powerBoost
+            Math.random() * (this.character.strength / 2) + this.character.strength / 2 * this.character.powerBoost
         );
-        console.log(
-            `${this.character.name} — offensive power: ${characterStrength}`
-        );
-        let opponentDefense = Phaser.Math.Between(1, this.opponent.defense);
+        console.log(`${this.character.name} — offensive power: ${characterStrength}`);
+        let opponentDefense = Math.ceil(Math.random() * this.opponent.defense);
         if (opponentDefense > this.opponent.currentStamina) {
             opponentDefense = this.opponent.currentStamina;
         }
-        console.log(
-            `${this.opponent.name} — defensive power: ${opponentDefense}`
-        );
+        console.log(`${this.opponent.name} — defensive power: ${opponentDefense}`);
 
         let basicDamage = characterStrength - opponentDefense;
         if (basicDamage <= 0) {
             basicDamage = 0;
-            console.log(
-                `${this.character.name} lands a blow but ${this.opponent.name} blocks all the damage!`
-            );
+            console.log(`${this.character.name} lands a blow but ${this.opponent.name} blocks all the damage!`);
         } else {
-            const luck = Phaser.Math.FloatBetween(0, 1);
-            console.log("Luck", luck);
+            const luck = Math.random();
             if (luck >= luckFactor) {
-                let totalDamage = Math.ceil(basicDamage * damageMultiplier);
-                if (totalDamage > this.opponent.currentHealth) {
-                    totalDamage = this.opponent.currentHealth
-                }
-                console.log(
-                    `${this.character.name} lands a MASSIVE ${attackType}!`
-                );
-                console.log(
-                    `${this.opponent.name} blocks ${opponentDefense} damage and ${this.character.name} deals ${totalDamage} damage`
-                );
+                const totalDamage = Math.ceil(basicDamage * damageMultiplier);
+                console.log(`${this.character.name} lands a MASSIVE ${attackType}!`);
+                console.log(`${this.opponent.name} blocks ${opponentDefense} damage and ${this.character.name} deals ${totalDamage} damage`);
                 this.opponent.updateHealth(totalDamage * -1);
             } else {
-                console.log(
-                    `${this.character.name} lands a regular ${attackType}!`
-                );
+                console.log(`${this.character.name} lands a regular ${attackType}!`);
                 const totalDamage = basicDamage;
-                if (totalDamage > this.opponent.currentHealth) {
-                    totalDamage = this.opponent.currentHealth
-                }
-                console.log(
-                    `${this.opponent.name} blocks ${opponentDefense} damage and ${this.character.name} deals ${totalDamage} damage`
-                );
+                console.log(`${this.opponent.name} blocks ${opponentDefense} damage and ${this.character.name} deals ${totalDamage} damage`);
                 this.opponent.updateHealth(totalDamage * -1);
             }
         }
 
+        this.opponent.updateStamina(-opponentDefense);  // Reduce opponent's stamina by the damage blocked
         this.opponent.damageBlocked += opponentDefense;
+        console.log(`${this.opponent.name}'s stamina decreased by ${opponentDefense}. Current stamina: ${this.opponent.currentStamina}`);
     }
 
     punch() {
@@ -142,9 +109,7 @@ class CombatActions {
         const staminaIncrease = Math.ceil(
             this.character.agility + this.character.reflexes
         );
-        console.log(
-            `${this.character.name}'s health increased ${healthIncrease} and stamina ${staminaIncrease}`
-        );
+        console.log(`${this.character.name}'s health increased ${healthIncrease} and stamina ${staminaIncrease}`);
         this.character.updateHealth(healthIncrease * 1);
         this.character.updateStamina(staminaIncrease * 1);
     }

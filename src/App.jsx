@@ -105,7 +105,6 @@ function App() {
                 </div>
                 <p id="keyPadText">NEW USER</p>
                 <div id="leftShoulderHole"></div>
-                {/* <div id="accountLeft">HOME PAGE</div> */}
                 <div id="sound">SOUND</div>
                 <div id="pause">PAUSE</div>
             </div>
