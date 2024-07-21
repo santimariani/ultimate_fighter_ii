@@ -28,9 +28,7 @@ export class FightRoundsStateMachine {
             case FightRoundsStateMachine.ROUND_STATES.START:
                 console.log("FIGHT BEGINS!");
                 this.roundNumber = 1;
-                this.setState(
-                    FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS
-                );
+                this.setState(FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS);
                 break;
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
@@ -44,12 +42,11 @@ export class FightRoundsStateMachine {
                     this.roundNumber++;
                 } else {
                     this.setState(FightRoundsStateMachine.ROUND_STATES.END);
+                    this.endFight(true, null);
                 }
                 break;
             case FightRoundsStateMachine.ROUND_STATES.END:
                 console.log("END OF FIGHT!");
-                const tie = true;
-                this.scene.events.emit("fightEnded", tie);
                 break;
         }
     }
@@ -59,17 +56,23 @@ export class FightRoundsStateMachine {
             return;
         }
 
+        if (this.hero.currentHealth <= 0 || this.enemy.currentHealth <= 0) {
+            const tie = false;
+            const winner = this.hero.currentHealth > 0 ? "hero" : "enemy";
+            this.setState(FightRoundsStateMachine.ROUND_STATES.END);
+            this.endFight(tie, winner);
+            return;
+        }
+
         if (this.roundStateMachine) {
             this.roundStateMachine.update();
             if (this.roundStateMachine.isRoundComplete()) {
-                this.setState(
-                    FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS
-                );
+                this.setState(FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS);
             }
         }
     }
 
-    changeScene() {
-        this.scene.start("MainMenu");
+    endFight(tie, winner) {
+        this.scene.events.emit("fightEnded", { tie, winner });
     }
 }

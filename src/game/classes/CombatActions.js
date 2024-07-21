@@ -17,10 +17,12 @@ class CombatActions {
             },
             special: {
                 requiredStamina: 50,
-                damageMultiplier: 4,
-                luckFactor: 0.25,
+                damageMultiplier: 10,
+                luckFactor: 0,
             },
         };
+        this.character.damageBlocked = 0;
+        this.opponent.damageBlocked = 0;
     }
 
     performAttack(attackType) {
@@ -91,7 +93,10 @@ class CombatActions {
             const luck = Phaser.Math.FloatBetween(0, 1);
             console.log("Luck", luck);
             if (luck >= luckFactor) {
-                const totalDamage = Math.ceil(basicDamage * damageMultiplier);
+                let totalDamage = Math.ceil(basicDamage * damageMultiplier);
+                if (totalDamage > this.opponent.currentHealth) {
+                    totalDamage = this.opponent.currentHealth
+                }
                 console.log(
                     `${this.character.name} lands a MASSIVE ${attackType}!`
                 );
@@ -104,12 +109,17 @@ class CombatActions {
                     `${this.character.name} lands a regular ${attackType}!`
                 );
                 const totalDamage = basicDamage;
+                if (totalDamage > this.opponent.currentHealth) {
+                    totalDamage = this.opponent.currentHealth
+                }
                 console.log(
                     `${this.opponent.name} blocks ${opponentDefense} damage and ${this.character.name} deals ${totalDamage} damage`
                 );
                 this.opponent.updateHealth(totalDamage * -1);
             }
         }
+
+        this.opponent.damageBlocked += opponentDefense;
     }
 
     punch() {
@@ -141,4 +151,3 @@ class CombatActions {
 }
 
 export default CombatActions;
-
