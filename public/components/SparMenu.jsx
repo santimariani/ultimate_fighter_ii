@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { EventBus } from "../../src/game/EventBus";
 
-const SparMenu = ({ changeScene, buttonDisabled, triggerPhaserEvent }) => {
+const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
-    const [currentFeedback, setFeedback] = useState("WAITING FOR OPPONENT");
 
     EventBus.on("playerTurn", () => {
         setIsPlayerTurn(true);
@@ -11,40 +10,32 @@ const SparMenu = ({ changeScene, buttonDisabled, triggerPhaserEvent }) => {
 
     EventBus.on("enemyTurn", () => {
         setIsPlayerTurn(false);
-        setFeedback("WAITING FOR OPPONENT");
-    });
-
-    EventBus.on("feedback", (message) => {
-        setFeedback(message);
     });
 
     return (
         <>
             {isPlayerTurn ? (
-                <div id="fight-options">
+                <div id="hero-options">
+                    <p>Hero is considering his options...</p>
                     <button
-                        className="button"
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("punch")}
                     >
                         PUNCH
                     </button>
                     <button
-                        className="button"
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("kick")}
                     >
                         KICK
                     </button>
                     <button
-                        className="button"
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("special")}
                     >
                         SPECIAL
                     </button>
                     <button
-                        className="button"
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("guard")}
                     >
@@ -52,8 +43,12 @@ const SparMenu = ({ changeScene, buttonDisabled, triggerPhaserEvent }) => {
                     </button>
                 </div>
             ) : (
-                <div id="fight-feedback">
-                    <p>{currentFeedback}</p>
+                <div id="enemy-options">
+                    <p>Opponent is considering his options...</p>
+                    <button disabled>PUNCH</button>
+                    <button disabled>KICK</button>
+                    <button disabled>SPECIAL</button>
+                    <button disabled>GUARD</button>
                 </div>
             )}
         </>

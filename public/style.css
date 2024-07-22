@@ -519,47 +519,98 @@ body {
     width: 20vw;
 }
 
-#fight-options {
+#hero-options {
     border: 0.5vw solid #ffffffbb;
-    height: 17vh;
-    width: 20vw;
+    height: 25vh;
+    width: 25vw;
     position: absolute;
     justify-content: center;
     align-items: center;
     z-index: 3;
-    right: 20vw;
-    top: 75vh;
+    left: 15vw;
+    top: 50vh;
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);
+    background-color: rgba(39, 62, 30, 0.9);
 }
 
-#fight-options button {
-    background-color: rgba(39, 62, 30, 0.9);
+#hero-options p {
+    grid-column: 1 / span 2;
+    text-align: center;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5vw;
+    margin: 0;
+    padding: 1vh;
+}
+
+#hero-options button {
     width: 100%;
     height: 100%;
-    background-color: #28421a00;
-
+    background-color: #28421a;
+    color: rgba(255, 255, 255, 0.87);
+    border: 0.1vw solid rgba(255, 255, 255, 0.87);
+    cursor: pointer;
+    transition: all 0.1s;
+    font-size: 1.5vw;
+    text-align: center;
+    font-family: Arial Black;
+    padding: 1vw;
 }
 
-#fight-feedback {
+#hero-options button:hover {
+    border: 0.3vw solid #7dc0c3;
+    color: #0ec3c9;
+}
+
+#hero-options button:active {
+    background-color: #0ec3c9;
+}
+
+#hero-options button:disabled {
+    cursor: not-allowed;
+    border: 0.1vw solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+#enemy-options {
     border: 0.5vw solid #1c1a1abb;
-    background-color: rgba(138, 14, 14, 0.9);
-    padding: 1vh;
-    box-sizing: border-box;
-    color: rgb(255, 255, 255);
-    height: 18.5vh;
-    width: 38vw;
+    height: 25vh;
+    width: 25vw;
     position: absolute;
     justify-content: center;
     align-items: center;
-    text-align: center;
     z-index: 3;
-    left: 20vw;
-    top: 75vh;
-    font-family: Arial Black;
-    font-style: italic;
+    right: 15vw;
+    top: 50vh;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    background-color: rgba(138, 14, 14, 0.9);
+}
+
+#enemy-options p {
+    grid-column: 1 / span 2;
+    text-align: center;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 1.5vw;
+    margin: 0;
+    padding: 1vh;
+}
+
+#enemy-options button {
+    width: 100%;
+    height: 100%;
+    background-color: #701010;
+    color: rgba(255, 255, 255, 0.87);
+    border: 0.1vw solid rgba(255, 255, 255, 0.87);
+    cursor: default;
+    font-size: 1.5vw;
+    text-align: center;
+    font-family: Arial Black;
+    padding: 1vw;
 }
 
 .button {
