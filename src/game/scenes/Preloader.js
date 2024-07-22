@@ -53,7 +53,10 @@ export class Preloader extends Scene {
         this.registry.set("hero", hero);
         this.registry.set("enemy", enemy);
 
+
         this.scene.start("MainMenu");
+        EventBus.emit('StartingStats', (hero, enemy))
     }
 }
+
 

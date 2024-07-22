@@ -39,6 +39,27 @@ export const PhaserGame = forwardRef(function PhaserGame(
 
     EventBus.on("loadGame", (x) => updateSceneRef(x));
 
+    const resetSceneRef = () => {
+        EventBus.on('StartingStats', (hero, enemy) => baseCharacterStats(hero, enemy));
+
+        baseCharacterStats = (x, y) => {
+            const baseHero = x
+            const baseEnemy = y
+            return (baseHero, baseEnemy)
+        };
+        
+        const roundNumber = 1;
+
+        ref.current.scene.fightStateMachine.roundNumber = game.roundNumber;
+        ref.current.scene.fightStateMachine.hero = game.baseHero;
+        ref.current.scene.fightStateMachine.enemy = gane.baseEnemy;
+        ref.current.scene.fightStateMachine.currentState = game.ROUND_STATES.START;
+
+        EventBus.emit("updateUi", game);
+    };
+
+    EventBus.on("resetGame", resetSceneRef);
+
     // Create the game inside a useLayoutEffect hook to avoid the game being created outside the DOM
     useLayoutEffect(() => {
         if (game.current === undefined) {

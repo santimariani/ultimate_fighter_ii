@@ -6,6 +6,7 @@ import UIMenus from "../public/components/UIMenus";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
 
+
 const supabase = createClient(
     "https://kqzjchdvriyxuaxybphk.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
@@ -32,6 +33,11 @@ function App() {
     const [userId, setUserId] = useState("");
     const [scores, setScores] = useState([]);
     const [gameState, setGameState] = useState([]);
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    EventBus.on("fightStateMachineInitialized", () => {
+        setIsInitialized(true);
+    });
 
     async function getScores() {
         const { data } = await supabase.from("score").select();
@@ -49,12 +55,16 @@ function App() {
 
     async function loadGameState() {
         const { data } = await supabase.from("save_state").select();
-        const userSavedStates = data.filter((x) => x.user_id === usesrId);
+        const userSavedStates = data.filter((x) => x.user_id === userId);
         const latestState = { game: userSavedStates.pop().save_state, userId };
 
         setGameState(latestState);
         // Emit the state via EventBut
         EventBus.emit("loadGame", latestState);
+    }
+
+    function resetGame() {
+        EventBus.emit("resetGame");
     }
 
     async function saveGameState() {
@@ -192,6 +202,7 @@ function App() {
                                 changeScene={changeScene}
                                 buttonDisabled={buttonDisabled}
                                 triggerPhaserEvent={triggerPhaserEvent}
+                                isInitialized={isInitialized}
                             />
                         </>
                     ) : (
@@ -246,9 +257,9 @@ function App() {
                 </div>
                 <p id="rightStickText">SIGN OUT</p>
                 <div id="fourButtons">
-                    <div id="square1">
+                    <button type="button" onClick={resetGame} id="square1">
                         <p className="buttonText">R</p>
-                    </div>
+                    </button>
                     <button type="button" onClick={loadGameState} id="square2">
                         <p className="buttonText">L</p>
                     </button>

@@ -7,6 +7,7 @@ export class Spar extends Scene {
     constructor() {
         super("Spar");
         this.fightStateMachine = null;
+        this.isInitialized = false
         this.heroTotalDamageCaused = 0;
         this.heroTotalDamageBlocked = 0;
         this.enemyTotalDamageCaused = 0;
@@ -46,52 +47,46 @@ export class Spar extends Scene {
     }
 
     create() {
-        this.add.image(512, 384, "gym");
 
-        this.add
-            .text(512, 150, "Let's SPAR!", {
-                fontFamily: "Arial Black",
-                fontSize: 38,
-                color: "#ffffff",
-                stroke: "#000000",
-                strokeThickness: 8,
-                align: "center",
-            })
-            .setOrigin(0.5)
-            .setDepth(100);
+        // Sequence of events
+        this.time.delayedCall(750, this.addLeftFighter, [], this);
+        this.time.delayedCall(1500, this.addVsText, [], this);
+        this.time.delayedCall(2250, this.addRightFighter, [], this);
+        this.time.delayedCall(3000, this.updateBackgroundAndText, [], this);
+        this.time.delayedCall(3750, this.showStatsAndRemoveFight, [], this);
 
         this.heroHealthText = this.add.text(16, 16, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.heroPowerBoost = this.add.text(16, 48, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.heroStaminaText = this.add.text(16, 80, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.heroSwiftnessBoost = this.add.text(16, 112, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.enemyHealthText = this.add.text(550, 16, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.enemyPowerBoost = this.add.text(550, 48, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.enemyStaminaText = this.add.text(550, 80, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
         this.enemySwiftnessBoost = this.add.text(550, 112, "", {
             fontSize: "32px",
             fill: "black",
-        });
+        }).setVisible(false);
 
         this.updateTextElements();
 
@@ -121,9 +116,6 @@ export class Spar extends Scene {
         );
         this.events.on("enemyAction", this.enemyAction, this);
 
-        this.fightStateMachine = new FightRoundsStateMachine(this);
-        this.fightStateMachine.start();
-
         this.events.on("fightEnded", this.changePostFightScene, this);
 
         EventBus.on("playerAction", this.heroAction.bind(this));
@@ -134,8 +126,59 @@ export class Spar extends Scene {
         });
     }
 
+    addLeftFighter() {
+        this.add.image(200, 390, "santi");
+    }
+
+    addVsText() {
+        this.vsText = this.add
+            .text(512, 300, "VS", {
+                fontFamily: "Arial Black",
+                fontSize: 64,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 8,
+                align: "center",
+            })
+            .setOrigin(0.5);
+    }
+
+    addRightFighter() {
+        this.add.image(825, 390, "matu");
+    }
+
+    updateBackgroundAndText() {
+        if (this.vsText) {
+            this.vsText.setText("FIGHT");
+        }
+    }
+
+    showStatsAndRemoveFight() {
+        this.add.image(512, 384, "gym").setDepth(-1); // Initial background
+        if (this.vsText) {
+            this.vsText.destroy();
+        }
+        this.heroHealthText.setVisible(true);
+        this.heroPowerBoost.setVisible(true);
+        this.heroStaminaText.setVisible(true);
+        this.heroSwiftnessBoost.setVisible(true);
+        this.enemyHealthText.setVisible(true);
+        this.enemyPowerBoost.setVisible(true);
+        this.enemyStaminaText.setVisible(true);
+        this.enemySwiftnessBoost.setVisible(true);
+
+        this.fightStateMachine = new FightRoundsStateMachine(this);
+        this.fightStateMachine.start();
+
+        this.isInitialized = true;
+        EventBus.emit("fightStateMachineInitialized");
+
+    }
+
     update() {
-        this.fightStateMachine.update();
+        if (this.isInitialized) { 
+            this.fightStateMachine.update();
+        }
         this.updateTextElements();
     }
 

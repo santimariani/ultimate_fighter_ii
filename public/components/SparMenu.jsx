@@ -2,16 +2,6 @@ import React, { useState } from "react";
 
 const SparMenu = ({ changeScene, buttonDisabled, triggerPhaserEvent }) => {
     const [currentFeedback, setFeedback] = useState(`CHOOSE YOUR NEXT ACTION`);
-    const feedbackMessages = [
-        "You missed because YOU SUCK!",
-        "HA! You SUCK at kicking!",
-        "YOU NOT SPECIAL",
-        "You guard your head and get punched in the cohones",
-    ];
-
-    const changeFeedback = (index) => {
-        setFeedback(feedbackMessages[index]);
-    };
 
     return (
         <>
@@ -48,6 +38,7 @@ const SparMenu = ({ changeScene, buttonDisabled, triggerPhaserEvent }) => {
             <div id="fight-feedback">
                 <p>{currentFeedback}</p>
             </div>
+            
         </>
     );
 };
