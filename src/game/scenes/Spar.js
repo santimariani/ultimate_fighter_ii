@@ -60,21 +60,57 @@ export class Spar extends Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
-        this.heroHealthText = this.add.text(16, 16, "", { fontSize: "32px", fill: "black" });
-        this.heroPowerBoost = this.add.text(16, 48, "", { fontSize: "32px", fill: "black" });
-        this.heroStaminaText = this.add.text(16, 80, "", { fontSize: "32px", fill: "black" });
-        this.heroSwiftnessBoost = this.add.text(16, 112, "", { fontSize: "32px", fill: "black" });
-        this.enemyHealthText = this.add.text(550, 16, "", { fontSize: "32px", fill: "black" });
-        this.enemyPowerBoost = this.add.text(550, 48, "", { fontSize: "32px", fill: "black" });
-        this.enemyStaminaText = this.add.text(550, 80, "", { fontSize: "32px", fill: "black" });
-        this.enemySwiftnessBoost = this.add.text(550, 112, "", { fontSize: "32px", fill: "black" });
+        this.heroHealthText = this.add.text(16, 16, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.heroPowerBoost = this.add.text(16, 48, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.heroStaminaText = this.add.text(16, 80, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.heroSwiftnessBoost = this.add.text(16, 112, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.enemyHealthText = this.add.text(550, 16, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.enemyPowerBoost = this.add.text(550, 48, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.enemyStaminaText = this.add.text(550, 80, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
+        this.enemySwiftnessBoost = this.add.text(550, 112, "", {
+            fontSize: "32px",
+            fill: "black",
+        });
 
         this.updateTextElements();
 
-        this.events.on("punch", this.heroCombatActions.punch.bind(this.heroCombatActions));
-        this.events.on("kick", this.heroCombatActions.kick.bind(this.heroCombatActions));
-        this.events.on("special", this.heroCombatActions.special.bind(this.heroCombatActions));
-        this.events.on("guard", this.heroCombatActions.guard.bind(this.heroCombatActions));
+        this.events.on(
+            "punch",
+            this.heroCombatActions.punch.bind(this.heroCombatActions)
+        );
+        this.events.on(
+            "kick",
+            this.heroCombatActions.kick.bind(this.heroCombatActions)
+        );
+        this.events.on(
+            "special",
+            this.heroCombatActions.special.bind(this.heroCombatActions)
+        );
+        this.events.on(
+            "guard",
+            this.heroCombatActions.guard.bind(this.heroCombatActions)
+        );
 
         this.events.on(
             "heroAction",
@@ -93,6 +129,9 @@ export class Spar extends Scene {
         EventBus.on("playerAction", this.heroAction.bind(this));
 
         EventBus.emit("current-scene-ready", this);
+        EventBus.on("updateUi", (x) => {
+            return this.updateStatsUi(x);
+        });
     }
 
     update() {
@@ -100,15 +139,50 @@ export class Spar extends Scene {
         this.updateTextElements();
     }
 
+    updateStatsUi(x) {
+        // Hero
+        this.hero.currentHealth = x.hero.currentHealth;
+        this.hero.totalHealth = x.hero.totalHealth;
+        this.hero.currentStamina = x.hero.currentStamina;
+        this.hero.totalStamina = x.hero.totalStamina;
+        // Enemy
+        this.enemy.currentHealth = x.enemy.currentHealth;
+        this.enemy.totalHealth = x.enemy.totalHealth;
+        this.enemy.currentStamina = x.enemy.currentStamina;
+        this.enemy.totalStamina = x.enemy.totalStamina;
+    }
+
     updateTextElements() {
-        this.heroHealthText.setText(`Hero Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`);
-        this.heroPowerBoost.setText(`Power Boost: ${((this.hero.powerBoost - 1) * 100).toFixed(0)}%`);
-        this.heroStaminaText.setText(`Hero Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`);
-        this.heroSwiftnessBoost.setText(`Swiftness Boost: +${((this.hero.swiftnessBoost - 1) * 100).toFixed(0)}%`);
-        this.enemyHealthText.setText(`Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`);
-        this.enemyPowerBoost.setText(`Power Boost: ${((this.enemy.powerBoost - 1) * 100).toFixed(0)}%`);
-        this.enemyStaminaText.setText(`Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`);
-        this.enemySwiftnessBoost.setText(`Swiftness Boost: +${((this.enemy.swiftnessBoost - 1) * 100).toFixed(0)}%`);
+        this.heroHealthText.setText(
+            `Hero Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`
+        );
+
+        this.heroPowerBoost.setText(
+            `Power Boost: ${((this.hero.powerBoost - 1) * 100).toFixed(0)}%`
+        );
+        this.heroStaminaText.setText(
+            `Hero Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
+        );
+        this.heroSwiftnessBoost.setText(
+            `Swiftness Boost: +${((this.hero.swiftnessBoost - 1) * 100).toFixed(
+                0
+            )}%`
+        );
+        this.enemyHealthText.setText(
+            `Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
+        );
+        this.enemyPowerBoost.setText(
+            `Power Boost: ${((this.enemy.powerBoost - 1) * 100).toFixed(0)}%`
+        );
+        this.enemyStaminaText.setText(
+            `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
+        );
+        this.enemySwiftnessBoost.setText(
+            `Swiftness Boost: +${(
+                (this.enemy.swiftnessBoost - 1) *
+                100
+            ).toFixed(0)}%`
+        );
     }
 
     heroAction(action) {
@@ -140,12 +214,20 @@ export class Spar extends Scene {
             do {
                 action = actions[Math.floor(Math.random() * actions.length)];
             } while (
-                (action === "punch" && this.enemy.currentStamina < this.enemyCombatActions.attackTypes.punch.requiredStamina) ||
-                (action === "kick" && this.enemy.currentStamina < this.enemyCombatActions.attackTypes.kick.requiredStamina) ||
+                (action === "punch" &&
+                    this.enemy.currentStamina <
+                        this.enemyCombatActions.attackTypes.punch
+                            .requiredStamina) ||
+                (action === "kick" &&
+                    this.enemy.currentStamina <
+                        this.enemyCombatActions.attackTypes.kick
+                            .requiredStamina) ||
                 (action === "guard" &&
                     !(
-                        this.enemy.currentHealth < (this.enemy.totalHealth * .5) ||
-                        this.enemy.currentStamina < (this.enemy.totalStamina * .5)
+                        this.enemy.currentHealth <
+                            this.enemy.totalHealth * 0.5 ||
+                        this.enemy.currentStamina <
+                            this.enemy.totalStamina * 0.5
                     ))
             );
 
@@ -177,7 +259,8 @@ export class Spar extends Scene {
             enemyTotalDamageCaused: this.enemyTotalDamageCaused,
             enemyTotalDamageBlocked: this.enemyTotalDamageBlocked,
             tie: tie,
-            winner: winner
+            winner: winner,
         });
     }
 }
+

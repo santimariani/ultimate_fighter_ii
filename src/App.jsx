@@ -11,6 +11,17 @@ const supabase = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
 );
 
+const mockState = {
+    round: 2,
+    step: 3,
+    heroStats: {
+        name: "santi",
+    },
+    enemyStats: {
+        name: "matu",
+    },
+};
+
 function App() {
     const phaserRef = useRef();
     const [session, setSession] = useState(null);
@@ -18,29 +29,63 @@ function App() {
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [showRegister, setShowRegister] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
-
+    const [userId, setUserId] = useState("");
     const [scores, setScores] = useState([]);
-
-    useEffect(() => {
-        getScores();
-    }, []);
+    const [gameState, setGameState] = useState([]);
 
     async function getScores() {
         const { data } = await supabase.from("score").select();
+        console.log("data", data);
         setScores(data);
     }
 
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-        });
+    async function getUser() {
         const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-        });
-        return () => subscription.unsubscribe();
-    }, []);
+            data: { user },
+        } = await supabase.auth.getUser();
+
+        setUserId(user.id);
+    }
+
+    async function loadGameState() {
+        const { data } = await supabase.from("save_state").select();
+        const userSavedStates = data.filter((x) => x.user_id === usesrId);
+        const latestState = { game: userSavedStates.pop().save_state, userId };
+
+        setGameState(latestState);
+        // Emit the state via EventBut
+        EventBus.emit("loadGame", latestState);
+    }
+
+    async function saveGameState() {
+        const {
+            fightStateMachine: {
+                currentState,
+                enemy,
+                enemyStats,
+                hero,
+                heroStats,
+                maxRounds,
+                roundNumber,
+            },
+        } = phaserRef.current?.scene;
+
+        const { data, error } = await supabase
+            .from("save_state")
+            .insert({
+                save_state: {
+                    currentState,
+                    enemy,
+                    enemyStats,
+                    hero,
+                    heroStats,
+                    maxRounds,
+                    roundNumber,
+                },
+            }) // Key (save_state) is the column, value is the payload, in this case json
+            .select();
+        console.log("Game save!", data, phaserRef.current?.scene);
+    }
 
     const changeScene = () => {
         const scene = phaserRef.current?.scene;
@@ -69,6 +114,30 @@ function App() {
         setSession(null);
     };
 
+    useEffect(() => {
+        getScores();
+        getUser();
+    }, []);
+
+    useEffect(() => {
+        if (!!userId) {
+            //loadGameState();
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+        });
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+        console.log("subscription", subscription);
+        return () => subscription.unsubscribe();
+    }, []);
+
     if (window.innerWidth < 480) {
         return (
             <div>
@@ -77,7 +146,7 @@ function App() {
             </div>
         );
     }
-
+    console.log("GAME STATE", gameState, phaserRef.current);
     return (
         <div id="app">
             <div id="leftColumn">
@@ -106,7 +175,9 @@ function App() {
                 <p id="keyPadText">NEW USER</p>
                 <div id="leftShoulderHole"></div>
                 <div id="sound">SOUND</div>
-                <div id="pause">PAUSE</div>
+                <button type="button" id="pause">
+                    PAUSE
+                </button>
             </div>
             <div id="center">
                 <div id="centerCenter">
@@ -126,18 +197,23 @@ function App() {
                     ) : (
                         <div style={{ width: "50%", alignItems: "center" }}>
                             {!showRegister && !showLogin && (
-                                <div style={{ 
-                                    display: 'flex', 
-                                    flexDirection: 'column', 
-                                    justifyContent: 'center', 
-                                    alignItems: 'center', 
-                                    textAlign: 'center',
-                                    height: '100vh',
-                                    width: '1080px',
-                                    fontSize: '8vh'
-                                }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        textAlign: "center",
+                                        height: "100vh",
+                                        width: "1080px",
+                                        fontSize: "8vh",
+                                    }}
+                                >
                                     <p>WELCOME!</p>
-                                    <p>CREATE NEW USER OR <br></br>SIGN IN TO PLAY THE GAME!</p>
+                                    <p>
+                                        CREATE NEW USER OR <br></br>SIGN IN TO
+                                        PLAY THE GAME!
+                                    </p>
                                 </div>
                             )}
                             {showRegister && (
@@ -173,12 +249,12 @@ function App() {
                     <div id="square1">
                         <p className="buttonText">R</p>
                     </div>
-                    <div id="square2">
+                    <button type="button" onClick={loadGameState} id="square2">
                         <p className="buttonText">L</p>
-                    </div>
-                    <div id="square3">
+                    </button>
+                    <button type="button" onClick={saveGameState} id="square3">
                         <p className="buttonText">S</p>
-                    </div>
+                    </button>
                     <div id="square4">
                         <p className="buttonText">A</p>
                     </div>
@@ -206,12 +282,14 @@ function App() {
                     >
                         RESTART
                     </div>
-                    <div
+                    <button
+                        type="button"
+                        onClick={saveGameState}
                         className="gridTextRight"
                         style={{ gridArea: "4 / 4" }}
                     >
                         SAVE
-                    </div>
+                    </button>
                     <div
                         className="gridTextRight"
                         style={{ gridArea: "6 / 4" }}
