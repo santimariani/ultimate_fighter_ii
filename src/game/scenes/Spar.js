@@ -111,6 +111,7 @@ export class Spar extends Scene {
             "heroAction",
             () => {
                 EventBus.emit("enableInput");
+                EventBus.emit("playerTurn");
             },
             this
         );
@@ -121,6 +122,7 @@ export class Spar extends Scene {
         EventBus.on("playerAction", this.heroAction.bind(this));
 
         EventBus.emit("current-scene-ready", this);
+
         EventBus.on("updateUi", (x) => {
             return this.updateStatsUi(x);
         });
@@ -246,6 +248,7 @@ export class Spar extends Scene {
                 console.log("Unknown action:", action);
         }
         this.heroTotalDamageBlocked = this.hero.damageBlocked;
+        EventBus.emit("enemyTurn");
         this.events.emit("heroActionComplete");
     }
 
@@ -292,6 +295,7 @@ export class Spar extends Scene {
             }
             this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
             this.events.emit("enemyActionComplete");
+            EventBus.emit("playerTurn");
         }, 1000);
     }
 

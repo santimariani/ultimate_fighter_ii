@@ -520,7 +520,7 @@ body {
 }
 
 #fight-options {
-    /* border: 0.5vw solid #ffffffbb; */
+    border: 0.5vw solid #ffffffbb;
     height: 17vh;
     width: 20vw;
     position: absolute;
@@ -535,7 +535,7 @@ body {
 }
 
 #fight-options button {
-    /* background-color: rgba(39, 62, 30, 0.9); */
+    background-color: rgba(39, 62, 30, 0.9);
     width: 100%;
     height: 100%;
     background-color: #28421a00;
@@ -543,8 +543,8 @@ body {
 }
 
 #fight-feedback {
-    /* border: 0.5vw solid #1c1a1abb;
-    background-color: rgba(138, 14, 14, 0.9); */
+    border: 0.5vw solid #1c1a1abb;
+    background-color: rgba(138, 14, 14, 0.9);
     padding: 1vh;
     box-sizing: border-box;
     color: rgb(255, 255, 255);

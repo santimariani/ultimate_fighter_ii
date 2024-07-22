@@ -8,7 +8,7 @@ const UIMenus = ({
     changeScene,
     buttonDisabled,
     triggerPhaserEvent,
-    isInitialized,
+    isInitialized
 }) => (
     <div id="ui-menus">
         {currentScene === "MainMenu" && <MainMenu changeScene={changeScene} />}
