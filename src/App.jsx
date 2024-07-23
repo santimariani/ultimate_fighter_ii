@@ -201,7 +201,7 @@ function App() {
                                 changeScene={changeScene}
                                 buttonDisabled={buttonDisabled}
                                 triggerPhaserEvent={triggerPhaserEvent}
-                                isInitialized={isInitialized}
+                                // isInitialized={isInitialized}
                             />
                         </>
                     ) : (

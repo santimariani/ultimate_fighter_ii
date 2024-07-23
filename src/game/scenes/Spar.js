@@ -282,9 +282,10 @@ export class Spar extends Scene {
     }
 
     update() {
-        if (this.isInitialized) {
-            this.fightStateMachine.update();
-        }
+        // if (this.isInitialized) {
+        //     this.fightStateMachine.update();
+        // }
+        this.fightStateMachine.update();
         this.updateTextElements();
     }
 
