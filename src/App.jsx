@@ -32,11 +32,11 @@ function App() {
     const [userId, setUserId] = useState("");
     const [scores, setScores] = useState([]);
     const [gameState, setGameState] = useState([]);
-    const [isInitialized, setIsInitialized] = useState(false);
+    // const [isInitialized, setIsInitialized] = useState(false);
 
-    EventBus.on("fightStateMachineInitialized", () => {
-        setIsInitialized(true);
-    });
+    // EventBus.on("fightStateMachineInitialized", () => {
+    //     setIsInitialized(true);
+    // });
 
     async function getScores() {
         const { data } = await supabase.from("score").select();

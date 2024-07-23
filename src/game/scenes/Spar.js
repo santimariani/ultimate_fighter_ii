@@ -47,6 +47,8 @@ export class Spar extends Scene {
     }
 
     create() {
+
+
         this.sparIntro = this.sound.add("sparIntro", {
             loop: false,
             volume: 0,
@@ -147,6 +149,9 @@ export class Spar extends Scene {
         this.events.on("fightEnded", this.changePostFightScene, this);
 
         EventBus.on("playerAction", this.heroAction.bind(this));
+
+        this.fightStateMachine = new FightRoundsStateMachine(this);
+        this.fightStateMachine.start();
 
         EventBus.emit("current-scene-ready", this);
 
@@ -269,11 +274,11 @@ export class Spar extends Scene {
 
         this.events.emit("showRoundCounter");
 
-        this.fightStateMachine = new FightRoundsStateMachine(this);
-        this.fightStateMachine.start();
+        // this.fightStateMachine = new FightRoundsStateMachine(this);
+        // this.fightStateMachine.start();
 
-        this.isInitialized = true;
-        EventBus.emit("fightStateMachineInitialized");
+        // this.isInitialized = true;
+        // EventBus.emit("fightStateMachineInitialized");
     }
 
     update() {
