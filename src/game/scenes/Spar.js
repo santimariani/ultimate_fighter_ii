@@ -7,11 +7,12 @@ export class Spar extends Scene {
     constructor() {
         super("Spar");
         this.fightStateMachine = null;
-        this.isInitialized = false;
+        // this.isInitialized = false;
         this.heroTotalDamageCaused = 0;
         this.heroTotalDamageBlocked = 0;
         this.enemyTotalDamageCaused = 0;
         this.enemyTotalDamageBlocked = 0;
+        
     }
 
     init(data) {
@@ -57,6 +58,8 @@ export class Spar extends Scene {
             loop: true,
             volume: 0,
         });
+
+        
 
         // Add characters and text with appropriate delays
         this.time.delayedCall(750, this.addLeftFighter, [], this);
