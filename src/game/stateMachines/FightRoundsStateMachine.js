@@ -28,11 +28,13 @@ export class FightRoundsStateMachine {
             case FightRoundsStateMachine.ROUND_STATES.START:
                 console.log("FIGHT BEGINS!");
                 this.roundNumber = 1;
+                this.scene.events.emit("roundChanged", this.roundNumber);
                 this.setState(FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS);
                 break;
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
                     console.log("—ROUND", this.roundNumber, "—");
+                    this.scene.events.emit("roundChanged", this.roundNumber);
                     this.roundStateMachine = new CombatStepsStateMachine(
                         this.scene,
                         this.hero,

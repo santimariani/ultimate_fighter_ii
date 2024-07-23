@@ -39,7 +39,7 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("guard")}
                     >
-                        GUARD
+                        GUARD & HEAL
                     </button>
                 </div>
             ) : (
@@ -48,7 +48,7 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
                     <button disabled>PUNCH</button>
                     <button disabled>KICK</button>
                     <button disabled>SPECIAL</button>
-                    <button disabled>GUARD</button>
+                    <button disabled>GUARD & HEAL</button>
                 </div>
             )}
         </>

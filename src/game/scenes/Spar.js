@@ -47,13 +47,15 @@ export class Spar extends Scene {
     }
 
     create() {
-        this.sparIntro = this.sound.add('sparIntro', {
+        this.sparIntro = this.sound.add("sparIntro", {
             loop: false,
-            volume: 0.5});
-        this.sparLoop = this.sound.add('sparLoop', {
+            volume: 0.5,
+        });
+        this.sparLoop = this.sound.add("sparLoop", {
             loop: true,
-            volume: 0.5});
-        
+            volume: 0.5,
+        });
+
         // Add characters and text with appropriate delays
         this.time.delayedCall(750, this.addLeftFighter, [], this);
         this.time.delayedCall(2300, this.addVsText, [], this);
@@ -62,38 +64,54 @@ export class Spar extends Scene {
         this.time.delayedCall(6650, this.showStatsAndRemoveFight, [], this);
 
         // Add hero and enemy stats text, initially hidden
-        this.heroHealthText = this.add.text(16, 16, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.heroPowerBoost = this.add.text(16, 48, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.heroStaminaText = this.add.text(16, 80, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.heroSwiftnessBoost = this.add.text(16, 112, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.enemyHealthText = this.add.text(550, 16, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.enemyPowerBoost = this.add.text(550, 48, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.enemyStaminaText = this.add.text(550, 80, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
-        this.enemySwiftnessBoost = this.add.text(550, 112, "", {
-            fontSize: "32px",
-            fill: "black",
-        }).setVisible(false);
+        this.heroHealthText = this.add
+            .text(16, 16, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.heroPowerBoost = this.add
+            .text(16, 48, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.heroStaminaText = this.add
+            .text(16, 80, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.heroSwiftnessBoost = this.add
+            .text(16, 112, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.enemyHealthText = this.add
+            .text(550, 16, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.enemyPowerBoost = this.add
+            .text(550, 48, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.enemyStaminaText = this.add
+            .text(550, 80, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
+        this.enemySwiftnessBoost = this.add
+            .text(550, 112, "", {
+                fontSize: "32px",
+                fill: "black",
+            })
+            .setVisible(false);
 
         this.updateTextElements();
 
@@ -133,35 +151,103 @@ export class Spar extends Scene {
         EventBus.on("updateUi", (x) => {
             return this.updateStatsUi(x);
         });
+
+        // Add round counter text, initially hidden
+        const centerX = this.cameras.main.width / 2;
+        const centerY = this.cameras.main.height / 8;
+
+        this.roundText = this.add
+            .text(centerX, centerY, "8", {
+                fontFamily: "Arial Black",
+                fontSize: 48,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 6,
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setVisible(false);
+
+        this.roundLabel = this.add
+            .text(centerX, centerY - 75, "ROUNDS", {
+                fontFamily: "Arial Black",
+                fontSize: 32,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 6,
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setVisible(false);
+
+        this.roundLeft = this.add
+            .text(centerX, centerY - 45, "LEFT", {
+                fontFamily: "Arial Black",
+                fontSize: 32,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 6,
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setVisible(false);
+
+        // Show the round counter when other texts are shown
+        this.events.on("showRoundCounter", () => {
+            this.roundText.setVisible(true);
+            this.roundLabel.setVisible(true);
+            this.roundLeft.setVisible(true);
+        });
+
+        // Update the round counter text when the round changes
+        this.events.on("roundChanged", (roundNumber) => {
+            this.roundText.setText(`${11 - roundNumber}`);
+        });
     }
 
     addLeftFighter() {
         this.sparIntro.play();
-        this.add.image(this.cameras.main.width * 0.2, this.cameras.main.height * 0.65, "santi")
+        this.add
+            .image(
+                this.cameras.main.width * 0.25,
+                this.cameras.main.height * 0.625,
+                "santi"
+            )
             .setOrigin(0.5);
     }
 
     addVsText() {
-        this.vsText = this.add.text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.5, "VS", {
-                fontFamily: "Arial Black",
-                fontSize: 64,
-                color: "#ffffff",
-                stroke: "#000000",
-                strokeThickness: 8,
-                align: "center",
-            })
+        this.vsText = this.add
+            .text(
+                this.cameras.main.width * 0.5,
+                this.cameras.main.height * 0.5,
+                "VS",
+                {
+                    fontFamily: "Arial Black",
+                    fontSize: 64,
+                    color: "#ffffff",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                    align: "center",
+                }
+            )
             .setOrigin(0.5);
     }
 
     addRightFighter() {
-        this.add.image(this.cameras.main.width * 0.8, this.cameras.main.height * 0.65, "matu")
+        this.add
+            .image(
+                this.cameras.main.width * 0.75,
+                this.cameras.main.height * 0.625,
+                "matu"
+            )
             .setOrigin(0.5);
     }
 
     updateBackgroundAndText() {
         if (this.vsText) {
             this.vsText.setText("FIGHT");
-        };
+        }
         this.sparLoop.play();
     }
 
@@ -179,6 +265,8 @@ export class Spar extends Scene {
         this.enemyStaminaText.setVisible(true);
         this.enemySwiftnessBoost.setVisible(true);
 
+        this.events.emit("showRoundCounter");
+
         this.fightStateMachine = new FightRoundsStateMachine(this);
         this.fightStateMachine.start();
 
@@ -186,9 +274,8 @@ export class Spar extends Scene {
         EventBus.emit("fightStateMachineInitialized");
     }
 
-
     update() {
-        if (this.isInitialized) { 
+        if (this.isInitialized) {
             this.fightStateMachine.update();
         }
         this.updateTextElements();
@@ -281,9 +368,9 @@ export class Spar extends Scene {
                 (action === "guard" &&
                     !(
                         this.enemy.currentHealth <
-                            (this.enemy.totalHealth * 0.5) ||
+                            this.enemy.totalHealth * 0.5 ||
                         this.enemy.currentStamina <
-                            (this.enemy.totalStamina * 0.5)
+                            this.enemy.totalStamina * 0.5
                     ))
             );
 

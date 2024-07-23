@@ -521,23 +521,24 @@ body {
 
 #hero-options {
     border: 0.5vw solid #ffffffbb;
-    height: 25vh;
-    width: 21vw;
+    height: 15vh;
+    width: 60vw;
     position: absolute;
     justify-content: center;
     align-items: center;
     z-index: 3;
     left: 50%;
-    top: 50%;
+    bottom: .5%;
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     background-color: rgba(32, 30, 62, 0.729);
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
+    text-align: center;
 }
 
 #hero-options p {
-    grid-column: 1 / span 2;
+    grid-column: 1 / span 4;
     text-align: center;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
@@ -561,7 +562,7 @@ body {
 }
 
 #hero-options button:hover {
-    border: 0.3vw solid #7dc0c3;
+    border: 0.1vw solid #7dc0c3;
     color: #0ec3c9;
 }
 
@@ -577,23 +578,24 @@ body {
 
 #enemy-options {
     border: 0.5vw solid #1c1a1abb;
-    height: 25vh;
-    width: 21vw;
+    height: 15vh;
+    width: 60vw;
     position: absolute;
     justify-content: center;
     align-items: center;
     z-index: 3;
     left: 50%;
-    top: 50%;
+    bottom: .5%;
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     background-color: rgba(138, 14, 14, 0.725);
-    transform: translate(-50%, -50%)
+    transform: translate(-50%, -50%);
+    text-align: center;
 }
 
 #enemy-options p {
-    grid-column: 1 / span 2;
+    grid-column: 1 / span 4;
     text-align: center;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
@@ -614,7 +616,6 @@ body {
     font-family: Arial Black;
     padding: 1vw;
 }
-
 .button {
     width: 100%;
     margin: 0;
