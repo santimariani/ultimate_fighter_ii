@@ -608,7 +608,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: #701010cf;
-    color: rgba(255, 255, 255, 0.87);
+    color: rgba(255, 255, 255, 0.3);
     border: 0.1vw solid rgba(255, 255, 255, 0.87);
     cursor: default;
     font-size: 1.5vw;

@@ -83,16 +83,18 @@ export class CombatStepsStateMachine {
 
     firstAction() {
         if (this.firstActor === "hero") {
+            console.log("HERO FIRST ACTION");
             console.log("Hero considers his options...");
-            this.scene.events.emit("heroAction");
+            this.scene.events.emit("heroGo");
             this.scene.events.once(
                 "heroActionComplete",
                 this.handleHeroActionComplete
             );
         }
         if (this.firstActor === "enemy") {
+            console.log("ENEMY FIRST ACTION");
             console.log("Enemy considers his options...");
-            this.scene.events.emit("enemyAction");
+            this.scene.events.emit("enemyGo");
             this.scene.events.once(
                 "enemyActionComplete",
                 this.handleEnemyActionComplete
@@ -102,16 +104,18 @@ export class CombatStepsStateMachine {
 
     secondAction() {
         if (this.secondActor === "hero") {
+            console.log("HERO SECOND ACTION");
             console.log("Hero considers his options...");
-            this.scene.events.emit("heroAction");
+            this.scene.events.emit("heroGo");
             this.scene.events.once(
                 "heroActionComplete",
                 this.handleHeroActionComplete
             );
         }
         if (this.secondActor === "enemy") {
+            console.log("ENEMY SECOND ACTION");
             console.log("Enemy considers his options...");
-            this.scene.events.emit("enemyAction");
+            this.scene.events.emit("enemyGo");
             this.scene.events.once(
                 "enemyActionComplete",
                 this.handleEnemyActionComplete

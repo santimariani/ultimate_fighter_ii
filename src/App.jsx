@@ -2,10 +2,9 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { createClient } from "@supabase/supabase-js";
 import React, { useEffect, useRef, useState } from "react";
-import UIMenus from "../public/components/UIMenus";
+import UIMenus from "./components/UIMenus";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
-
 
 const supabase = createClient(
     "https://kqzjchdvriyxuaxybphk.supabase.co",
@@ -112,7 +111,7 @@ function App() {
         setButtonDisabled((prevState) => !prevState);
     };
 
-    EventBus.on("playerTurnEnabled", switchButton);
+    EventBus.on("enablePlayerButtons", switchButton);
 
     const triggerPhaserEvent = (eventName) => {
         EventBus.emit("playerAction", eventName);

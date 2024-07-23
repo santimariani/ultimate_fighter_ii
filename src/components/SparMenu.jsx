@@ -1,20 +1,23 @@
 import React, { useState } from "react";
-import { EventBus } from "../../src/game/EventBus";
+import { EventBus } from "../game/EventBus";
 
 const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
-    const [isPlayerTurn, setIsPlayerTurn] = useState(false);
+    const [isHeroTurn, setIsHeroTurn] = useState(true);
+    const [isEnemyTurn, setIsEnemyTurn] = useState(false);
 
-    EventBus.on("playerTurnEnabled", () => {
-        setIsPlayerTurn(true);
+    EventBus.on("playerTurn", () => {
+        setIsHeroTurn(true);
+        setIsEnemyTurn(false);
     });
 
     EventBus.on("enemyTurn", () => {
-        setIsPlayerTurn(false);
+        setIsHeroTurn(false);
+        setIsEnemyTurn(true);
     });
 
     return (
         <>
-            {isPlayerTurn ? (
+            {isHeroTurn && (
                 <div id="hero-options">
                     <p>Hero is considering his options...</p>
                     <button
@@ -42,7 +45,8 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
                         GUARD & HEAL
                     </button>
                 </div>
-            ) : (
+            )}
+            {isEnemyTurn && (
                 <div id="enemy-options">
                     <p>Enemy is considering his options...</p>
                     <button disabled>PUNCH</button>

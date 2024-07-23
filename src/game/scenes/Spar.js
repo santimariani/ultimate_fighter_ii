@@ -49,11 +49,11 @@ export class Spar extends Scene {
     create() {
         this.sparIntro = this.sound.add("sparIntro", {
             loop: false,
-            volume: 0.5,
+            volume: 0,
         });
         this.sparLoop = this.sound.add("sparLoop", {
             loop: true,
-            volume: 0.5,
+            volume: 0,
         });
 
         // Add characters and text with appropriate delays
@@ -67,49 +67,49 @@ export class Spar extends Scene {
         this.heroHealthText = this.add
             .text(16, 16, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.heroPowerBoost = this.add
             .text(16, 48, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.heroStaminaText = this.add
             .text(16, 80, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.heroSwiftnessBoost = this.add
             .text(16, 112, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.enemyHealthText = this.add
             .text(550, 16, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.enemyPowerBoost = this.add
             .text(550, 48, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.enemyStaminaText = this.add
             .text(550, 80, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
         this.enemySwiftnessBoost = this.add
             .text(550, 112, "", {
                 fontSize: "32px",
-                fill: "black",
+                fill: "white",
             })
             .setVisible(false);
 
@@ -134,13 +134,15 @@ export class Spar extends Scene {
         );
 
         this.events.on(
-            "heroAction",
+            "heroGo",
             () => {
-                EventBus.emit("playerTurnEnabled");
+                console.log("ENABLING BUTTONS AND UI")
+                EventBus.emit("playerTurn");
+                EventBus.emit("enablePlayerButtons");
             },
             this
         );
-        this.events.on("enemyAction", this.enemyAction, this);
+        this.events.on("enemyGo", this.enemyAction, this);
 
         this.events.on("fightEnded", this.changePostFightScene, this);
 
@@ -328,6 +330,7 @@ export class Spar extends Scene {
     }
 
     heroAction(action) {
+        EventBus.emit("playerTurn");
         switch (action) {
             case "punch":
                 this.heroCombatActions.punch();
@@ -345,11 +348,11 @@ export class Spar extends Scene {
                 console.log("Unknown action:", action);
         }
         this.heroTotalDamageBlocked = this.hero.damageBlocked;
-        EventBus.emit("enemyTurn");
         this.events.emit("heroActionComplete");
     }
 
     enemyAction() {
+        EventBus.emit("enemyTurn");
         setTimeout(() => {
             const actions = ["punch", "kick", "guard"];
             let action;
@@ -392,7 +395,6 @@ export class Spar extends Scene {
             }
             this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
             this.events.emit("enemyActionComplete");
-            EventBus.emit("playerTurn");
         }, 1000);
     }
 
