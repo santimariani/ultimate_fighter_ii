@@ -527,8 +527,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 3;
-    left: 15vw;
-    top: 50vh;
+    left: 20vw;
+    top: 63vh;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);
@@ -582,8 +582,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 3;
-    right: 15vw;
-    top: 50vh;
+    right: 20vw;
+    top: 63vh;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);

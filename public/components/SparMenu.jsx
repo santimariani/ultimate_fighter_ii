@@ -4,7 +4,7 @@ import { EventBus } from "../../src/game/EventBus";
 const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
 
-    EventBus.on("playerTurn", () => {
+    EventBus.on("playerTurnEnabled", () => {
         setIsPlayerTurn(true);
     });
 

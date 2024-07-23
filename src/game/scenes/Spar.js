@@ -110,8 +110,7 @@ export class Spar extends Scene {
         this.events.on(
             "heroAction",
             () => {
-                EventBus.emit("enableInput");
-                EventBus.emit("playerTurn");
+                EventBus.emit("playerTurnEnabled");
             },
             this
         );

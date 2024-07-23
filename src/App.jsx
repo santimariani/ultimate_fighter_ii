@@ -112,7 +112,7 @@ function App() {
         setButtonDisabled((prevState) => !prevState);
     };
 
-    EventBus.on("enableInput", switchButton);
+    EventBus.on("playerTurnEnabled", switchButton);
 
     const triggerPhaserEvent = (eventName) => {
         EventBus.emit("playerAction", eventName);
