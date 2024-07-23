@@ -22,11 +22,11 @@ export class PostFight extends Scene {
         let fightEndText;
         if (this.tie) {
             this.winner = this.determineWinner();
-            fightEndText = this.winner === "tie" ? "FIGHT OVER BY ROUNDS" : `FIGHT OVER BY ROUNDS`;
+            fightEndText = this.winner === "tie" ? "FIGHT OVER BY ROUNDS" : `FIGHT OVER BY ROUNDS, WINNER ${this.winner.toUpperCase()}`;
         } else if (this.winner) {
             fightEndText = `FIGHT OVER BY KO, WINNER ${this.winner.toUpperCase()}`;
         } else {
-            fightEndText = "FIGHT OVER BY KO!";
+            fightEndText = "FIGHT OVER, UNDETERMINED WINNER";
         }
 
         this.add

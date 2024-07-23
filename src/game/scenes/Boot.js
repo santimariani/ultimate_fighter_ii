@@ -20,6 +20,8 @@ export class Boot extends Scene
         this.load.image('roundNumber', 'assets/roundNumber.png');
         this.load.image('options', 'assets/options.png');
         this.load.image('info', 'assets/info.png');
+        this.load.audio('sparIntro', 'assets/sparIntro.wav')
+        this.load.audio('sparLoop', 'assets/sparLoop.wav')
 
 
     }

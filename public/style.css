@@ -522,17 +522,18 @@ body {
 #hero-options {
     border: 0.5vw solid #ffffffbb;
     height: 25vh;
-    width: 25vw;
+    width: 21vw;
     position: absolute;
     justify-content: center;
     align-items: center;
     z-index: 3;
-    left: 20vw;
-    top: 63vh;
+    left: 50%;
+    top: 50%;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);
-    background-color: rgba(39, 62, 30, 0.9);
+    background-color: rgba(32, 30, 62, 0.729);
+    transform: translate(-50%, -50%)
 }
 
 #hero-options p {
@@ -548,7 +549,7 @@ body {
 #hero-options button {
     width: 100%;
     height: 100%;
-    background-color: #28421a;
+    background-color: #1a1c42c3;
     color: rgba(255, 255, 255, 0.87);
     border: 0.1vw solid rgba(255, 255, 255, 0.87);
     cursor: pointer;
@@ -577,17 +578,18 @@ body {
 #enemy-options {
     border: 0.5vw solid #1c1a1abb;
     height: 25vh;
-    width: 25vw;
+    width: 21vw;
     position: absolute;
     justify-content: center;
     align-items: center;
     z-index: 3;
-    right: 20vw;
-    top: 63vh;
+    left: 50%;
+    top: 50%;
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);
-    background-color: rgba(138, 14, 14, 0.9);
+    background-color: rgba(138, 14, 14, 0.725);
+    transform: translate(-50%, -50%)
 }
 
 #enemy-options p {
@@ -603,7 +605,7 @@ body {
 #enemy-options button {
     width: 100%;
     height: 100%;
-    background-color: #701010;
+    background-color: #701010cf;
     color: rgba(255, 255, 255, 0.87);
     border: 0.1vw solid rgba(255, 255, 255, 0.87);
     cursor: default;

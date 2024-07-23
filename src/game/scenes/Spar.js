@@ -7,7 +7,7 @@ export class Spar extends Scene {
     constructor() {
         super("Spar");
         this.fightStateMachine = null;
-        this.isInitialized = false
+        this.isInitialized = false;
         this.heroTotalDamageCaused = 0;
         this.heroTotalDamageBlocked = 0;
         this.enemyTotalDamageCaused = 0;
@@ -47,14 +47,21 @@ export class Spar extends Scene {
     }
 
     create() {
-
-        // Sequence of events
+        this.sparIntro = this.sound.add('sparIntro', {
+            loop: false,
+            volume: 0.5});
+        this.sparLoop = this.sound.add('sparLoop', {
+            loop: true,
+            volume: 0.5});
+        
+        // Add characters and text with appropriate delays
         this.time.delayedCall(750, this.addLeftFighter, [], this);
-        this.time.delayedCall(1500, this.addVsText, [], this);
-        this.time.delayedCall(2250, this.addRightFighter, [], this);
-        this.time.delayedCall(3000, this.updateBackgroundAndText, [], this);
-        this.time.delayedCall(3750, this.showStatsAndRemoveFight, [], this);
+        this.time.delayedCall(2300, this.addVsText, [], this);
+        this.time.delayedCall(2850, this.addRightFighter, [], this);
+        this.time.delayedCall(5100, this.updateBackgroundAndText, [], this);
+        this.time.delayedCall(6650, this.showStatsAndRemoveFight, [], this);
 
+        // Add hero and enemy stats text, initially hidden
         this.heroHealthText = this.add.text(16, 16, "", {
             fontSize: "32px",
             fill: "black",
@@ -90,6 +97,7 @@ export class Spar extends Scene {
 
         this.updateTextElements();
 
+        // Event listeners for combat actions
         this.events.on(
             "punch",
             this.heroCombatActions.punch.bind(this.heroCombatActions)
@@ -128,12 +136,13 @@ export class Spar extends Scene {
     }
 
     addLeftFighter() {
-        this.add.image(200, 390, "santi");
+        this.sparIntro.play();
+        this.add.image(this.cameras.main.width * 0.2, this.cameras.main.height * 0.65, "santi")
+            .setOrigin(0.5);
     }
 
     addVsText() {
-        this.vsText = this.add
-            .text(512, 300, "VS", {
+        this.vsText = this.add.text(this.cameras.main.width * 0.5, this.cameras.main.height * 0.5, "VS", {
                 fontFamily: "Arial Black",
                 fontSize: 64,
                 color: "#ffffff",
@@ -145,13 +154,15 @@ export class Spar extends Scene {
     }
 
     addRightFighter() {
-        this.add.image(825, 390, "matu");
+        this.add.image(this.cameras.main.width * 0.8, this.cameras.main.height * 0.65, "matu")
+            .setOrigin(0.5);
     }
 
     updateBackgroundAndText() {
         if (this.vsText) {
             this.vsText.setText("FIGHT");
-        }
+        };
+        this.sparLoop.play();
     }
 
     showStatsAndRemoveFight() {
@@ -173,8 +184,8 @@ export class Spar extends Scene {
 
         this.isInitialized = true;
         EventBus.emit("fightStateMachineInitialized");
-
     }
+
 
     update() {
         if (this.isInitialized) { 
@@ -270,9 +281,9 @@ export class Spar extends Scene {
                 (action === "guard" &&
                     !(
                         this.enemy.currentHealth <
-                            this.enemy.totalHealth * 0.5 ||
+                            (this.enemy.totalHealth * 0.5) ||
                         this.enemy.currentStamina <
-                            this.enemy.totalStamina * 0.5
+                            (this.enemy.totalStamina * 0.5)
                     ))
             );
 

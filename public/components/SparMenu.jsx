@@ -44,7 +44,7 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
                 </div>
             ) : (
                 <div id="enemy-options">
-                    <p>Opponent is considering his options...</p>
+                    <p>Enemy is considering his options...</p>
                     <button disabled>PUNCH</button>
                     <button disabled>KICK</button>
                     <button disabled>SPECIAL</button>
