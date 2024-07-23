@@ -2,6 +2,7 @@ import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 import { FightRoundsStateMachine } from "../stateMachines/FightRoundsStateMachine";
 import CombatActions from "../classes/CombatActions";
+import SparMenu from "../../components/SparMenu";
 
 export class Spar extends Scene {
     constructor() {
@@ -133,15 +134,14 @@ export class Spar extends Scene {
             this.heroCombatActions.guard.bind(this.heroCombatActions)
         );
 
-        this.events.on(
-            "heroGo",
-            () => {
-                console.log("ENABLING BUTTONS AND UI")
-                EventBus.emit("playerTurn");
-                EventBus.emit("enablePlayerButtons");
-            },
-            this
-        );
+        // this.events.on(
+        //     "heroGo",
+        //     () => {
+        //         console.log("ENABLING BUTTONS AND UI")
+        //         EventBus.emit("enablePlayerButtons");
+        //     },
+        //     this
+        // );
         this.events.on("enemyGo", this.enemyAction, this);
 
         this.events.on("fightEnded", this.changePostFightScene, this);
@@ -211,7 +211,7 @@ export class Spar extends Scene {
         this.sparIntro.play();
         this.add
             .image(
-                this.cameras.main.width * 0.25,
+                this.cameras.main.width * 0.225,
                 this.cameras.main.height * 0.625,
                 "santi"
             )
@@ -239,7 +239,7 @@ export class Spar extends Scene {
     addRightFighter() {
         this.add
             .image(
-                this.cameras.main.width * 0.75,
+                this.cameras.main.width * 0.775,
                 this.cameras.main.height * 0.625,
                 "matu"
             )
@@ -279,6 +279,7 @@ export class Spar extends Scene {
     update() {
         if (this.isInitialized) {
             this.fightStateMachine.update();
+            SparMenu();
         }
         this.updateTextElements();
     }
@@ -330,7 +331,6 @@ export class Spar extends Scene {
     }
 
     heroAction(action) {
-        EventBus.emit("playerTurn");
         switch (action) {
             case "punch":
                 this.heroCombatActions.punch();
@@ -352,7 +352,6 @@ export class Spar extends Scene {
     }
 
     enemyAction() {
-        EventBus.emit("enemyTurn");
         setTimeout(() => {
             const actions = ["punch", "kick", "guard"];
             let action;

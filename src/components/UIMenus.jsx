@@ -6,7 +6,7 @@ import GameOverMenu from "./GameOverMenu";
 const UIMenus = ({
     currentScene,
     changeScene,
-    buttonDisabled,
+    // buttonDisabled,
     triggerPhaserEvent,
     isInitialized
 }) => (
@@ -15,7 +15,7 @@ const UIMenus = ({
         {currentScene === "Spar" && isInitialized && (
             <SparMenu
                 changeScene={changeScene}
-                buttonDisabled={buttonDisabled}
+                // buttonDisabled={buttonDisabled}
                 triggerPhaserEvent={triggerPhaserEvent}
             />
         )}

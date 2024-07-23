@@ -1,52 +1,51 @@
 import React, { useState } from "react";
 import { EventBus } from "../game/EventBus";
 
-const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
-    const [isHeroTurn, setIsHeroTurn] = useState(true);
-    const [isEnemyTurn, setIsEnemyTurn] = useState(false);
+/*removed buttonDisabled*/
+const SparMenu = ({ triggerPhaserEvent }) => {
+    const [currentCharacter, setCurrentCharacter] = useState("hero");
 
-    EventBus.on("playerTurn", () => {
-        setIsHeroTurn(true);
-        setIsEnemyTurn(false);
+    EventBus.on("heroTurn", () => {
+        console.log("heroTurnEmittedFirstAction—received");
+        setCurrentCharacter("hero");
     });
 
     EventBus.on("enemyTurn", () => {
-        setIsHeroTurn(false);
-        setIsEnemyTurn(true);
+        console.log("enemyTurnEmittedFirstAction—received");
+        setCurrentCharacter("enemy");
     });
 
     return (
         <>
-            {isHeroTurn && (
+            {currentCharacter === "hero" ? (
                 <div id="hero-options">
-                    <p>Hero is considering his options...</p>
+                    <p>Hero is considering his options... [CHOOSE AN OPTION]</p>
                     <button
-                        disabled={buttonDisabled}
+                        // disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("punch")}
                     >
-                        PUNCH
+                        PUNCH—10SP
                     </button>
                     <button
-                        disabled={buttonDisabled}
+                        // disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("kick")}
                     >
-                        KICK
+                        KICK—25SP
                     </button>
                     <button
-                        disabled={buttonDisabled}
+                        // disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("special")}
                     >
-                        SPECIAL
+                        SPECIAL—50SP
                     </button>
                     <button
-                        disabled={buttonDisabled}
+                        // disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("guard")}
                     >
                         GUARD & HEAL
                     </button>
                 </div>
-            )}
-            {isEnemyTurn && (
+            ) : (
                 <div id="enemy-options">
                     <p>Enemy is considering his options...</p>
                     <button disabled>PUNCH</button>

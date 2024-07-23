@@ -1,3 +1,5 @@
+import { EventBus } from "../EventBus";
+
 export class CombatStepsStateMachine {
     static ROUND_STEP_STATES = {
         DETERMINE_FIRST_ACTOR: "DETERMINE_FIRST_ACTOR",
@@ -84,8 +86,9 @@ export class CombatStepsStateMachine {
     firstAction() {
         if (this.firstActor === "hero") {
             console.log("HERO FIRST ACTION");
+            EventBus.emit("heroTurn", console.log("heroTurnEmittedFirstAction"));
             console.log("Hero considers his options...");
-            this.scene.events.emit("heroGo");
+            // this.scene.events.emit("heroGo");
             this.scene.events.once(
                 "heroActionComplete",
                 this.handleHeroActionComplete
@@ -93,6 +96,7 @@ export class CombatStepsStateMachine {
         }
         if (this.firstActor === "enemy") {
             console.log("ENEMY FIRST ACTION");
+            EventBus.emit("enemyTurn", console.log("enemyTurnEmittedFirstAction"));
             console.log("Enemy considers his options...");
             this.scene.events.emit("enemyGo");
             this.scene.events.once(
@@ -100,11 +104,13 @@ export class CombatStepsStateMachine {
                 this.handleEnemyActionComplete
             );
         }
+        console.log("firstAction", this.firstActor)
     }
 
     secondAction() {
         if (this.secondActor === "hero") {
             console.log("HERO SECOND ACTION");
+            EventBus.emit("playerTurn");
             console.log("Hero considers his options...");
             this.scene.events.emit("heroGo");
             this.scene.events.once(
@@ -114,6 +120,7 @@ export class CombatStepsStateMachine {
         }
         if (this.secondActor === "enemy") {
             console.log("ENEMY SECOND ACTION");
+            EventBus.emit("enemyTurn");
             console.log("Enemy considers his options...");
             this.scene.events.emit("enemyGo");
             this.scene.events.once(

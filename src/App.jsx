@@ -26,7 +26,7 @@ function App() {
     const phaserRef = useRef();
     const [session, setSession] = useState(null);
     const [currentScene, setCurrentScene] = useState("MainMenu");
-    const [buttonDisabled, setButtonDisabled] = useState(true);
+    // const [buttonDisabled, setButtonDisabled] = useState(true);
     const [showRegister, setShowRegister] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [userId, setUserId] = useState("");
@@ -107,15 +107,15 @@ function App() {
         setCurrentScene(scene.scene.key);
     };
 
-    const switchButton = () => {
-        setButtonDisabled((prevState) => !prevState);
-    };
+    // const switchButton = () => {
+    //     setButtonDisabled((prevState) => !prevState);
+    // };
 
-    EventBus.on("enablePlayerButtons", switchButton);
+    // EventBus.on("enablePlayerButtons", switchButton);
 
     const triggerPhaserEvent = (eventName) => {
         EventBus.emit("playerAction", eventName);
-        setButtonDisabled(true);
+        // setButtonDisabled(true);
     };
 
     const logOut = async () => {
@@ -199,7 +199,7 @@ function App() {
                             <UIMenus
                                 currentScene={currentScene}
                                 changeScene={changeScene}
-                                buttonDisabled={buttonDisabled}
+                                // buttonDisabled={buttonDisabled}
                                 triggerPhaserEvent={triggerPhaserEvent}
                                 isInitialized={isInitialized}
                             />
