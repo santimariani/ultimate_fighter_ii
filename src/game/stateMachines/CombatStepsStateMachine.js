@@ -15,10 +15,14 @@ export class CombatStepsStateMachine {
     this.currentStep = null;
     this.firstActor = null;
     this.secondActor = null;
+    this.delay = 2000;
 
     // Bind the event listeners
+    /*
     this.handleHeroActionComplete = this.handleHeroActionComplete.bind(this);
     this.handleEnemyActionComplete = this.handleEnemyActionComplete.bind(this);
+    */
+    this.handleActionComplete = this.handleActionComplete.bind(this);
   }
 
   startRound() {
@@ -83,17 +87,15 @@ export class CombatStepsStateMachine {
     if (this.firstActor === 'hero') {
       console.log('Hero considers his options...');
       this.scene.events.emit('heroGo');
-      this.scene.events.once(
-        'heroActionComplete',
-        this.handleHeroActionComplete
+      this.scene.events.once('heroActionComplete', () =>
+        setTimeout(() => this.handleActionComplete(this.hero), this.delay)
       );
     }
     if (this.firstActor === 'enemy') {
       console.log('Enemy considers his options...');
       this.scene.events.emit('enemyGo');
-      this.scene.events.once(
-        'enemyActionComplete',
-        this.handleEnemyActionComplete
+      this.scene.events.once('enemyActionComplete', () =>
+        setTimeout(() => this.handleActionComplete(this.enemy), this.delay)
       );
     }
   }
@@ -102,22 +104,41 @@ export class CombatStepsStateMachine {
     if (this.secondActor === 'hero') {
       console.log('Hero considers his options...');
       this.scene.events.emit('heroGo');
-      this.scene.events.once(
-        'heroActionComplete',
-        this.handleHeroActionComplete
+      this.scene.events.once('heroActionComplete', () =>
+        setTimeout(() => this.handleActionComplete(this.hero), this.delay)
       );
     }
     if (this.secondActor === 'enemy') {
       console.log('Enemy considers his options...');
       this.scene.events.emit('enemyGo');
-      this.scene.events.once(
-        'enemyActionComplete',
-        this.handleEnemyActionComplete
+      this.scene.events.once('enemyActionComplete', () =>
+        setTimeout(() => this.handleActionComplete(this.enemy), this.delay)
       );
     }
   }
 
-  handleHeroActionComplete() {
+  handleActionComplete(actor) {
+    // actor is either this.enemay or this.hero
+    if (actor.currentHealth > 0) {
+      if (
+        this.currentStep ===
+        CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION
+      ) {
+        this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
+      } else if (
+        this.currentStep ===
+        CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
+      ) {
+        this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
+      }
+    } else {
+      console.log(`${actor.name} wins by Knock Out!`);
+      this.scene.events.emit('fightEnded', actor);
+    }
+  }
+  /*
+  handleHeroActionComplete(actor) {
+    console.log('ACTOR', actor);
     if (this.enemy.currentHealth > 0) {
       if (
         this.currentStep ===
@@ -136,7 +157,8 @@ export class CombatStepsStateMachine {
       this.scene.events.emit('fightEnded', heroWins);
     }
   }
-  handleEnemyActionComplete() {
+  handleEnemyActionComplete(actor) {
+    console.log('ENEMY ACTOR', actor);
     if (this.hero.currentHealth > 0) {
       if (
         this.currentStep ===
@@ -155,4 +177,5 @@ export class CombatStepsStateMachine {
       this.scene.events.emit('fightEnded', enemyWins);
     }
   }
+  */
 }

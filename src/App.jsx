@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import UIMenus from './components/UIMenus';
 import { EventBus } from './game/EventBus';
 import { PhaserGame } from './game/PhaserGame';
-
+import FightAction from './components/FightAction';
 const supabase = createClient(
   'https://kqzjchdvriyxuaxybphk.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0'
@@ -36,6 +36,8 @@ function App() {
   const [isPlayerTurn, setIsPlayerTurn] = useState();
   const [isEnemyTurn, setIsEnemyTurn] = useState();
   const [gameIsReady, setGameIsReady] = useState(false);
+  const [fightAction, setFightAction] = useState('');
+  const [showFightAction, setShowFightAction] = useState(false);
 
   EventBus.on('fightStateMachineInitialized', () => {
     setIsInitialized(true);
@@ -117,6 +119,11 @@ function App() {
     setButtonDisabled(true);
   };
 
+  EventBus.on('playerAction', (x) => {
+    setFightAction(x);
+    setShowFightAction(true);
+  });
+
   const logOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
@@ -125,12 +132,10 @@ function App() {
   EventBus.on('enablePlayerButtons', switchButton);
 
   EventBus.on('enemyTurn', () => {
-    console.log('enemy turn');
     setIsPlayerTurn(false);
     setIsEnemyTurn(true);
   });
   EventBus.on('playerTurn', () => {
-    console.log('player turn');
     setIsPlayerTurn(true);
     setIsEnemyTurn(false);
   });
@@ -160,6 +165,14 @@ function App() {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (showFightAction) {
+      setTimeout(() => {
+        setShowFightAction(!showFightAction);
+      }, 1000);
+    }
+  }, [showFightAction]);
 
   if (window.innerWidth < 480) {
     return (
@@ -210,6 +223,10 @@ function App() {
                 ref={phaserRef}
                 currentActiveScene={handleCurrentScene}
               />
+              {showFightAction ? (
+                <FightAction fightAction={fightAction} />
+              ) : null}
+
               <UIMenus
                 currentScene={currentScene}
                 changeScene={changeScene}

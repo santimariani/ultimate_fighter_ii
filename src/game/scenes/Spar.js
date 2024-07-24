@@ -339,6 +339,8 @@ export class Spar extends Scene {
   }
 
   heroAction(action) {
+    //EventBus.emit('playerAction', action);
+
     switch (action) {
       case 'punch':
         this.heroCombatActions.punch();
@@ -381,6 +383,7 @@ export class Spar extends Scene {
             this.enemy.currentStamina < this.enemy.totalStamina * 0.5
           ))
       );
+      EventBus.emit('playerAction', action);
 
       switch (action) {
         case 'punch':
