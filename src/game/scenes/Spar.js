@@ -12,7 +12,7 @@ export class Spar extends Scene {
         this.heroTotalDamageBlocked = 0;
         this.enemyTotalDamageCaused = 0;
         this.enemyTotalDamageBlocked = 0;
-        
+        this.isGamePaused = false;
     }
 
     init(data) {
@@ -49,17 +49,19 @@ export class Spar extends Scene {
 
     create() {
 
-
         this.sparIntro = this.sound.add("sparIntro", {
             loop: false,
-            volume: 0,
+            volume: .5,
         });
         this.sparLoop = this.sound.add("sparLoop", {
             loop: true,
-            volume: 0,
+            volume: .5,
         });
 
-        
+        EventBus.on('muteGame', this.muteGame, this);
+
+        EventBus.on('pauseGame', this.pauseGame, this);
+        EventBus.on('resumeGame', this.resumeGame, this);
 
         // Add characters and text with appropriate delays
         this.time.delayedCall(750, this.addLeftFighter, [], this);
@@ -213,6 +215,57 @@ export class Spar extends Scene {
         this.events.on("roundChanged", (roundNumber) => {
             this.roundText.setText(`${11 - roundNumber}`);
         });
+
+        const centerPauseX = this.cameras.main.width / 2;
+        const centerPauseY = this.cameras.main.height / 2;
+
+        this.pauseBackground = this.add.graphics();
+        this.pauseBackground.fillStyle(0x000000, 0.9);
+        this.pauseBackground.fillRect(centerPauseX - 200, centerPauseY - 100, 400, 200);
+        this.pauseBackground.setVisible(false);
+        this.pauseBackground.setDepth(10);  // Set a high depth value
+
+    
+        this.pauseText = this.add
+            .text(centerPauseX, centerPauseY, "Game Paused\nClick to Resume", {
+                fontFamily: "Arial Black",
+                fontSize: 32,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 6,
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setVisible(false)
+            .setInteractive()
+            .on("pointerdown", () => {
+                this.resumeGame();
+                EventBus.emit("resumeGame");
+            });
+        this.pauseText.setDepth(10);  // Set a high depth value
+
+    }
+
+    muteGame() {
+        this.sound.mute = !this.sound.mute;
+    }
+
+    pauseGame() {
+        this.scene.pause();
+        this.sparIntro.pause();
+        this.sparLoop.pause();
+        this.isGamePaused = true;
+        this.pauseBackground.setVisible(true);
+        this.pauseText.setVisible(true);
+    }
+
+    resumeGame() {
+        this.scene.resume();
+        this.sparIntro.resume();
+        this.sparLoop.resume();
+        this.isGamePaused = false;
+        this.pauseBackground.setVisible(false);
+        this.pauseText.setVisible(false);
     }
 
     addLeftFighter() {

@@ -11,17 +11,6 @@ const supabase = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
 );
 
-const mockState = {
-    round: 2,
-    step: 3,
-    heroStats: {
-        name: "santi",
-    },
-    enemyStats: {
-        name: "matu",
-    },
-};
-
 function App() {
     const phaserRef = useRef();
     const [session, setSession] = useState(null);
@@ -32,11 +21,35 @@ function App() {
     const [userId, setUserId] = useState("");
     const [scores, setScores] = useState([]);
     const [gameState, setGameState] = useState([]);
+    const [isGamePaused, setIsGamePaused] = useState(false); // State to manage pause/resume
+    const [isGameMuted, setIsGameMuted] = useState(false); // State to manage pause/resume
+
     // const [isInitialized, setIsInitialized] = useState(false);
 
     // EventBus.on("fightStateMachineInitialized", () => {
     //     setIsInitialized(true);
     // });
+
+    const handleRefresh = () => {
+        window.location.reload();
+        setIsGamePaused(false); 
+        setIsGameMuted(false);
+    };
+
+    const toggleSound = () => {
+        EventBus.emit("muteGame");
+        setIsGameMuted(!isGameMuted);
+    };
+
+    const togglePauseResume = () => {
+        if (isGamePaused) {
+            EventBus.emit("resumeGame");
+        } else {
+            EventBus.emit("pauseGame");
+        }
+        setIsGamePaused(!isGamePaused);
+        setButtonDisabled(!buttonDisabled)
+    };
 
     async function getScores() {
         const { data } = await supabase.from("score").select();
@@ -183,9 +196,11 @@ function App() {
                 </div>
                 <p id="keyPadText">NEW USER</p>
                 <div id="leftShoulderHole"></div>
-                <div id="sound">SOUND</div>
-                <button type="button" id="pause">
-                    PAUSE
+                <button type="button" onClick={toggleSound} id="sound">
+                    {isGameMuted ? "SOUND" : "MUTE"}
+                </button>
+                <button type="button" onClick={togglePauseResume} id="pause">
+                    {isGamePaused ? "RESUME" : "PAUSE"}
                 </button>
             </div>
             <div id="center">
@@ -256,7 +271,7 @@ function App() {
                 </div>
                 <p id="rightStickText">SIGN OUT</p>
                 <div id="fourButtons">
-                    <button type="button" onClick={resetGame} id="square1">
+                    <button type="button" onClick={handleRefresh} id="square1">
                         <p className="buttonText">R</p>
                     </button>
                     <button type="button" onClick={loadGameState} id="square2">
@@ -290,7 +305,7 @@ function App() {
                         className="gridTextRight"
                         style={{ gridArea: "2 / 4" }}
                     >
-                        RESTART
+                        REFRESH
                     </div>
                     <button
                         type="button"

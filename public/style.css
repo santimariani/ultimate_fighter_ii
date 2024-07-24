@@ -69,8 +69,9 @@ body {
     font-family: Arial Black;
     font-size: 2.5vh;
     &:hover {
-        font-size: 2.65vh; 
-        color: #5eacd5;}
+        font-size: 2.65vh;
+        color: #5eacd5;
+    }
 }
 
 #outerCircleLeft {
@@ -94,7 +95,8 @@ body {
     height: 5.5vw;
     width: 5.5vw;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #outerKeyPad {
@@ -149,7 +151,8 @@ body {
     font-family: Arial Black;
     font-size: 1.75vh;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #leftStickText {
@@ -189,7 +192,8 @@ body {
     position: absolute;
     z-index: 5;
     background-color: rgb(53, 49, 49);
-    border: .3vh solid rgba(0, 0, 0, 0.696);
+    border: 0.3vh solid rgba(0, 0, 0, 0.696);
+    color: rgba(255, 255, 255, 0.87);
     text-align: center;
     height: 3.5vh;
     width: 5vw;
@@ -202,15 +206,17 @@ body {
     bottom: 15vh;
     left: 4.5vw;
     &:hover {
-        font-size: 1.6vh; 
-        color: #5eacd5;}
+        font-size: 1.6vh;
+        color: #5eacd5;
+    }
 }
 
 #pause {
     position: absolute;
     z-index: 5;
     background-color: rgb(53, 49, 49);
-    border: .3vh solid rgba(0, 0, 0, 0.696);
+    border: 0.3vh solid rgba(0, 0, 0, 0.696);
+    color: rgba(255, 255, 255, 0.87);
     text-align: center;
     height: 3.5vh;
     width: 5vw;
@@ -223,15 +229,16 @@ body {
     bottom: 10vh;
     left: 4.5vw;
     &:hover {
-        font-size: 1.6vh; 
-        color: #5eacd5;}
+        font-size: 1.6vh;
+        color: #5eacd5;
+    }
 }
 
 #accountLeft {
     position: absolute;
     z-index: 5;
     background-color: rgb(53, 49, 49);
-    border: .3vh solid rgba(0, 0, 0, 0.696);
+    border: 0.3vh solid rgba(0, 0, 0, 0.696);
     text-align: center;
     font-size: 1.5em;
     height: 3.5vh;
@@ -254,7 +261,6 @@ body {
     font-size: 2vh;
     transform: translateY(-.5vh)
 } */
-
 
 #center {
     height: 96.5vh;
@@ -312,8 +318,9 @@ body {
     font-family: Arial Black;
     font-size: 2.5vh;
     &:hover {
-        font-size: 2.65vh; 
-        color: #5eacd5;}
+        font-size: 2.65vh;
+        color: #5eacd5;
+    }
 }
 
 #outerCircleRight {
@@ -339,7 +346,8 @@ body {
     justify-content: center;
     align-items: center;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #fourButtons {
@@ -377,7 +385,8 @@ body {
     align-items: center;
     border: 0.1vw solid white;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #square2 {
@@ -392,7 +401,8 @@ body {
     align-items: center;
     border: 0.1vw solid white;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #square3 {
@@ -407,7 +417,8 @@ body {
     align-items: center;
     border: 0.1vw solid white;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #square4 {
@@ -422,7 +433,8 @@ body {
     align-items: center;
     border: 0.1vw solid white;
     &:hover {
-        border: .2vw solid #5eacd5;}
+        border: 0.2vw solid #5eacd5;
+    }
 }
 
 #gridContainerRight {
@@ -440,7 +452,7 @@ body {
 
 .gridItemRight {
     background-color: rgba(0, 0, 0, 0.696);
-    border: .3vh solid rgb(53, 49, 49);
+    border: 0.3vh solid rgb(53, 49, 49);
     text-align: center;
     font-size: 1.5em;
     height: 1.25vh;
@@ -454,7 +466,7 @@ body {
     color: rgb(7, 7, 7);
     font-family: Arial Black;
     font-size: 2vh;
-    transform: translateY(-.5vh);
+    transform: translateY(-0.5vh);
 }
 
 #leftShoulderHole {
@@ -528,7 +540,7 @@ body {
     align-items: center;
     z-index: 3;
     left: 50%;
-    bottom: .5%;
+    bottom: 0.5%;
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: repeat(4, 1fr);
@@ -585,7 +597,7 @@ body {
     align-items: center;
     z-index: 3;
     left: 50%;
-    bottom: .5%;
+    bottom: 0.5%;
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: repeat(4, 1fr);
