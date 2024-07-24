@@ -2,6 +2,7 @@ import React from 'react';
 import MainMenu from './MainMenu';
 import SparMenu from './SparMenu';
 import GameOverMenu from './GameOverMenu';
+import LoadingSpinner from './LoadingSpinner';
 
 const UIMenus = ({
   currentScene,
@@ -10,11 +11,15 @@ const UIMenus = ({
   isInitialized,
   isPlayerTurn,
   isEnemyTurn,
+  gameIsReady,
 }) => {
-  console.log('test', currentScene, isInitialized, isPlayerTurn);
   return (
     <div id="ui-menus">
-      {currentScene === 'MainMenu' && <MainMenu changeScene={changeScene} />}
+      {currentScene === 'MainMenu' && gameIsReady ? (
+        <MainMenu changeScene={changeScene} />
+      ) : (
+        <LoadingSpinner />
+      )}
       {/* {currentScene === "Spar" && isInitialized && ( */}
       {currentScene === 'Spar' && isInitialized && (
         <SparMenu

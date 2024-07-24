@@ -35,6 +35,7 @@ function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState();
   const [isEnemyTurn, setIsEnemyTurn] = useState();
+  const [gameIsReady, setGameIsReady] = useState(false);
 
   EventBus.on('fightStateMachineInitialized', () => {
     setIsInitialized(true);
@@ -133,6 +134,9 @@ function App() {
     setIsPlayerTurn(true);
     setIsEnemyTurn(false);
   });
+  EventBus.on('gameIsReady', () => {
+    setGameIsReady(true);
+  });
 
   useEffect(() => {
     getScores();
@@ -213,6 +217,7 @@ function App() {
                 isInitialized={isInitialized}
                 isPlayerTurn={isPlayerTurn}
                 isEnemyTurn={isEnemyTurn}
+                gameIsReady={gameIsReady}
               />
             </>
           ) : (
