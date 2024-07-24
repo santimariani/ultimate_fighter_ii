@@ -81,10 +81,8 @@ export class CombatStepsStateMachine {
 
   firstAction() {
     if (this.firstActor === 'hero') {
-      console.log('HERO FIRST ACTION');
       console.log('Hero considers his options...');
       this.scene.events.emit('heroGo');
-      console.log('herego???');
       this.scene.events.once(
         'heroActionComplete',
         this.handleHeroActionComplete
@@ -139,8 +137,6 @@ export class CombatStepsStateMachine {
     }
   }
   handleEnemyActionComplete() {
-    console.log('enemy action complete');
-
     if (this.hero.currentHealth > 0) {
       if (
         this.currentStep ===
