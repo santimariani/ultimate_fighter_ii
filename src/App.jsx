@@ -24,11 +24,11 @@ function App() {
     const [isGamePaused, setIsGamePaused] = useState(false); // State to manage pause/resume
     const [isGameMuted, setIsGameMuted] = useState(false); // State to manage pause/resume
 
-    // const [isInitialized, setIsInitialized] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
 
-    // EventBus.on("fightStateMachineInitialized", () => {
-    //     setIsInitialized(true);
-    // });
+    EventBus.on("fightStateMachineInitialized", () => {
+        setIsInitialized(true);
+    });
 
     const handleRefresh = () => {
         window.location.reload();
@@ -53,7 +53,7 @@ function App() {
 
     async function getScores() {
         const { data } = await supabase.from("score").select();
-        console.log("data", data);
+        // console.log("data", data);
         setScores(data);
     }
 
@@ -106,7 +106,7 @@ function App() {
                 },
             }) // Key (save_state) is the column, value is the payload, in this case json
             .select();
-        console.log("Game save!", data, phaserRef.current?.scene);
+        // console.log("Game save!", data, phaserRef.current?.scene);
     }
 
     const changeScene = () => {
@@ -156,7 +156,7 @@ function App() {
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
         });
-        console.log("subscription", subscription);
+        // console.log("subscription", subscription);
         return () => subscription.unsubscribe();
     }, []);
 
@@ -168,7 +168,7 @@ function App() {
             </div>
         );
     }
-    console.log("GAME STATE", gameState, phaserRef.current);
+    // console.log("GAME STATE", gameState, phaserRef.current);
     return (
         <div id="app">
             <div id="leftColumn">
@@ -216,7 +216,7 @@ function App() {
                                 changeScene={changeScene}
                                 buttonDisabled={buttonDisabled}
                                 triggerPhaserEvent={triggerPhaserEvent}
-                                // isInitialized={isInitialized}
+                                isInitialized={isInitialized}
                             />
                         </>
                     ) : (

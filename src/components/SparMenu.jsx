@@ -46,15 +46,15 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
                     </button>
                 </div>
             )}
-            {isEnemyTurn && (
+            {/* {isEnemyTurn && (
                 <div id="enemy-options">
                     <p>Enemy is considering his options...</p>
                     <button disabled>PUNCH</button>
                     <button disabled>KICK</button>
                     <button disabled>SPECIAL</button>
                     <button disabled>GUARD & HEAL</button>
-                </div>
-            )}
+                </div> */}
+            {/* )} */}
         </>
     );
 };

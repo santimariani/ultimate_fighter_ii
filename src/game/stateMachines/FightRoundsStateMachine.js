@@ -26,22 +26,26 @@ export class FightRoundsStateMachine {
         this.currentState = state;
         switch (state) {
             case FightRoundsStateMachine.ROUND_STATES.START:
-                console.log("FIGHT BEGINS!");
                 this.roundNumber = 1;
-                this.scene.events.emit("roundChanged", this.roundNumber);
-                this.setState(FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS);
+                this.scene.updatePopupText(`—ROUND ${this.roundNumber}—`);
+                this.scene.time.delayedCall(1000, () => {
+                    this.setState(FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS);
+                });
                 break;
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
-                    console.log("—ROUND", this.roundNumber, "—");
+                    this.scene.updatePopupText(`—ROUND ${this.roundNumber}—`);
                     this.scene.events.emit("roundChanged", this.roundNumber);
                     this.roundStateMachine = new CombatStepsStateMachine(
                         this.scene,
                         this.hero,
                         this.enemy
                     );
-                    this.roundStateMachine.startRound();
-                    this.roundNumber++;
+                    this.scene.time.delayedCall(1000, () => {
+                        this.roundStateMachine.startRound();
+                        this.roundNumber++;
+                    });
+
                 } else {
                     this.setState(FightRoundsStateMachine.ROUND_STATES.END);
                     this.endFight(true, null);

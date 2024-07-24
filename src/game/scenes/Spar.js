@@ -7,7 +7,7 @@ export class Spar extends Scene {
     constructor() {
         super("Spar");
         this.fightStateMachine = null;
-        // this.isInitialized = false;
+        this.isInitialized = false;
         this.heroTotalDamageCaused = 0;
         this.heroTotalDamageBlocked = 0;
         this.enemyTotalDamageCaused = 0;
@@ -18,8 +18,12 @@ export class Spar extends Scene {
     init(data) {
         this.hero = this.registry.get("hero");
         this.enemy = this.registry.get("enemy");
-        this.heroCombatActions = new CombatActions(this.hero, this.enemy);
-        this.enemyCombatActions = new CombatActions(this.enemy, this.hero);
+        this.heroCombatActions = new CombatActions(this.hero, this.enemy, this); // Pass the scene
+        this.enemyCombatActions = new CombatActions(
+            this.enemy,
+            this.hero,
+            this
+        ); // Pass the scene
 
         // Override the updateHealth method to track damage
         this.hero.updateHealth = (amount) => {
@@ -48,20 +52,143 @@ export class Spar extends Scene {
     }
 
     create() {
+        this.hero.sprite = this.add.image(100, 100, 'heroSprite').setVisible(false);
+        this.enemy.sprite = this.add.image(500, 100, 'enemySprite').setVisible(false);
+    
+        
+        const centerPopUpX = this.cameras.main.width / 2;
+        const centerPopUpY = this.cameras.main.height / 2;
+        this.popupBackground = this.add.graphics();
+        this.popupBackground.fillStyle(0x000000, 0.7);
+        this.popupBackground.fillRect(
+            centerPopUpX - 200,
+            centerPopUpY - 100,
+            400,
+            200
+        );
+        this.popupBackground.setVisible(false);
+        this.popupBackground.setDepth(10);
+
+        this.popupText = this.add
+            .text(centerPopUpX, centerPopUpY, "", {
+                fontFamily: "Arial Black",
+                fontSize: 24,
+                color: "#ffffff",
+                align: "center",
+                wordWrap: { width: 380, useAdvancedWrap: true },
+            })
+            .setOrigin(0.5)
+            .setVisible(false)
+            .setDepth(14);
 
         this.sparIntro = this.sound.add("sparIntro", {
             loop: false,
-            volume: .5,
+            volume: 0.5,
         });
         this.sparLoop = this.sound.add("sparLoop", {
             loop: true,
-            volume: .5,
+            volume: 0.5,
         });
 
-        EventBus.on('muteGame', this.muteGame, this);
+        // Define volume levels
+        const VOLUME_LEVELS = {
+            SOFT: 0.5,
+            NORMAL: 1,
+            LOUD: 1.5,
+        };
 
-        EventBus.on('pauseGame', this.pauseGame, this);
-        EventBus.on('resumeGame', this.resumeGame, this);
+        // Load sounds with specified volume levels
+        this.punch1 = this.sound.add("punch1", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch2 = this.sound.add("punch2", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch3 = this.sound.add("punch3", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch4 = this.sound.add("punch4", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch5 = this.sound.add("punch5", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch6 = this.sound.add("punch6", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch7 = this.sound.add("punch7", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch8 = this.sound.add("punch8", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.punch9 = this.sound.add("punch9", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+
+        this.massivePunch = this.sound.add("massivePunch", {
+            loop: false,
+            volume: VOLUME_LEVELS.NORMAL,
+        });
+
+        this.kick1 = this.sound.add("kick1", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick2 = this.sound.add("kick2", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick3 = this.sound.add("kick3", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick4 = this.sound.add("kick4", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick5 = this.sound.add("kick5", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick6 = this.sound.add("kick6", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick7 = this.sound.add("kick7", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick8 = this.sound.add("kick8", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+        this.kick9 = this.sound.add("kick9", {
+            loop: false,
+            volume: VOLUME_LEVELS.SOFT,
+        });
+
+        this.massiveKick = this.sound.add("massiveKick", {
+            loop: false,
+            volume: VOLUME_LEVELS.NORMAL,
+        });
+
+        this.special = this.sound.add("special", {
+            loop: false,
+            volume: VOLUME_LEVELS.LOUD,
+        });
+        EventBus.on("muteGame", this.muteGame, this);
+        EventBus.on("pauseGame", this.pauseGame, this);
+        EventBus.on("resumeGame", this.resumeGame, this);
 
         // Add characters and text with appropriate delays
         this.time.delayedCall(750, this.addLeftFighter, [], this);
@@ -143,20 +270,23 @@ export class Spar extends Scene {
         this.events.on(
             "heroGo",
             () => {
-                console.log("ENABLING BUTTONS AND UI")
                 EventBus.emit("playerTurn");
+                this.updatePopupText(
+                    `${this.hero.name} considers his options...`
+                );
                 EventBus.emit("enablePlayerButtons");
             },
             this
         );
+
         this.events.on("enemyGo", this.enemyAction, this);
 
         this.events.on("fightEnded", this.changePostFightScene, this);
 
         EventBus.on("playerAction", this.heroAction.bind(this));
 
-        this.fightStateMachine = new FightRoundsStateMachine(this);
-        this.fightStateMachine.start();
+        // this.fightStateMachine = new FightRoundsStateMachine(this);
+        // this.fightStateMachine.start();
 
         EventBus.emit("current-scene-ready", this);
 
@@ -221,13 +351,17 @@ export class Spar extends Scene {
 
         this.pauseBackground = this.add.graphics();
         this.pauseBackground.fillStyle(0x000000, 0.9);
-        this.pauseBackground.fillRect(centerPauseX - 200, centerPauseY - 100, 400, 200);
+        this.pauseBackground.fillRect(
+            centerPauseX - 200,
+            centerPauseY - 100,
+            400,
+            200
+        );
         this.pauseBackground.setVisible(false);
-        this.pauseBackground.setDepth(10);  // Set a high depth value
+        this.pauseBackground.setDepth(10); // Set a high depth value
 
-    
         this.pauseText = this.add
-            .text(centerPauseX, centerPauseY, "Game Paused\nClick to Resume", {
+            .text(centerPauseX, centerPauseY, "Game Paused", {
                 fontFamily: "Arial Black",
                 fontSize: 32,
                 color: "#ffffff",
@@ -242,8 +376,18 @@ export class Spar extends Scene {
                 this.resumeGame();
                 EventBus.emit("resumeGame");
             });
-        this.pauseText.setDepth(10);  // Set a high depth value
+        this.pauseText.setDepth(10); // Set a high depth value
+    }
 
+    updatePopupText(text) {
+        this.popupText.setText(text);
+        this.popupBackground.setVisible(true);
+        this.popupText.setVisible(true);
+    }
+
+    hidePopupText() {
+        this.popupBackground.setVisible(false);
+        this.popupText.setVisible(false);
     }
 
     muteGame() {
@@ -270,13 +414,14 @@ export class Spar extends Scene {
 
     addLeftFighter() {
         this.sparIntro.play();
-        this.add
-            .image(
-                this.cameras.main.width * 0.25,
-                this.cameras.main.height * 0.625,
-                "santi"
-            )
-            .setOrigin(0.5);
+        if (this.hero && this.hero.sprite) {
+            this.hero.sprite
+                .setPosition(this.cameras.main.width * 0.25, this.cameras.main.height * 0.625)
+                .setVisible(true)
+                .setOrigin(0.5)
+                .setDepth(13);
+            console.log('Hero sprite set in Spar:', this.hero.sprite); // Debugging line
+        }
     }
 
     addVsText() {
@@ -298,13 +443,15 @@ export class Spar extends Scene {
     }
 
     addRightFighter() {
-        this.add
-            .image(
-                this.cameras.main.width * 0.75,
-                this.cameras.main.height * 0.625,
-                "matu"
-            )
-            .setOrigin(0.5);
+        if (this.enemy && this.enemy.sprite) {
+            this.enemy.sprite
+                .setPosition(this.cameras.main.width * 0.75, this.cameras.main.height * 0.625)
+                .setVisible(true)
+                .setOrigin(0.5)
+                .setDepth(13);
+
+            console.log('Enemy sprite set in Spar:', this.enemy.sprite); // Debugging line
+        }
     }
 
     updateBackgroundAndText() {
@@ -330,18 +477,17 @@ export class Spar extends Scene {
 
         this.events.emit("showRoundCounter");
 
-        // this.fightStateMachine = new FightRoundsStateMachine(this);
-        // this.fightStateMachine.start();
+        this.fightStateMachine = new FightRoundsStateMachine(this);
+        this.fightStateMachine.start();
 
-        // this.isInitialized = true;
-        // EventBus.emit("fightStateMachineInitialized");
+        this.isInitialized = true;
+        EventBus.emit("fightStateMachineInitialized");
     }
 
     update() {
-        // if (this.isInitialized) {
-        //     this.fightStateMachine.update();
-        // }
-        this.fightStateMachine.update();
+        if (this.isInitialized) {
+            this.fightStateMachine.update();
+        }
         this.updateTextElements();
     }
 
@@ -392,28 +538,35 @@ export class Spar extends Scene {
     }
 
     heroAction(action) {
-        EventBus.emit("playerTurn");
         switch (action) {
             case "punch":
-                this.heroCombatActions.punch();
+                this.heroCombatActions.punch(() => {
+                    this.events.emit("heroActionComplete");
+                });
                 break;
             case "kick":
-                this.heroCombatActions.kick();
+                this.heroCombatActions.kick(() => {
+                    this.events.emit("heroActionComplete");
+                });
                 break;
             case "special":
-                this.heroCombatActions.special();
+                this.heroCombatActions.special(() => {
+                    this.events.emit("heroActionComplete");
+                });
                 break;
             case "guard":
-                this.heroCombatActions.guard();
+                this.heroCombatActions.guard(() => {
+                    this.events.emit("heroActionComplete");
+                });
                 break;
             default:
                 console.log("Unknown action:", action);
         }
         this.heroTotalDamageBlocked = this.hero.damageBlocked;
-        this.events.emit("heroActionComplete");
     }
 
     enemyAction() {
+        this.updatePopupText(`${this.enemy.name} considers his options...`);
         EventBus.emit("enemyTurn");
         setTimeout(() => {
             const actions = ["punch", "kick", "guard"];
@@ -439,24 +592,27 @@ export class Spar extends Scene {
                     ))
             );
 
+            const onComplete = () => {
+                this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
+                this.events.emit("enemyActionComplete");
+            };
+
             switch (action) {
                 case "punch":
-                    this.enemyCombatActions.punch();
+                    this.enemyCombatActions.punch(onComplete);
                     break;
                 case "kick":
-                    this.enemyCombatActions.kick();
+                    this.enemyCombatActions.kick(onComplete);
                     break;
                 case "special":
-                    this.enemyCombatActions.special();
+                    this.enemyCombatActions.special(onComplete);
                     break;
                 case "guard":
-                    this.enemyCombatActions.guard();
+                    this.enemyCombatActions.guard(onComplete);
                     break;
                 default:
                     console.log("Unknown action:", action);
             }
-            this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
-            this.events.emit("enemyActionComplete");
         }, 1000);
     }
 

@@ -9,6 +9,7 @@ export class Character {
         defense,
         agility,
         reflexes,
+        sprite = null,
     }) {
         this.name = name;
         this.totalHealth = totalHealth;
@@ -19,8 +20,8 @@ export class Character {
         this.defense = defense;
         this.agility = agility;
         this.reflexes = reflexes;
+        this.sprite = sprite; 
     }
-
     updateHealth(amount) {
         this.currentHealth += amount;
         if (this.currentHealth > this.totalHealth) {

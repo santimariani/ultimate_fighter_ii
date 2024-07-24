@@ -41,8 +41,6 @@ export class CombatStepsStateMachine {
                 this.secondAction();
                 break;
             case CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE:
-                console.log("Round Complete");
-                // Emit an event to signal that the round is complete
                 this.scene.events.emit("roundComplete");
                 break;
         }
@@ -72,54 +70,56 @@ export class CombatStepsStateMachine {
         if (heroAgility > enemyAgility) {
             this.firstActor = "hero";
             this.secondActor = "enemy";
-            console.log("Hero takes the initiative!");
         } else {
             this.firstActor = "enemy";
             this.secondActor = "hero";
-            console.log("Enemy takes the initiative!");
         }
         this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION);
     }
 
     firstAction() {
         if (this.firstActor === "hero") {
-            console.log("HERO FIRST ACTION");
-            console.log("Hero considers his options...");
-            this.scene.events.emit("heroGo");
-            this.scene.events.once(
-                "heroActionComplete",
-                this.handleHeroActionComplete
-            );
+            this.scene.updatePopupText("Hero takes the initiative!");
+            this.scene.time.delayedCall(1000, () => {
+                this.scene.events.emit("heroGo");
+                this.scene.events.once(
+                    "heroActionComplete",
+                    this.handleHeroActionComplete
+                );
+            });
         }
         if (this.firstActor === "enemy") {
-            console.log("ENEMY FIRST ACTION");
-            console.log("Enemy considers his options...");
-            this.scene.events.emit("enemyGo");
-            this.scene.events.once(
-                "enemyActionComplete",
-                this.handleEnemyActionComplete
-            );
+            this.scene.updatePopupText("Enemy takes the initiative!");
+            this.scene.time.delayedCall(1000, () => {
+                this.scene.events.emit("enemyGo");
+                this.scene.events.once(
+                    "enemyActionComplete",
+                    this.handleEnemyActionComplete
+                );
+            });
         }
     }
 
     secondAction() {
         if (this.secondActor === "hero") {
-            console.log("HERO SECOND ACTION");
-            console.log("Hero considers his options...");
-            this.scene.events.emit("heroGo");
-            this.scene.events.once(
-                "heroActionComplete",
-                this.handleHeroActionComplete
-            );
+            this.scene.updatePopupText("Hero goes next!");
+            this.scene.time.delayedCall(1000, () => {
+                this.scene.events.emit("heroGo");
+                this.scene.events.once(
+                    "heroActionComplete",
+                    this.handleHeroActionComplete
+                );
+            });
         }
         if (this.secondActor === "enemy") {
-            console.log("ENEMY SECOND ACTION");
-            console.log("Enemy considers his options...");
-            this.scene.events.emit("enemyGo");
-            this.scene.events.once(
-                "enemyActionComplete",
-                this.handleEnemyActionComplete
-            );
+            this.scene.updatePopupText("Enemy goes next!");
+            this.scene.time.delayedCall(1000, () => {
+                this.scene.events.emit("enemyGo");
+                this.scene.events.once(
+                    "enemyActionComplete",
+                    this.handleEnemyActionComplete
+                );
+            });
         }
     }
 
@@ -171,4 +171,3 @@ export class CombatStepsStateMachine {
         }
     }
 }
-

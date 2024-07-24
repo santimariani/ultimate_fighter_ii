@@ -80,7 +80,7 @@ export const PhaserGame = forwardRef(function PhaserGame(
 
     useEffect(() => {
         EventBus.on("current-scene-ready", (currentScene) => {
-            console.log("currentScene", currentScene);
+            // console.log("currentScene", currentScene);
             if (currentActiveScene instanceof Function) {
                 currentActiveScene(currentScene);
             }
@@ -92,10 +92,10 @@ export const PhaserGame = forwardRef(function PhaserGame(
         };
     }, [currentActiveScene, ref]);
 
-    console.log(
-        "current round",
-        ref.current?.scene?.fightStateMachine?.roundNumber
-    );
+    // console.log(
+    //     "current round",
+    //     ref.current?.scene?.fightStateMachine?.roundNumber
+    // );
 
     return <div id="game-container"></div>;
 });

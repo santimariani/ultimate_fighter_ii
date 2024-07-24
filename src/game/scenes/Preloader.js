@@ -23,9 +23,18 @@ export class Preloader extends Scene {
 
         this.load.image("logo", "logo.png");
         this.load.image("star", "star.png");
+        this.load.image("heroSprite", "assets/hero.png");
+        this.load.image("enemySprite", "assets/enemy.png");
     }
 
     create() {
+        const heroSprite = this.add
+            .image(100, 100, "heroSprite")
+            .setVisible(false);
+        const enemySprite = this.add
+            .image(500, 100, "enemySprite")
+            .setVisible(false);
+
         const hero = new Character({
             name: "Hero",
             currentHealth: 100,
@@ -36,6 +45,7 @@ export class Preloader extends Scene {
             defense: 10,
             agility: 10,
             reflexes: 10,
+            sprite: heroSprite, // Assign the sprite to the character
         });
 
         const enemy = new Character({
@@ -48,15 +58,15 @@ export class Preloader extends Scene {
             defense: 10,
             agility: 10,
             reflexes: 10,
+            sprite: enemySprite, // Assign the sprite to the character
         });
+
+        console.log("Hero sprite:", hero.sprite); // Debugging line
+        console.log("Enemy sprite:", enemy.sprite); // Debugging line
 
         this.registry.set("hero", hero);
         this.registry.set("enemy", enemy);
 
-
         this.scene.start("MainMenu");
-        EventBus.emit('StartingStats', (hero, enemy))
     }
 }
-
-
