@@ -54,7 +54,12 @@ export class Spar extends Scene {
     create() {
         this.hero.sprite = this.add.image(100, 100, 'heroSprite').setVisible(false);
         this.enemy.sprite = this.add.image(500, 100, 'enemySprite').setVisible(false);
-    
+        this.punchSprite = this.add.sprite(400, 300, 'punchReg');
+        this.punchSprite.setVisible(false); // Hide initially
+        this.specialSprite = this.add.sprite(600, 100, 'special');
+        this.specialSprite.setVisible(false); // Hide initially
+
+
         
         const centerPopUpX = this.cameras.main.width / 2;
         const centerPopUpY = this.cameras.main.height / 2;
@@ -75,11 +80,11 @@ export class Spar extends Scene {
                 fontSize: 24,
                 color: "#ffffff",
                 align: "center",
-                wordWrap: { width: 380, useAdvancedWrap: true },
+                wordWrap: { width: 300, useAdvancedWrap: true },
             })
             .setOrigin(0.5)
             .setVisible(false)
-            .setDepth(14);
+            .setDepth(13);
 
         this.sparIntro = this.sound.add("sparIntro", {
             loop: false,
@@ -358,7 +363,7 @@ export class Spar extends Scene {
             200
         );
         this.pauseBackground.setVisible(false);
-        this.pauseBackground.setDepth(10); // Set a high depth value
+        this.pauseBackground.setDepth(14); // Set a high depth value
 
         this.pauseText = this.add
             .text(centerPauseX, centerPauseY, "Game Paused", {
@@ -376,7 +381,7 @@ export class Spar extends Scene {
                 this.resumeGame();
                 EventBus.emit("resumeGame");
             });
-        this.pauseText.setDepth(10); // Set a high depth value
+        this.pauseText.setDepth(15); // Set a high depth value
     }
 
     updatePopupText(text) {
@@ -414,6 +419,8 @@ export class Spar extends Scene {
 
     addLeftFighter() {
         this.sparIntro.play();
+        this.punchSprite.play('punchReg');
+
         if (this.hero && this.hero.sprite) {
             this.hero.sprite
                 .setPosition(this.cameras.main.width * 0.25, this.cameras.main.height * 0.625)

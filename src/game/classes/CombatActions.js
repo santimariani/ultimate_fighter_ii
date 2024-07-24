@@ -28,11 +28,11 @@ class CombatActions {
 
     flickerCharacter(target, duration = 500) {
         if (!target || !target.setAlpha) {
-            console.error('Invalid target for flickerCharacter:', target);
+            console.error("Invalid target for flickerCharacter:", target);
             return;
         }
-        
-        let flickerInterval = 50; // Interval in milliseconds for each flicker
+
+        let flickerInterval = 100; // Interval in milliseconds for each flicker
         let flickerCount = duration / flickerInterval; // Number of flickers
         let flickerTween = this.scene.tweens.addCounter({
             from: 1,
@@ -45,10 +45,10 @@ class CombatActions {
             },
             onComplete: () => {
                 target.setAlpha(1); // Ensure it's fully visible at the end
-            }
+            },
         });
     }
-    
+
     performAttack(attackType, onComplete) {
         const { requiredStamina, damageMultiplier, luckFactor } =
             this.attackTypes[attackType];
@@ -191,25 +191,64 @@ class CombatActions {
 
     playSound(attackType, isMassive) {
         const scene = this.scene;
-        if (attackType === 'special') {
-            this.scene.sound.play('special');
+        const target = this.opponent.sprite;
+    
+        if (attackType === "special") {
+            scene.sound.play("special");
             return;
         }
-
-        const soundPrefix = attackType === 'punch' ? 'punch' : 'kick';
-        if (isMassive) {
-            let soundNumber = Phaser.Math.Between(1, 9);
-            this.scene.sound.play(`${soundPrefix}${soundNumber}`);
-            scene.time.delayedCall(500, () => {
-                this.scene.sound.play(`massive${soundPrefix.charAt(0).toUpperCase() + soundPrefix.slice(1)}`);
+    
+        const soundPrefix = attackType === "punch" ? "punch" : "kick";
+        
+        // Helper function to play the animation and sound
+        const playAnimation = (scale) => {
+            const randomOffsetX = Phaser.Math.Between(-10, 10); // Randomness within model
+            const randomOffsetY = Phaser.Math.Between(-10, 10); // Randomness within model
+            scene.punchSprite.setPosition(target.x + randomOffsetX, target.y + randomOffsetY);
+            scene.punchSprite.setScale(scale); // Adjust size
+            scene.punchSprite.setDepth(10); // Ensure it appears above other elements
+            scene.punchSprite.setVisible(true).play("punchReg");
+    
+            scene.punchSprite.once("animationcomplete", () => {
+                scene.punchSprite.setVisible(false);
             });
-            scene.time.delayedCall(1000, () => {
+        };
+    
+        if (scene.punchSprite && scene.anims.exists('punchReg')) {
+            // For regular attacks
+            if (!isMassive) {
                 let soundNumber = Phaser.Math.Between(1, 9);
-                this.scene.sound.play(`${soundPrefix}${soundNumber}`);
-            });
+                scene.sound.play(`${soundPrefix}${soundNumber}`);
+                playAnimation(0.50); // Regular size
+            }
+    
+            // For massive attacks
+            if (isMassive) {
+                // Play the first regular attack sound and animation
+                let soundNumber = Phaser.Math.Between(1, 9);
+    
+                // Play the second regular attack sound and animation after 250ms
+                scene.time.delayedCall(250, () => {
+                    soundNumber = Phaser.Math.Between(1, 9);
+                    scene.sound.play(`${soundPrefix}${soundNumber}`);
+                    playAnimation(0.50); // Regular size
+                });
+    
+                // Play the massive attack sound and animation after 750ms
+                scene.time.delayedCall(750, () => {
+                    scene.sound.play(`massive${soundPrefix.charAt(0).toUpperCase() + soundPrefix.slice(1)}`);
+                    playAnimation(1); // Massive size
+                });
+    
+                // Play the final regular attack sound and animation after 1250ms
+                scene.time.delayedCall(1250, () => {
+                    soundNumber = Phaser.Math.Between(1, 9);
+                    scene.sound.play(`${soundPrefix}${soundNumber}`);
+                    playAnimation(0.50); // Regular size
+                });
+            }
         } else {
-            const soundNumber = Phaser.Math.Between(1, 9);
-            this.scene.sound.play(`${soundPrefix}${soundNumber}`);
+            console.warn('Animation "punchReg" or punchSprite not set correctly.');
         }
     }
 
@@ -223,7 +262,7 @@ class CombatActions {
 
     special(onComplete) {
         this.performAttack("special", onComplete);
-        this.scene.sound.play('special');
+        this.scene.sound.play("special");
     }
 
     guard(onComplete) {

@@ -25,9 +25,49 @@ export class Preloader extends Scene {
         this.load.image("star", "star.png");
         this.load.image("heroSprite", "assets/hero.png");
         this.load.image("enemySprite", "assets/enemy.png");
+
+        this.load.image("punchReg1", "assets/punchReg1.png");
+        this.load.image("punchReg2", "assets/punchReg2.png");
+        this.load.image("punchReg3", "assets/punchReg3.png");
+        this.load.image("punchReg4", "assets/punchReg4.png");
+        this.load.image("punchReg5", "assets/punchReg5.png");
+        this.load.image("punchReg6", "assets/punchReg6.png");
     }
 
     create() {
+        this.anims.create({
+            key: "punchReg",
+            frames: [
+                { key: "punchReg1" },
+                { key: "punchReg2" },
+                { key: "punchReg3" },
+                { key: "punchReg4" },
+                { key: "punchReg5" },
+                { key: "punchReg6" },
+
+                // Add more frames as needed
+            ],
+            frameRate: 30, // Adjust the frame rate as needed
+            repeat: 0, // Set to -1 to loop the animation indefinitely
+            hideOnComplete: true // Hides the sprite on animation complete
+        });
+
+        this.anims.create({
+            key: "special",
+            frames: [
+                { key: "punchMas1" },
+                { key: "punchMas2" },
+                { key: "punchMas3" },
+                { key: "punchMas4" },
+                { key: "punchMas5" },
+                { key: "punchMas6" },
+                // Add more frames as needed
+            ],
+            frameRate: 50, // Adjust the frame rate as needed
+            repeat: 0, // Set to -1 to loop the animation indefinitely
+            hideOnComplete: true // Hides the sprite on animation complete
+        });
+
         const heroSprite = this.add
             .image(100, 100, "heroSprite")
             .setVisible(false);
@@ -70,3 +110,4 @@ export class Preloader extends Scene {
         this.scene.start("MainMenu");
     }
 }
+
