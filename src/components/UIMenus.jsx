@@ -17,9 +17,8 @@ const UIMenus = ({
     <div id="ui-menus">
       {currentScene === 'MainMenu' && gameIsReady ? (
         <MainMenu changeScene={changeScene} />
-      ) : (
-        <LoadingSpinner />
-      )}
+      ) : null}
+      {!gameIsReady && <LoadingSpinner />}
       {/* {currentScene === "Spar" && isInitialized && ( */}
       {currentScene === 'Spar' && isInitialized && (
         <SparMenu
