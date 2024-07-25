@@ -77,6 +77,19 @@ export class Preloader extends Scene {
 
         const hero = new Character({
             name: "Santi",
+            currentHealth: 100,
+            totalHealth: 100,
+            currentStamina: 100,
+            totalStamina: 100,
+            strength: 10,
+            defense: 10,
+            agility: 10,
+            reflexes: 10,
+            sprite: heroSprite, // Assign the sprite to the character
+        });
+
+        const enemy = new Character({
+            name: "Matu",
             currentHealth: 120,
             totalHealth: 120,
             currentStamina: 80,
@@ -85,19 +98,6 @@ export class Preloader extends Scene {
             defense: 8,
             agility: 12,
             reflexes: 8,
-            sprite: heroSprite, // Assign the sprite to the character
-        });
-
-        const enemy = new Character({
-            name: "Matu",
-            currentHealth: 80,
-            totalHealth: 80,
-            currentStamina: 120,
-            totalStamina: 120,
-            strength: 8,
-            defense: 12,
-            agility: 8,
-            reflexes: 12,
             sprite: enemySprite, // Assign the sprite to the character
         });
 
