@@ -13,6 +13,8 @@ export class Spar extends Scene {
         this.enemyTotalDamageCaused = 0;
         this.enemyTotalDamageBlocked = 0;
         this.isGamePaused = false;
+        this.notificationText = null; // Add this line to declare notificationText
+
     }
 
     init(data) {
@@ -75,6 +77,38 @@ export class Spar extends Scene {
     }
 
     create() {
+
+        const notificationStyle = {
+            fontFamily: 'Arial Black',
+            fontSize: '24px',
+            fontStyle: 'italic',
+            color: '#ffffff',
+            align: 'right',
+        };
+    
+        this.notificationText = this.add.text(
+            this.cameras.main.width - 10, // Offset by 10 pixels from the right edge
+            this.cameras.main.height - 10, // Offset by 10 pixels from the bottom edge
+            "", 
+            notificationStyle
+        )
+        .setOrigin(1, 1) // Set origin to the bottom right corner
+        .setVisible(false)
+        .setDepth(100); // Increased depth for visibility
+    
+        console.log('Notification text created:', this.notificationText); // Debugging log
+    
+        // Event listeners for showing notification
+        EventBus.on("gameStateSaved", () => {
+            console.log('gameStateSaved event triggered'); // Debugging log
+            this.showNotification("GAME STATE SAVED");
+        });
+        EventBus.on("gameStateLoaded", () => {
+            console.log('gameStateLoaded event triggered'); // Debugging log
+            this.showNotification("GAME STATE LOADED");
+        });
+
+
         // Initialize hero and enemy sprites
         this.hero.sprite = this.add.image(100, 100, 'heroSprite').setVisible(false);
         this.enemy.sprite = this.add.image(500, 100, 'enemySprite').setVisible(false);
@@ -447,6 +481,19 @@ export class Spar extends Scene {
         this.pauseText.setVisible(false);
     }
 
+    showNotification(message) {
+        console.log("Displaying notification:", message); // Debugging log
+        this.notificationText.setText(message);
+        this.notificationText.setVisible(true);
+    
+        console.log("Notification text:", this.notificationText); // Debugging log
+    
+        this.time.delayedCall(3000, () => {
+            this.notificationText.setVisible(false);
+            console.log("Notification hidden"); // Debugging log
+        });
+    }
+
     addLeftFighter() {
         this.sparIntro.play();
         this.punchSprite.play('punchReg');
@@ -642,8 +689,21 @@ export class Spar extends Scene {
         this.enemy.totalHealth = x.enemy.totalHealth;
         this.enemy.currentStamina = x.enemy.currentStamina;
         this.enemy.totalStamina = x.enemy.totalStamina;
+    
+        // Update bars
+        this.updateBars();
+    
+        // Debugging logs to check round number and rounds left
+        console.log('Current round number:', x.roundNumber);
+        const roundsLeft = 11 - x.roundNumber; // Assuming 11 total rounds
+        console.log('Rounds left:', roundsLeft);
+    
+        // Update the round number display
+        this.roundText.setText(`${roundsLeft}`);
+        this.roundText.setVisible(true); // Ensure visibility if hidden
+        this.roundLabel.setVisible(true);
+        this.roundLeft.setVisible(true);
     }
-
     updateTextElements() {
         const textStyle = {
             fontFamily: 'Arial Black',

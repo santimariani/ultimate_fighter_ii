@@ -11,7 +11,7 @@ const UIMenus = ({
     isInitialized
 }) => (
     <div id="ui-menus">
-        {currentScene === "MainMenu" && <MainMenu changeScene={changeScene} />}
+        {/* {currentScene === "MainMenu" && <MainMenu changeScene={changeScene} />} */}
         {currentScene === "Spar" && isInitialized && (
             <SparMenu
                 changeScene={changeScene}
