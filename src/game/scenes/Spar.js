@@ -277,7 +277,7 @@ export class Spar extends Scene {
             () => {
                 EventBus.emit("playerTurn");
                 this.updatePopupText(
-                    `${this.hero.name} considers his options...`
+                    `${this.hero.name} considers \nhis options ...`
                 );
                 EventBus.emit("enablePlayerButtons");
             },
@@ -463,7 +463,7 @@ export class Spar extends Scene {
 
     updateBackgroundAndText() {
         if (this.vsText) {
-            this.vsText.setText("FIGHT");
+            this.vsText.setText("FIGHT!");
         }
         this.sparLoop.play();
     }
@@ -573,7 +573,7 @@ export class Spar extends Scene {
     }
 
     enemyAction() {
-        this.updatePopupText(`${this.enemy.name} considers his options...`);
+        this.updatePopupText(`${this.enemy.name} considers \nhis options ...`);
         EventBus.emit("enemyTurn");
         setTimeout(() => {
             const actions = ["punch", "kick", "guard"];
@@ -620,7 +620,7 @@ export class Spar extends Scene {
                 default:
                     console.log("Unknown action:", action);
             }
-        }, 1000);
+        }, 2000);
     }
 
     changePostFightScene({ tie, winner }) {

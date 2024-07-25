@@ -8,7 +8,7 @@ class CombatActions {
         this.attackTypes = {
             punch: {
                 requiredStamina: 10,
-                damageMultiplier: 2,
+                damageMultiplier: 1.5,
                 luckFactor: 0.75,
             },
             kick: {
@@ -17,8 +17,8 @@ class CombatActions {
                 luckFactor: 0.5,
             },
             special: {
-                requiredStamina: 50,
-                damageMultiplier: 10,
+                requiredStamina: 75,
+                damageMultiplier: 6,
                 luckFactor: 0,
             },
         };
@@ -53,9 +53,14 @@ class CombatActions {
         const { requiredStamina, damageMultiplier, luckFactor } =
             this.attackTypes[attackType];
         const characterName = this.character.name;
+        const opponentName = this.opponent.name;
         const scene = this.scene;
 
-        scene.updatePopupText(`${characterName} attempts to ${attackType}!`);
+        if (attackType === "special") {
+            scene.updatePopupText(`${characterName} charges \nhis ${attackType} attack!`);
+        } else {
+            scene.updatePopupText(`${characterName} attempts \nto ${attackType} the ${opponentName}!`);
+        }
 
         scene.time.delayedCall(1000, () => {
             if (
@@ -72,17 +77,17 @@ class CombatActions {
                     );
                 } else {
                     scene.updatePopupText(
-                        `${characterName} is too slow and misses!`
+                        `${characterName} is too slow \nand misses!`
                     );
-                    scene.time.delayedCall(1000, () => {
+                    scene.time.delayedCall(4000, () => {
                         if (onComplete) onComplete();
                     });
                 }
             } else {
                 scene.updatePopupText(
-                    `${characterName} is too exhausted and misses...`
+                    `${characterName} is too exhausted \nand misses...`
                 );
-                scene.time.delayedCall(1000, () => {
+                scene.time.delayedCall(4000, () => {
                     this.character.updateStamina(
                         -this.character.currentStamina
                     );
@@ -109,36 +114,34 @@ class CombatActions {
         const opponentName = this.opponent.name;
         const scene = this.scene;
 
-        scene.time.delayedCall(1000, () => {
+        scene.time.delayedCall(500, () => {
             let characterStrength = Math.ceil(
                 Math.random() * (this.character.strength / 2) +
                     (this.character.strength / 2) * this.character.powerBoost
             );
             scene.updatePopupText(
-                `${characterName} power surges to ${characterStrength}!`
+                `${characterName}'s power \nsurges to ${characterStrength}!`
             );
 
-            scene.time.delayedCall(1000, () => {
+            scene.time.delayedCall(2000, () => {
                 let opponentDefense = Math.ceil(
                     Math.random() * this.opponent.defense
                 );
                 if (opponentDefense > this.opponent.currentStamina) {
                     opponentDefense = this.opponent.currentStamina;
                 }
-                console.log(
-                    `${opponentName} braces for the attack with ${opponentDefense} defense power!`
-                );
+
                 scene.updatePopupText(
-                    `${opponentName} braces for the attack...`
+                    `${opponentName} braces \nfor the attack ...`
                 );
 
-                scene.time.delayedCall(1000, () => {
+                scene.time.delayedCall(1500, () => {
                     let basicDamage = characterStrength - opponentDefense;
                     if (basicDamage <= 0) {
                         scene.updatePopupText(
-                            `${characterName} lands the blow but ${opponentName} blocks all the damage!`
+                            `${characterName} lands the blow \nbut ${opponentName} blocks \nall the damage!`
                         );
-                        scene.time.delayedCall(1000, () => {
+                        scene.time.delayedCall(5000, () => {
                             if (onComplete) onComplete();
                         });
                     } else {
@@ -151,16 +154,16 @@ class CombatActions {
                             this.playSound(attackType, true);
                             this.flickerCharacter(this.opponent.sprite, 1500);
                             scene.updatePopupText(
-                                `${characterName} lands a MASSIVE ${attackType}, increasing his damage!`
+                                `${characterName} lands a MASSIVE ${attackType}!`
                             );
 
-                            scene.time.delayedCall(1500, () => {
+                            scene.time.delayedCall(2500, () => {
                                 scene.updatePopupText(
-                                    `${opponentName} blocks ${opponentDefense} damage, \nreducing his stamina, \nand ${characterName} deals ${totalDamage} damage!`
+                                    `${opponentName} blocks \n${opponentDefense} damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                                 );
                                 this.opponent.updateHealth(totalDamage * -1);
                                 this.opponent.updateStamina(-opponentDefense);
-                                scene.time.delayedCall(1000, () => {
+                                scene.time.delayedCall(5000, () => {
                                     if (onComplete) onComplete();
                                 });
                             });
@@ -169,16 +172,16 @@ class CombatActions {
                             this.playSound(attackType, false);
                             this.flickerCharacter(this.opponent.sprite, 500);
                             scene.updatePopupText(
-                                `${characterName} lands a regular ${attackType}!`
+                                `${characterName} lands \na regular ${attackType}!`
                             );
 
-                            scene.time.delayedCall(1500, () => {
+                            scene.time.delayedCall(2500, () => {
                                 scene.updatePopupText(
-                                    `${opponentName} blocks ${opponentDefense} damage, \nreducing his stamina, \nand ${characterName} deals ${totalDamage} damage!`
+                                    `${opponentName} blocks \n${opponentDefense} damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                                 );
                                 this.opponent.updateHealth(totalDamage * -1);
                                 this.opponent.updateStamina(-opponentDefense);
-                                scene.time.delayedCall(1000, () => {
+                                scene.time.delayedCall(5000, () => {
                                     if (onComplete) onComplete();
                                 });
                             });
@@ -193,62 +196,75 @@ class CombatActions {
         const scene = this.scene;
         const target = this.opponent.sprite;
     
-        if (attackType === "special") {
-            scene.sound.play("special");
-            return;
-        }
-    
-        const soundPrefix = attackType === "punch" ? "punch" : "kick";
-        
         // Helper function to play the animation and sound
-        const playAnimation = (scale) => {
+        const playAnimation = (scale, spriteKey = 'punchReg') => {
             const randomOffsetX = Phaser.Math.Between(-10, 10); // Randomness within model
             const randomOffsetY = Phaser.Math.Between(-10, 10); // Randomness within model
-            scene.punchSprite.setPosition(target.x + randomOffsetX, target.y + randomOffsetY);
-            scene.punchSprite.setScale(scale); // Adjust size
-            scene.punchSprite.setDepth(10); // Ensure it appears above other elements
-            scene.punchSprite.setVisible(true).play("punchReg");
+            const sprite = spriteKey === 'special' ? scene.specialSprite : scene.punchSprite;
+            sprite.setPosition(target.x + randomOffsetX, target.y + randomOffsetY);
+            sprite.setScale(scale); // Adjust size
+            sprite.setDepth(10); // Ensure it appears above other elements
+            sprite.setVisible(true).play(spriteKey);
     
-            scene.punchSprite.once("animationcomplete", () => {
-                scene.punchSprite.setVisible(false);
+            sprite.once("animationcomplete", () => {
+                sprite.setVisible(false);
             });
         };
     
-        if (scene.punchSprite && scene.anims.exists('punchReg')) {
-            // For regular attacks
+        if (attackType === "special") {
+            if (isMassive) {
+                // Massive special attack sequence
+                scene.time.delayedCall(250, () => {
+                    let soundNumber = Phaser.Math.Between(10, 18);
+                    scene.sound.play("special");
+                    playAnimation(0.50, 'special'); // Regular size, special animation
+                });
+    
+                scene.time.delayedCall(750, () => {
+                    scene.sound.play("special");
+                    playAnimation(1, 'special'); // Massive size, special animation
+                });
+    
+                scene.time.delayedCall(1250, () => {
+                    let soundNumber = Phaser.Math.Between(10, 18);
+                    scene.sound.play("special");
+                    playAnimation(0.5, 'special'); // Regular size, special animation
+                });
+            } else {
+                // Regular special attack sequence
+                let soundNumber = Phaser.Math.Between(10, 18);
+                scene.sound.play("special");
+                playAnimation(0.35, 'special'); // Regular size, special animation
+            }
+        } else {
+            // Handle punch/kick attacks
+            const soundPrefix = attackType === "punch" ? "punch" : "kick";
+    
             if (!isMassive) {
                 let soundNumber = Phaser.Math.Between(1, 9);
                 scene.sound.play(`${soundPrefix}${soundNumber}`);
-                playAnimation(0.50); // Regular size
-            }
-    
-            // For massive attacks
-            if (isMassive) {
-                // Play the first regular attack sound and animation
+                playAnimation(0.35); // Regular size
+            } else {
+                // Massive attack sequence
                 let soundNumber = Phaser.Math.Between(1, 9);
     
-                // Play the second regular attack sound and animation after 250ms
                 scene.time.delayedCall(250, () => {
                     soundNumber = Phaser.Math.Between(1, 9);
                     scene.sound.play(`${soundPrefix}${soundNumber}`);
-                    playAnimation(0.50); // Regular size
+                    playAnimation(0.35); // Regular size
                 });
     
-                // Play the massive attack sound and animation after 750ms
                 scene.time.delayedCall(750, () => {
                     scene.sound.play(`massive${soundPrefix.charAt(0).toUpperCase() + soundPrefix.slice(1)}`);
-                    playAnimation(1); // Massive size
+                    playAnimation(.85); // Massive size
                 });
     
-                // Play the final regular attack sound and animation after 1250ms
                 scene.time.delayedCall(1250, () => {
                     soundNumber = Phaser.Math.Between(1, 9);
                     scene.sound.play(`${soundPrefix}${soundNumber}`);
-                    playAnimation(0.50); // Regular size
+                    playAnimation(0.35); // Regular size
                 });
             }
-        } else {
-            console.warn('Animation "punchReg" or punchSprite not set correctly.');
         }
     }
 
@@ -262,27 +278,24 @@ class CombatActions {
 
     special(onComplete) {
         this.performAttack("special", onComplete);
-        this.scene.sound.play("special");
     }
 
     guard(onComplete) {
-        console.log(`${this.character.name} defends!`);
-        this.scene.updatePopupText(`${this.character.name} defends!`);
+        const scene = this.scene;
         const healthIncrease = Math.ceil(
             this.character.defense + this.character.strength
         );
         const staminaIncrease = Math.ceil(
             this.character.agility + this.character.reflexes
         );
-        console.log(
-            `${this.character.name}'s health increased ${healthIncrease} and stamina ${staminaIncrease}`
-        );
         this.scene.updatePopupText(
-            `${this.character.name}'s health increased ${healthIncrease} and stamina ${staminaIncrease}`
+            `${this.character.name} defends! \n\n He restores \n${healthIncrease} HEALTH \nand  ${staminaIncrease} STAMINA.`
         );
         this.character.updateHealth(healthIncrease);
         this.character.updateStamina(staminaIncrease);
-        if (onComplete) onComplete();
+        scene.time.delayedCall(5000, () => {
+            if (onComplete) onComplete();
+        });
     }
 }
 

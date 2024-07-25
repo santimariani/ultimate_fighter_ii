@@ -19,24 +19,24 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
         <>
             {isHeroTurn && (
                 <div id="hero-options">
-                    <p>Hero is considering his options...</p>
+                    <p>CHOOSE YOUR ACTION!</p>
                     <button
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("punch")}
                     >
-                        PUNCH
+                        PUNCH: 10SP
                     </button>
                     <button
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("kick")}
                     >
-                        KICK
+                        KICK: 25SP
                     </button>
                     <button
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("special")}
                     >
-                        SPECIAL
+                        SPECIAL: 75SP
                     </button>
                     <button
                         disabled={buttonDisabled}
