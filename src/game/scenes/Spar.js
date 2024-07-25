@@ -334,36 +334,36 @@ export class Spar extends Scene {
         const centerY = this.cameras.main.height / 8;
 
         this.roundText = this.add
-            .text(centerX, centerY + 15, "8", {
+            .text(centerX, centerY + 27, "8", {
                 fontFamily: "Arial Black",
                 fontSize: 48,
                 color: "#ffffff",
                 stroke: "#000000",
-                strokeThickness: 6,
+                strokeThickness: 7,
                 align: "center",
             })
             .setOrigin(0.5)
             .setVisible(false);
 
         this.roundLabel = this.add
-            .text(centerX, centerY - 65, "ROUNDS", {
+            .text(centerX, centerY - 55, "ROUNDS", {
                 fontFamily: "Arial Black",
                 fontSize: 32,
                 color: "#ffffff",
                 stroke: "#000000",
-                strokeThickness: 6,
+                strokeThickness: 7,
                 align: "center",
             })
             .setOrigin(0.5)
             .setVisible(false);
 
         this.roundLeft = this.add
-            .text(centerX, centerY - 30, "LEFT", {
+            .text(centerX, centerY - 20, "LEFT", {
                 fontFamily: "Arial Black",
                 fontSize: 32,
                 color: "#ffffff",
                 stroke: "#000000",
-                strokeThickness: 6,
+                strokeThickness: 7,
                 align: "center",
             })
             .setOrigin(0.5)
@@ -745,9 +745,9 @@ export class Spar extends Scene {
         this.updatePopupText(`${this.enemy.name} considers \nhis options ...`);
         EventBus.emit("enemyTurn");
         setTimeout(() => {
-            const actions = ["punch", "kick", "guard"];
+            const actions = ["punch", "kick", "special", "guard"]; // Added "special" here
             let action;
-
+    
             do {
                 action = actions[Math.floor(Math.random() * actions.length)];
             } while (
@@ -759,6 +759,10 @@ export class Spar extends Scene {
                     this.enemy.currentStamina <
                         this.enemyCombatActions.attackTypes.kick
                             .requiredStamina) ||
+                (action === "special" &&
+                    this.enemy.currentStamina <
+                        this.enemyCombatActions.attackTypes.special
+                            .requiredStamina) || // Check stamina for "special"
                 (action === "guard" &&
                     !(
                         this.enemy.currentHealth <
@@ -767,12 +771,12 @@ export class Spar extends Scene {
                             this.enemy.totalStamina * 0.5
                     ))
             );
-
+    
             const onComplete = () => {
                 this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
                 this.events.emit("enemyActionComplete");
             };
-
+    
             switch (action) {
                 case "punch":
                     this.enemyCombatActions.punch(onComplete);
@@ -780,7 +784,7 @@ export class Spar extends Scene {
                 case "kick":
                     this.enemyCombatActions.kick(onComplete);
                     break;
-                case "special":
+                case "special": // Handling special attack
                     this.enemyCombatActions.special(onComplete);
                     break;
                 case "guard":
@@ -791,6 +795,7 @@ export class Spar extends Scene {
             }
         }, 2000);
     }
+    
 
     changePostFightScene({ tie, winner }) {
         this.scene.start("PostFight", {

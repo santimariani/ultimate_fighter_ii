@@ -8,12 +8,12 @@ class CombatActions {
         this.attackTypes = {
             punch: {
                 requiredStamina: 10,
-                damageMultiplier: 1.5,
+                damageMultiplier: 2,
                 luckFactor: 0.75,
             },
             kick: {
                 requiredStamina: 25,
-                damageMultiplier: 3,
+                damageMultiplier: 4,
                 luckFactor: 0.5,
             },
             special: {
@@ -50,47 +50,42 @@ class CombatActions {
     }
 
     performAttack(attackType, onComplete) {
-        const { requiredStamina, damageMultiplier, luckFactor } =
-            this.attackTypes[attackType];
+        const { requiredStamina, damageMultiplier, luckFactor } = this.attackTypes[attackType];
         const characterName = this.character.name;
         const opponentName = this.opponent.name;
         const scene = this.scene;
+    
+        // Display the action text and reduce stamina
+        scene.updatePopupText(`${characterName} charges \nhis ${attackType} attack!`);
 
-        if (attackType === "special") {
-            scene.updatePopupText(`${characterName} charges \nhis ${attackType} attack!`);
+    
+        // Reduce stamina immediately after displaying the text
+        if (this.character.currentStamina >= requiredStamina) {
+            this.character.updateStamina(-requiredStamina);
         } else {
-            scene.updatePopupText(`${characterName} attempts \nto ${attackType} the ${opponentName}!`);
+            scene.updatePopupText(`${characterName} is too exhausted \nand misses...`);
+            scene.time.delayedCall(2500, () => {
+                this.character.updateStamina(-this.character.currentStamina);
+                if (onComplete) onComplete();
+            });
+            return; // Exit early if stamina is insufficient
         }
-
+    
+        // Continue the attack sequence after a delay
         scene.time.delayedCall(1000, () => {
-            if (
-                this.opponent.currentHealth > 0 &&
-                this.character.currentStamina >= requiredStamina
-            ) {
-                this.character.updateStamina(-requiredStamina);
+            if (this.opponent.currentHealth > 0) {
                 if (attackType === "special" || this.attackHits()) {
-                    this.calculateDamage(
-                        damageMultiplier,
-                        luckFactor,
-                        attackType,
-                        onComplete
-                    );
+                    this.calculateDamage(damageMultiplier, luckFactor, attackType, onComplete);
                 } else {
-                    scene.updatePopupText(
-                        `${characterName} is too slow \nand misses!`
-                    );
-                    scene.time.delayedCall(4000, () => {
+                    scene.updatePopupText(`${characterName} is too slow \nand misses!`);
+                    scene.time.delayedCall(2500, () => {
                         if (onComplete) onComplete();
                     });
                 }
             } else {
-                scene.updatePopupText(
-                    `${characterName} is too exhausted \nand misses...`
-                );
-                scene.time.delayedCall(4000, () => {
-                    this.character.updateStamina(
-                        -this.character.currentStamina
-                    );
+                scene.updatePopupText(`${characterName} is too exhausted \nand misses...`);
+                scene.time.delayedCall(2500, () => {
+                    this.character.updateStamina(-this.character.currentStamina);
                     if (onComplete) onComplete();
                 });
             }
@@ -113,7 +108,7 @@ class CombatActions {
         const characterName = this.character.name;
         const opponentName = this.opponent.name;
         const scene = this.scene;
-
+    
         scene.time.delayedCall(500, () => {
             let characterStrength = Math.ceil(
                 Math.random() * (this.character.strength / 2) +
@@ -122,73 +117,73 @@ class CombatActions {
             scene.updatePopupText(
                 `${characterName}'s power \nsurges to ${characterStrength}!`
             );
-
-            scene.time.delayedCall(2000, () => {
-                let opponentDefense = Math.ceil(
-                    Math.random() * this.opponent.defense
-                );
-                if (opponentDefense > this.opponent.currentStamina) {
-                    opponentDefense = this.opponent.currentStamina;
-                }
-
+    
+            let opponentDefense = Math.ceil(
+                Math.random() * this.opponent.defense
+            );
+            if (opponentDefense > this.opponent.currentStamina) {
+                opponentDefense = this.opponent.currentStamina;
+            }
+    
+            scene.updatePopupText(
+                `${opponentName} braces \nfor the attack ...`
+            );
+    
+            let basicDamage = characterStrength - opponentDefense;
+            if (basicDamage <= 0) {
                 scene.updatePopupText(
-                    `${opponentName} braces \nfor the attack ...`
+                    `${characterName} lands the blow \nbut ${opponentName} blocks \nall the damage!`
                 );
-
-                scene.time.delayedCall(1500, () => {
-                    let basicDamage = characterStrength - opponentDefense;
-                    if (basicDamage <= 0) {
+                scene.time.delayedCall(5000, () => {
+                    if (onComplete) onComplete();
+                });
+            } else {
+                const luck = Math.random();
+                let totalDamage;
+                if (luck >= luckFactor) {
+                    totalDamage = Math.ceil(
+                        basicDamage * damageMultiplier
+                    );
+                    this.playSound(attackType, true);
+                    this.flickerCharacter(this.opponent.sprite, 1500);
+                    scene.updatePopupText(
+                        `${characterName} lands a MASSIVE ${attackType}!`
+                    );
+    
+                    // Update health and stamina immediately after the MASSIVE attack message
+                    this.opponent.updateHealth(totalDamage * -1);
+                    this.opponent.updateStamina(-opponentDefense);
+    
+                    scene.time.delayedCall(2500, () => {
                         scene.updatePopupText(
-                            `${characterName} lands the blow \nbut ${opponentName} blocks \nall the damage!`
+                            `${opponentName} blocks \n${opponentDefense} damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                         );
                         scene.time.delayedCall(5000, () => {
                             if (onComplete) onComplete();
                         });
-                    } else {
-                        const luck = Math.random();
-                        let totalDamage;
-                        if (luck >= luckFactor) {
-                            totalDamage = Math.ceil(
-                                basicDamage * damageMultiplier
-                            );
-                            this.playSound(attackType, true);
-                            this.flickerCharacter(this.opponent.sprite, 1500);
-                            scene.updatePopupText(
-                                `${characterName} lands a MASSIVE ${attackType}!`
-                            );
-
-                            scene.time.delayedCall(2500, () => {
-                                scene.updatePopupText(
-                                    `${opponentName} blocks \n${opponentDefense} damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
-                                );
-                                this.opponent.updateHealth(totalDamage * -1);
-                                this.opponent.updateStamina(-opponentDefense);
-                                scene.time.delayedCall(5000, () => {
-                                    if (onComplete) onComplete();
-                                });
-                            });
-                        } else {
-                            totalDamage = basicDamage;
-                            this.playSound(attackType, false);
-                            this.flickerCharacter(this.opponent.sprite, 500);
-                            scene.updatePopupText(
-                                `${characterName} lands \na regular ${attackType}!`
-                            );
-
-                            scene.time.delayedCall(2500, () => {
-                                scene.updatePopupText(
-                                    `${opponentName} blocks \n${opponentDefense} damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
-                                );
-                                this.opponent.updateHealth(totalDamage * -1);
-                                this.opponent.updateStamina(-opponentDefense);
-                                scene.time.delayedCall(5000, () => {
-                                    if (onComplete) onComplete();
-                                });
-                            });
-                        }
-                    }
-                });
-            });
+                    });
+                } else {
+                    totalDamage = basicDamage;
+                    this.playSound(attackType, false);
+                    this.flickerCharacter(this.opponent.sprite, 500);
+                    scene.updatePopupText(
+                        `${characterName} lands \na regular ${attackType}!`
+                    );
+    
+                    // Update health and stamina immediately after the regular attack message
+                    this.opponent.updateHealth(totalDamage * -1);
+                    this.opponent.updateStamina(-opponentDefense);
+    
+                    scene.time.delayedCall(2500, () => {
+                        scene.updatePopupText(
+                            `${opponentName} blocks \n${opponentDefense} damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
+                        );
+                        scene.time.delayedCall(5000, () => {
+                            if (onComplete) onComplete();
+                        });
+                    });
+                }
+            }
         });
     }
 
@@ -294,18 +289,22 @@ class CombatActions {
 
     guard(onComplete) {
         const scene = this.scene;
-        const healthIncrease = Math.ceil(
-            this.character.defense + this.character.strength
-        );
-        const staminaIncrease = Math.ceil(
-            this.character.agility + this.character.reflexes
-        );
+    
+        // Calculate base increases
+        const baseHealthIncrease = Math.ceil(this.character.defense + this.character.strength);
+        const baseStaminaIncrease = Math.ceil(this.character.agility + this.character.reflexes);
+    
+        // Apply a random factor between 0.75 and 1.25
+        const randomFactor = Phaser.Math.FloatBetween(0.75, 1.25);
+        const healthIncrease = Math.ceil(baseHealthIncrease * randomFactor);
+        const staminaIncrease = Math.ceil(baseStaminaIncrease * randomFactor);
+    
         this.scene.updatePopupText(
-            `${this.character.name} defends! \n\n He restores \n${healthIncrease} HEALTH \nand  ${staminaIncrease} STAMINA.`
+            `${this.character.name} defends! \n\n He restores: \n\n${healthIncrease} HEALTH \n${staminaIncrease} STAMINA.`
         );
         this.character.updateHealth(healthIncrease);
         this.character.updateStamina(staminaIncrease);
-        scene.time.delayedCall(5000, () => {
+        scene.time.delayedCall(3500, () => {
             if (onComplete) onComplete();
         });
     }

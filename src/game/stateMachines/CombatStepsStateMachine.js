@@ -80,7 +80,7 @@ export class CombatStepsStateMachine {
     firstAction() {
         if (this.firstActor === "hero") {
             this.scene.updatePopupText("Hero takes \nthe initiative!");
-            this.scene.time.delayedCall(2500, () => {
+            this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
                 this.scene.events.once(
                     "heroActionComplete",
@@ -90,7 +90,7 @@ export class CombatStepsStateMachine {
         }
         if (this.firstActor === "enemy") {
             this.scene.updatePopupText("Enemy takes \nthe initiative!");
-            this.scene.time.delayedCall(2500, () => {
+            this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
                 this.scene.events.once(
                     "enemyActionComplete",
@@ -103,7 +103,7 @@ export class CombatStepsStateMachine {
     secondAction() {
         if (this.secondActor === "hero") {
             this.scene.updatePopupText("Hero goes next!");
-            this.scene.time.delayedCall(2500, () => {
+            this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
                 this.scene.events.once(
                     "heroActionComplete",
@@ -113,7 +113,7 @@ export class CombatStepsStateMachine {
         }
         if (this.secondActor === "enemy") {
             this.scene.updatePopupText("Enemy goes next!");
-            this.scene.time.delayedCall(2500, () => {
+            this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
                 this.scene.events.once(
                     "enemyActionComplete",
