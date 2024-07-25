@@ -36,6 +36,7 @@ export class Spar extends Scene {
             } else if (this.hero.currentHealth < 0) {
                 this.hero.currentHealth = 0;
             }
+            this.updateBars(); // Update bars when health changes
         };
 
         this.enemy.updateHealth = (amount) => {
@@ -48,16 +49,45 @@ export class Spar extends Scene {
             } else if (this.enemy.currentHealth < 0) {
                 this.enemy.currentHealth = 0;
             }
+            this.updateBars(); // Update bars when health changes
+        };
+
+        // Override updateStamina method to track stamina changes
+        this.hero.updateStamina = (amount) => {
+            this.hero.currentStamina += amount;
+            if (this.hero.currentStamina > this.hero.totalStamina) {
+                this.hero.currentStamina = this.hero.totalStamina;
+            } else if (this.hero.currentStamina < 0) {
+                this.hero.currentStamina = 0;
+            }
+            this.updateBars(); // Update bars when stamina changes
+        };
+
+        this.enemy.updateStamina = (amount) => {
+            this.enemy.currentStamina += amount;
+            if (this.enemy.currentStamina > this.enemy.totalStamina) {
+                this.enemy.currentStamina = this.enemy.totalStamina;
+            } else if (this.enemy.currentStamina < 0) {
+                this.enemy.currentStamina = 0;
+            }
+            this.updateBars(); // Update bars when stamina changes
         };
     }
 
     create() {
+        // Initialize hero and enemy sprites
         this.hero.sprite = this.add.image(100, 100, 'heroSprite').setVisible(false);
         this.enemy.sprite = this.add.image(500, 100, 'enemySprite').setVisible(false);
-        this.punchSprite = this.add.sprite(400, 300, 'punchReg');
-        this.punchSprite.setVisible(false); // Hide initially
-        this.specialSprite = this.add.sprite(600, 100, 'special');
-        this.specialSprite.setVisible(false); // Hide initially
+        this.punchSprite = this.add.sprite(400, 300, 'punchReg').setVisible(false);
+        this.specialSprite = this.add.sprite(600, 100, 'special').setVisible(false);
+
+        // Initialize health and stamina bars
+        this.heroHealthBar = this.add.graphics();
+        this.heroStaminaBar = this.add.graphics();
+        this.enemyHealthBar = this.add.graphics();
+        this.enemyStaminaBar = this.add.graphics();
+
+        this.updateBars(); // Initial update of the bars
 
 
         
@@ -304,7 +334,7 @@ export class Spar extends Scene {
         const centerY = this.cameras.main.height / 8;
 
         this.roundText = this.add
-            .text(centerX, centerY, "8", {
+            .text(centerX, centerY + 15, "8", {
                 fontFamily: "Arial Black",
                 fontSize: 48,
                 color: "#ffffff",
@@ -316,7 +346,7 @@ export class Spar extends Scene {
             .setVisible(false);
 
         this.roundLabel = this.add
-            .text(centerX, centerY - 75, "ROUNDS", {
+            .text(centerX, centerY - 65, "ROUNDS", {
                 fontFamily: "Arial Black",
                 fontSize: 32,
                 color: "#ffffff",
@@ -328,7 +358,7 @@ export class Spar extends Scene {
             .setVisible(false);
 
         this.roundLeft = this.add
-            .text(centerX, centerY - 45, "LEFT", {
+            .text(centerX, centerY - 30, "LEFT", {
                 fontFamily: "Arial Black",
                 fontSize: 32,
                 color: "#ffffff",
@@ -489,6 +519,99 @@ export class Spar extends Scene {
 
         this.isInitialized = true;
         EventBus.emit("fightStateMachineInitialized");
+    }
+
+    updateBars() {
+        const barWidth = 375; // 25% wider than 300
+        const barHeight = 30; // 50% taller than 20
+        const borderColor = 0x000000; // White border color
+        const borderThickness = 3; // Thickness of the border
+        const backgroundColor = 0x000000; // Very dark, almost black background for empty bars
+    
+        // Subdued colors for the bars
+        const healthColor = 0x004d00; // Dark green for health
+        const staminaColor = 0x4da6ff; // Light blue for stamina
+    
+        // Positions for hero bars (doubled distance from top and sides)
+        const offsetX = 32; // Twice the original 16
+        const offsetY = 32; // Twice the original 16
+    
+        const heroHealthX = offsetX;
+        const heroHealthY = offsetY;
+        const heroStaminaY = heroHealthY + 50; // 50px below the health bar
+    
+        // Positions for enemy bars (mirrored)
+        const enemyHealthX = this.cameras.main.width - barWidth - offsetX; // Align with right side
+        const enemyHealthY = heroHealthY;
+        const enemyStaminaY = heroStaminaY;
+    
+        // Update hero health bar smoothly
+        this.tweens.add({
+            targets: this.heroHealthBar,
+            fillRectWidth: (this.hero.currentHealth / this.hero.totalHealth) * barWidth,
+            duration: 500,
+            onUpdate: (tween) => {
+                const width = tween.getValue();
+                this.heroHealthBar.clear();
+                this.heroHealthBar.lineStyle(borderThickness, borderColor);
+                this.heroHealthBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
+                this.heroHealthBar.fillRect(heroHealthX, heroHealthY, barWidth, barHeight); // Background rectangle
+                this.heroHealthBar.strokeRect(heroHealthX, heroHealthY, barWidth, barHeight); // Border rectangle
+                this.heroHealthBar.fillStyle(healthColor);
+                this.heroHealthBar.fillRect(heroHealthX, heroHealthY, width, barHeight);
+            }
+        });
+    
+        // Update hero stamina bar smoothly
+        this.tweens.add({
+            targets: this.heroStaminaBar,
+            fillRectWidth: (this.hero.currentStamina / this.hero.totalStamina) * barWidth,
+            duration: 500,
+            onUpdate: (tween) => {
+                const width = tween.getValue();
+                this.heroStaminaBar.clear();
+                this.heroStaminaBar.lineStyle(borderThickness, borderColor);
+                this.heroStaminaBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
+                this.heroStaminaBar.fillRect(heroHealthX, heroStaminaY, barWidth, barHeight); // Background rectangle
+                this.heroStaminaBar.strokeRect(heroHealthX, heroStaminaY, barWidth, barHeight); // Border rectangle
+                this.heroStaminaBar.fillStyle(staminaColor);
+                this.heroStaminaBar.fillRect(heroHealthX, heroStaminaY, width, barHeight);
+            }
+        });
+    
+        // Update enemy health bar smoothly
+        this.tweens.add({
+            targets: this.enemyHealthBar,
+            fillRectWidth: (this.enemy.currentHealth / this.enemy.totalHealth) * barWidth,
+            duration: 500,
+            onUpdate: (tween) => {
+                const width = tween.getValue();
+                this.enemyHealthBar.clear();
+                this.enemyHealthBar.lineStyle(borderThickness, borderColor);
+                this.enemyHealthBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
+                this.enemyHealthBar.fillRect(enemyHealthX, enemyHealthY, barWidth, barHeight); // Background rectangle
+                this.enemyHealthBar.strokeRect(enemyHealthX, enemyHealthY, barWidth, barHeight); // Border rectangle
+                this.enemyHealthBar.fillStyle(healthColor);
+                this.enemyHealthBar.fillRect(enemyHealthX, enemyHealthY, width, barHeight);
+            }
+        });
+    
+        // Update enemy stamina bar smoothly
+        this.tweens.add({
+            targets: this.enemyStaminaBar,
+            fillRectWidth: (this.enemy.currentStamina / this.enemy.totalStamina) * barWidth,
+            duration: 500,
+            onUpdate: (tween) => {
+                const width = tween.getValue();
+                this.enemyStaminaBar.clear();
+                this.enemyStaminaBar.lineStyle(borderThickness, borderColor);
+                this.enemyStaminaBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
+                this.enemyStaminaBar.fillRect(enemyHealthX, enemyStaminaY, barWidth, barHeight); // Background rectangle
+                this.enemyStaminaBar.strokeRect(enemyHealthX, enemyStaminaY, barWidth, barHeight); // Border rectangle
+                this.enemyStaminaBar.fillStyle(staminaColor);
+                this.enemyStaminaBar.fillRect(enemyHealthX, enemyStaminaY, width, barHeight);
+            }
+        });
     }
 
     update() {

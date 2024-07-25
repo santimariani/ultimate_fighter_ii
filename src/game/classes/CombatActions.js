@@ -198,8 +198,8 @@ class CombatActions {
     
         // Helper function to play the animation and sound
         const playAnimation = (scale, spriteKey = 'punchReg') => {
-            const randomOffsetX = Phaser.Math.Between(-10, 10); // Randomness within model
-            const randomOffsetY = Phaser.Math.Between(-10, 10); // Randomness within model
+            let randomOffsetX = Phaser.Math.Between(-15, 15); // Randomness within model
+            let randomOffsetY = Phaser.Math.Between(-15, 15); // Randomness within model
             const sprite = spriteKey === 'special' ? scene.specialSprite : scene.punchSprite;
             sprite.setPosition(target.x + randomOffsetX, target.y + randomOffsetY);
             sprite.setScale(scale); // Adjust size
