@@ -15,7 +15,6 @@ export class MainMenu extends Scene {
             color: '#ffffff',
             backgroundColor: '#28421a', // Green background
             padding: { x: 15, y: 8 }, // Reduced padding for a smaller button
-
         }).setOrigin(0.5)
           .setInteractive()
           .on('pointerdown', () => {
@@ -28,14 +27,10 @@ export class MainMenu extends Scene {
               startButton.setStyle({ backgroundColor: '#28421a', border: '0.1vw solid rgba(255, 255, 255, 0.87)' });
           });
 
-          EventBus.on('goToNextScene', () => {
+        EventBus.on('goToNextScene', () => {
             this.scene.start('CharacterSelectionScene');
         });
 
         EventBus.emit('current-scene-ready', this);
-    }
-
-    changeScene() {
-        this.scene.start('Spar');
     }
 }

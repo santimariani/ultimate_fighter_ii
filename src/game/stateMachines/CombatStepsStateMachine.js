@@ -66,13 +66,13 @@ export class CombatStepsStateMachine {
 
     firstAction() {
         if (this.firstActor === "hero") {
-            this.scene.updatePopupText(`${this.hero.name} takes \nthe initiative!`);
+            this.scene.updatePopupText(`${this.hero.name} takes the initiative!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
                 this.scene.events.once("heroActionComplete", this.handleHeroActionComplete);
             });
         } else {
-            this.scene.updatePopupText(`${this.enemy.name} takes \nthe initiative!`);
+            this.scene.updatePopupText(`${this.enemy.name} takes the initiative!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
                 this.scene.events.once("enemyActionComplete", this.handleEnemyActionComplete);
