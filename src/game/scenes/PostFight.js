@@ -168,6 +168,10 @@ export class PostFight extends Scene {
                 .setDepth(100);
         }
 
+        EventBus.on('goToPreviousScene', () => {
+            this.scene.start('Spar');
+        });
+
         EventBus.emit("current-scene-ready", this);
     }
 

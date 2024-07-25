@@ -23,6 +23,8 @@ function App() {
     const [gameState, setGameState] = useState([]);
     const [isGamePaused, setIsGamePaused] = useState(false); // State to manage pause/resume
     const [isGameMuted, setIsGameMuted] = useState(false); // State to manage pause/resume
+    const sceneChangeCooldown = 500; // 500 ms cooldown
+
 
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -168,12 +170,21 @@ function App() {
             </div>
         );
     }
+
+    const handleBackButton = () => {
+        EventBus.emit('goToPreviousScene');
+    };
+
+    const handleNextButton = () => {
+        EventBus.emit('goToNextScene');
+    };
+
     // console.log("GAME STATE", gameState, phaserRef.current);
     return (
         <div id="app">
             <div id="leftColumn">
-                <div id="leftShoulderButton">
-                    <p className="fowardItalics">HOME</p>
+                <div id="leftShoulderButton" onClick={handleBackButton}>
+                    <p className="fowardItalics">BACK</p>
                 </div>
                 <div id="outerCircleLeft">
                     <button
@@ -263,8 +274,8 @@ function App() {
                 </div>
             </div>
             <div id="rightColumn">
-                <div id="rightShoulderButton">
-                    <p className="backwardItalics">GAME</p>
+            <div id="rightShoulderButton" onClick={handleNextButton}>
+                    <p className="backwardItalics">NEXT</p>
                 </div>
                 <div id="outerCircleRight">
                     <button id="innerCircleRight" onClick={logOut}></button>

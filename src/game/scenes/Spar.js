@@ -357,6 +357,14 @@ export class Spar extends Scene {
         // this.fightStateMachine = new FightRoundsStateMachine(this);
         // this.fightStateMachine.start();
 
+        EventBus.on('goToNextScene', () => {
+            this.scene.start('PostFight');
+        });
+
+        EventBus.on('goToPreviousScene', () => {
+            this.scene.start('CharacterSelectionScene');
+        });
+
         EventBus.emit("current-scene-ready", this);
 
         EventBus.on("updateUi", (x) => {

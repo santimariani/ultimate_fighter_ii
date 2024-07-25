@@ -9,7 +9,7 @@ export class MainMenu extends Scene {
     create() {
         this.add.image(512, 384, 'background');
 
-        const startButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'SELECT CHARACTER', {
+        const startButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'GET STARTED!', {
             fontFamily: 'Arial Black',
             fontSize: 28, // Slightly smaller font size
             color: '#ffffff',
@@ -27,6 +27,10 @@ export class MainMenu extends Scene {
           .on('pointerout', () => {
               startButton.setStyle({ backgroundColor: '#28421a', border: '0.1vw solid rgba(255, 255, 255, 0.87)' });
           });
+
+          EventBus.on('goToNextScene', () => {
+            this.scene.start('CharacterSelectionScene');
+        });
 
         EventBus.emit('current-scene-ready', this);
     }

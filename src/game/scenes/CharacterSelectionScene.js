@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { EventBus } from "../EventBus";
 
 export class CharacterSelectionScene extends Scene {
     constructor() {
@@ -17,7 +18,7 @@ export class CharacterSelectionScene extends Scene {
         this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'backgroundSelect');
 
         // Title Text
-        this.add.text(this.cameras.main.width / 2, 50, 'CHOOSE YOUR CHARACTER', {
+        this.add.text(this.cameras.main.width / 2, 60, 'CHOOSE YOUR CHARACTER', {
             fontFamily: 'Arial Black',
             fontSize: 48,
             color: '#ffffff',
@@ -46,12 +47,13 @@ export class CharacterSelectionScene extends Scene {
         const bottomMargin = 50;
         const sideMargin = 75; // Side margin
         const increasedBoxY = this.cameras.main.height - bottomMargin - (increasedBoxHeight / 2);
-        const defaultBoxColor = 0x000000; // Default opaque color
+        const defaultBoxColor = 0x000000; // Default color
+        const defaultBoxAlpha = 0.6; // Opacity set to half
         const heroBoxColorHover = 0x1a1c42; // Blue hover color for hero
         const enemyBoxColorHover = 0x701010; // Red hover color for enemy
 
         // Stats background rectangle style for hero
-        const heroStatsBgStyle = { x: 200 + sideMargin, y: increasedBoxY, width: 350, height: increasedBoxHeight, color: defaultBoxColor, alpha: 0.8 };
+        const heroStatsBgStyle = { x: 200 + sideMargin, y: increasedBoxY, width: 350, height: increasedBoxHeight, color: defaultBoxColor, alpha: defaultBoxAlpha };
 
         // Draw background rectangle for hero stats
         const heroStatsBg = this.add.graphics()
@@ -130,6 +132,14 @@ export class CharacterSelectionScene extends Scene {
         
         enemyInteractiveArea.on('pointerout', () => {
             enemyStatsBg.clear().fillStyle(enemyStatsBgStyle.color, enemyStatsBgStyle.alpha).fillRect(enemyStatsBgStyle.x - enemyStatsBgStyle.width / 2, enemyStatsBgStyle.y - enemyStatsBgStyle.height / 2, enemyStatsBgStyle.width, enemyStatsBgStyle.height);
+        });
+
+        EventBus.on('goToNextScene', () => {
+            this.scene.start('Spar');
+        });
+
+        EventBus.on('goToPreviousScene', () => {
+            this.scene.start('MainMenu');
         });
     }
 
