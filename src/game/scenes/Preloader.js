@@ -77,14 +77,14 @@ export class Preloader extends Scene {
 
         const hero = new Character({
             name: "Santi",
-            currentHealth: 120,
-            totalHealth: 120,
-            currentStamina: 80,
-            totalStamina: 80,
-            strength: 12,
-            defense: 8,
-            agility: 12,
-            reflexes: 8,
+            currentHealth: 100,
+            totalHealth: 100,
+            currentStamina: 100,
+            totalStamina: 100,
+            strength: 10,
+            defense: 10,
+            agility: 10,
+            reflexes: 10,
             sprite: heroSprite, // Assign the sprite to the character
         });
 

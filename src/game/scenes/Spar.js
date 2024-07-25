@@ -376,7 +376,7 @@ export class Spar extends Scene {
         const centerY = this.cameras.main.height / 8;
 
         this.roundText = this.add
-            .text(centerX, centerY + 27, "8", {
+            .text(centerX, centerY + 27, "10", {
                 fontFamily: "Arial Black",
                 fontSize: 48,
                 color: "#ffffff",
@@ -411,14 +411,12 @@ export class Spar extends Scene {
             .setOrigin(0.5)
             .setVisible(false);
 
-        // Show the round counter when other texts are shown
         this.events.on("showRoundCounter", () => {
             this.roundText.setVisible(true);
             this.roundLabel.setVisible(true);
             this.roundLeft.setVisible(true);
         });
 
-        // Update the round counter text when the round changes
         this.events.on("roundChanged", (roundNumber) => {
             this.roundText.setText(`${11 - roundNumber}`);
         });
@@ -435,7 +433,7 @@ export class Spar extends Scene {
             200
         );
         this.pauseBackground.setVisible(false);
-        this.pauseBackground.setDepth(14); // Set a high depth value
+        this.pauseBackground.setDepth(14); 
 
         this.pauseText = this.add
             .text(centerPauseX, centerPauseY, "Game Paused", {
@@ -698,24 +696,21 @@ export class Spar extends Scene {
         this.enemy.currentStamina = x.enemy.currentStamina;
         this.enemy.totalStamina = x.enemy.totalStamina;
     
-        // Update bars
         this.updateBars();
     
-        // Debugging logs to check round number and rounds left
         console.log('Current round number:', x.roundNumber);
-        const roundsLeft = 11 - x.roundNumber; // Assuming 11 total rounds
+        const roundsLeft = (x.maxRounds + 1) - x.roundNumber; 
         console.log('Rounds left:', roundsLeft);
     
-        // Update the round number display
         this.roundText.setText(`${roundsLeft}`);
-        this.roundText.setVisible(true); // Ensure visibility if hidden
+        this.roundText.setVisible(true); 
         this.roundLabel.setVisible(true);
         this.roundLeft.setVisible(true);
     }
     updateTextElements() {
         const textStyle = {
             fontFamily: 'Arial Black',
-            fontSize: '20px', // 25% smaller than 26px
+            fontSize: '20px', 
             color: '#ffffff',
             stroke: '#000000', // Black stroke around the text
             strokeThickness: 3, // Thickness of the stroke
@@ -732,13 +727,11 @@ export class Spar extends Scene {
         const heroHealthTextY = offsetY;
         const heroStaminaTextY = heroHealthTextY + spacingY;
     
-        // Enemy text positions (mirrored on the right side)
         const enemyLabelOffsetX = this.cameras.main.width - labelOffsetX;
         const enemyValueOffsetX = this.cameras.main.width - valueOffsetX;
         const enemyHealthTextY = heroHealthTextY;
         const enemyStaminaTextY = heroStaminaTextY;
     
-        // Check if text objects already exist, if not, create them
         if (!this.heroHealthValueText) {
             this.heroHealthText = this.add.text(heroHealthTextX, heroHealthTextY, `HEALTH`, textStyle).setOrigin(0, 0).setVisible(false);
             this.heroHealthValueText = this.add.text(heroHealthValueX, heroHealthTextY, `${this.hero.currentHealth} / ${this.hero.totalHealth}`, { ...textStyle, align: 'right' }).setOrigin(1, 0).setVisible(false);
@@ -747,19 +740,17 @@ export class Spar extends Scene {
             this.heroStaminaValueText = this.add.text(heroHealthValueX, heroStaminaTextY, `${this.hero.currentStamina} / ${this.hero.totalStamina}`, { ...textStyle, align: 'right' }).setOrigin(1, 0).setVisible(false);
             
             this.enemyHealthText = this.add.text(enemyLabelOffsetX, enemyHealthTextY, `HEALTH`, textStyle).setOrigin(1, 0).setVisible(false);
-            this.enemyHealthValueText = this.add.text(enemyValueOffsetX, enemyHealthTextY, `${this.enemy.currentHealth} / ${this.enemy.totalHealth}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
+            this.enemyHealthValueText = this.add.text(enemyValueOffsetX, enemyHealthTextY, `${this.enemy.totalHealth} / ${this.enemy.currentHealth}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
     
             this.enemyStaminaText = this.add.text(enemyLabelOffsetX, enemyStaminaTextY, `STAMINA`, textStyle).setOrigin(1, 0).setVisible(false);
-            this.enemyStaminaValueText = this.add.text(enemyValueOffsetX, enemyStaminaTextY, `${this.enemy.currentStamina} / ${this.enemy.totalStamina}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
+            this.enemyStaminaValueText = this.add.text(enemyValueOffsetX, enemyStaminaTextY, `${this.enemy.totalStamina} / ${this.enemy.totalStamina}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
         }
     
-        // Update text values
         this.heroHealthValueText.setText(`${this.hero.currentHealth} / ${this.hero.totalHealth}`);
         this.heroStaminaValueText.setText(`${this.hero.currentStamina} / ${this.hero.totalStamina}`);
         this.enemyHealthValueText.setText(`${this.enemy.currentHealth} / ${this.enemy.totalHealth}`);
         this.enemyStaminaValueText.setText(`${this.enemy.currentStamina} / ${this.enemy.totalStamina}`);
         
-        // Show the text elements if they should be visible
         if (this.isInitialized) {
             this.heroHealthText.setVisible(true);
             this.heroHealthValueText.setVisible(true);
@@ -864,15 +855,23 @@ export class Spar extends Scene {
         }, 2000);
     }
     
+    handleNextScene() {
+        // Check if we are trying to switch to the correct scene
+        console.log("Transitioning to PostFight scene");
+        this.changePostFightScene({
+            roundOut: this.fightStateMachine?.roundOut || false,
+            knockOut: this.fightStateMachine?.knockOut || "tie",
+        });
+    }
 
-    changePostFightScene({ tie, winner }) {
+    changePostFightScene({ roundOut, knockOut }) {
         this.scene.start("PostFight", {
             heroTotalDamageCaused: this.heroTotalDamageCaused,
             heroTotalDamageBlocked: this.heroTotalDamageBlocked,
             enemyTotalDamageCaused: this.enemyTotalDamageCaused,
             enemyTotalDamageBlocked: this.enemyTotalDamageBlocked,
-            tie: tie,
-            winner: winner,
+            roundOut: this.fightStateMachine,
+            knockOut: this.fightStateMachine
         });
     }
 }

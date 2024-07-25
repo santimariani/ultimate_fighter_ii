@@ -1,6 +1,5 @@
 import { Boot } from "./scenes/Boot";
 import { Spar } from "./scenes/Spar";
-import { GameOver } from "./scenes/GameOver";
 import { MainMenu } from "./scenes/MainMenu";
 import { CharacterSelectionScene } from "./scenes/CharacterSelectionScene";
 import { PostFight } from "./scenes/PostFight";
@@ -15,7 +14,7 @@ const StartGame = (parent) => {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.FIT,
         },
-        scene: [Boot, Preloader, MainMenu, CharacterSelectionScene, Spar, GameOver, PostFight],
+        scene: [Boot, Preloader, MainMenu, CharacterSelectionScene, Spar, PostFight],
         parent,
     });
 };

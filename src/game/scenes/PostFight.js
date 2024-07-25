@@ -11,8 +11,8 @@ export class PostFight extends Scene {
         this.heroTotalDamageBlocked = data.heroTotalDamageBlocked;
         this.enemyTotalDamageCaused = data.enemyTotalDamageCaused;
         this.enemyTotalDamageBlocked = data.enemyTotalDamageBlocked;
-        this.tie = data.tie;
-        this.winner = data.winner;
+        this.roundOut = data.roundOut; // Use 'roundOut' instead of 'roundsOut'
+        this.knockOut = data.knockOut;
         console.log("PostFight init data:", data); // Debugging
     }
 
@@ -20,13 +20,14 @@ export class PostFight extends Scene {
         this.add.image(512, 384, "background").setAlpha(0.7);
 
         let fightEndText;
-        if (this.tie) {
+        if (this.roundOut) {
             this.winner = this.determineWinner();
-            fightEndText = this.winner === "tie" ? "FIGHT OVER BY ROUNDS" : `FIGHT OVER BY ROUNDS, WINNER ${this.winner.toUpperCase()}`;
-        } else if (this.winner) {
-            fightEndText = `FIGHT OVER BY KO, WINNER ${this.winner.toUpperCase()}`;
+            fightEndText = "FIGHT OVER BY ROUNDS!"
+        } else if (this.knockOut) {
+            console.log('knockOut', this.knockOut)
+            fightEndText = `FIGHT OVER BY KO!`;
         } else {
-            fightEndText = "FIGHT OVER, UNDETERMINED WINNER";
+            fightEndText = "FIGHT OVER!";
         }
 
         this.add
@@ -156,7 +157,7 @@ export class PostFight extends Scene {
                 .setDepth(100);
         } else {
             this.add
-                .text(512, 500, `WINNER: IT'S A TIE!`, {
+                .text(512, 500, `WINNER: ${this.knockOut.toUpperCase()}`, {
                     fontFamily: "Arial Black",
                     fontSize: 32,
                     color: "#ffffff",
