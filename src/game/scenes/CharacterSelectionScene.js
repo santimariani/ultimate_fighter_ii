@@ -64,7 +64,7 @@ export class CharacterSelectionScene extends Scene {
         const heroSprite = this.add.image(200 + sideMargin, 300, 'heroSprite').setInteractive();
 
         // Hero Name
-        this.add.text(200 + sideMargin, 475, 'HERO', {
+        this.add.text(200 + sideMargin, 475, 'SANTI', {
             fontFamily: 'Arial Black',
             fontSize: 32,
             color: '#ffffff',
@@ -105,7 +105,7 @@ export class CharacterSelectionScene extends Scene {
         const enemySprite = this.add.image(this.cameras.main.width - (200 + sideMargin), 300, 'enemySprite').setInteractive();
 
         // Enemy Name
-        this.add.text(this.cameras.main.width - (200 + sideMargin), 475, 'ENEMY', {
+        this.add.text(this.cameras.main.width - (200 + sideMargin), 475, 'MATU', {
             fontFamily: 'Arial Black',
             fontSize: 32,
             color: '#ffffff',

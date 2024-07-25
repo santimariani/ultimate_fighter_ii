@@ -341,7 +341,7 @@ export class Spar extends Scene {
             () => {
                 EventBus.emit("playerTurn");
                 this.updatePopupText(
-                    `${this.hero.name} considers \nhis options ...`
+                    `${this.hero.name} considers \nhis options ...\n\nCHOOSE AN ACTION\nBELOW!`
                 );
                 EventBus.emit("enablePlayerButtons");
             },

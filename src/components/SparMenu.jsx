@@ -19,7 +19,7 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
         <>
             {isHeroTurn && (
                 <div id="hero-options">
-                    <p>CHOOSE YOUR ACTION!</p>
+                    {/* <p>CHOOSE YOUR ACTION!</p> */}
                     <button
                         disabled={buttonDisabled}
                         onClick={() => triggerPhaserEvent("punch")}

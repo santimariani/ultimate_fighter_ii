@@ -14,24 +14,18 @@ export class CombatStepsStateMachine {
         this.firstActor = null;
         this.secondActor = null;
 
-        // Bind the event listeners
-        this.handleHeroActionComplete =
-            this.handleHeroActionComplete.bind(this);
-        this.handleEnemyActionComplete =
-            this.handleEnemyActionComplete.bind(this);
+        this.handleHeroActionComplete = this.handleHeroActionComplete.bind(this);
+        this.handleEnemyActionComplete = this.handleEnemyActionComplete.bind(this);
     }
 
     startRound() {
-        this.setState(
-            CombatStepsStateMachine.ROUND_STEP_STATES.DETERMINE_FIRST_ACTOR
-        );
+        this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.DETERMINE_FIRST_ACTOR);
     }
 
     setState(state) {
         this.currentStep = state;
         switch (state) {
-            case CombatStepsStateMachine.ROUND_STEP_STATES
-                .DETERMINE_FIRST_ACTOR:
+            case CombatStepsStateMachine.ROUND_STEP_STATES.DETERMINE_FIRST_ACTOR:
                 this.determineFirstActor();
                 break;
             case CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION:
@@ -47,25 +41,18 @@ export class CombatStepsStateMachine {
     }
 
     update() {
-        if (
-            this.currentStep ===
-            CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE
-        ) {
+        if (this.currentStep === CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE) {
             return true;
         }
     }
 
     isRoundComplete() {
-        return (
-            this.currentStep ===
-            CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE
-        );
+        return this.currentStep === CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE;
     }
 
     determineFirstActor() {
-        let heroAgility, enemyAgility;
-        heroAgility = Phaser.Math.Between(1, this.hero.agility);
-        enemyAgility = Phaser.Math.Between(1, this.enemy.agility);
+        let heroAgility = Phaser.Math.Between(1, this.hero.agility);
+        let enemyAgility = Phaser.Math.Between(1, this.enemy.agility);
 
         if (heroAgility > enemyAgility) {
             this.firstActor = "hero";
@@ -79,66 +66,42 @@ export class CombatStepsStateMachine {
 
     firstAction() {
         if (this.firstActor === "hero") {
-            this.scene.updatePopupText("Hero takes \nthe initiative!");
+            this.scene.updatePopupText(`${this.hero.name} takes \nthe initiative!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
-                this.scene.events.once(
-                    "heroActionComplete",
-                    this.handleHeroActionComplete
-                );
+                this.scene.events.once("heroActionComplete", this.handleHeroActionComplete);
             });
-        }
-        if (this.firstActor === "enemy") {
-            this.scene.updatePopupText("Enemy takes \nthe initiative!");
+        } else {
+            this.scene.updatePopupText(`${this.enemy.name} takes \nthe initiative!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
-                this.scene.events.once(
-                    "enemyActionComplete",
-                    this.handleEnemyActionComplete
-                );
+                this.scene.events.once("enemyActionComplete", this.handleEnemyActionComplete);
             });
         }
     }
 
     secondAction() {
         if (this.secondActor === "hero") {
-            this.scene.updatePopupText("Hero goes next!");
+            this.scene.updatePopupText(`${this.hero.name} goes next!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
-                this.scene.events.once(
-                    "heroActionComplete",
-                    this.handleHeroActionComplete
-                );
+                this.scene.events.once("heroActionComplete", this.handleHeroActionComplete);
             });
-        }
-        if (this.secondActor === "enemy") {
-            this.scene.updatePopupText("Enemy goes next!");
+        } else {
+            this.scene.updatePopupText(`${this.enemy.name} goes next!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
-                this.scene.events.once(
-                    "enemyActionComplete",
-                    this.handleEnemyActionComplete
-                );
+                this.scene.events.once("enemyActionComplete", this.handleEnemyActionComplete);
             });
         }
     }
 
     handleHeroActionComplete() {
         if (this.enemy.currentHealth > 0) {
-            if (
-                this.currentStep ===
-                CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION
-            ) {
-                this.setState(
-                    CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
-                );
-            } else if (
-                this.currentStep ===
-                CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
-            ) {
-                this.setState(
-                    CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE
-                );
+            if (this.currentStep === CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION) {
+                this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
+            } else if (this.currentStep === CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION) {
+                this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
             }
         } else {
             const heroWins = true;
@@ -149,20 +112,10 @@ export class CombatStepsStateMachine {
 
     handleEnemyActionComplete() {
         if (this.hero.currentHealth > 0) {
-            if (
-                this.currentStep ===
-                CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION
-            ) {
-                this.setState(
-                    CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
-                );
-            } else if (
-                this.currentStep ===
-                CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION
-            ) {
-                this.setState(
-                    CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE
-                );
+            if (this.currentStep === CombatStepsStateMachine.ROUND_STEP_STATES.FIRST_ACTION) {
+                this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION);
+            } else if (this.currentStep === CombatStepsStateMachine.ROUND_STEP_STATES.SECOND_ACTION) {
+                this.setState(CombatStepsStateMachine.ROUND_STEP_STATES.ROUND_COMPLETE);
             }
         } else {
             const enemyWins = true;
