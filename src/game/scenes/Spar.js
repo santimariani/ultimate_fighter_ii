@@ -82,10 +82,10 @@ export class Spar extends Scene {
         this.specialSprite = this.add.sprite(600, 100, 'special').setVisible(false);
 
         // Initialize health and stamina bars
-        this.heroHealthBar = this.add.graphics();
-        this.heroStaminaBar = this.add.graphics();
-        this.enemyHealthBar = this.add.graphics();
-        this.enemyStaminaBar = this.add.graphics();
+        this.heroHealthBar = this.add.graphics().setVisible(false);
+        this.heroStaminaBar = this.add.graphics().setVisible(false);
+        this.enemyHealthBar = this.add.graphics().setVisible(false);
+        this.enemyStaminaBar = this.add.graphics().setVisible(false);
 
         this.updateBars(); // Initial update of the bars
 
@@ -503,20 +503,30 @@ export class Spar extends Scene {
         if (this.vsText) {
             this.vsText.destroy();
         }
+        
+        // Set the visibility of hero stats
         this.heroHealthText.setVisible(true);
         this.heroPowerBoost.setVisible(true);
         this.heroStaminaText.setVisible(true);
         this.heroSwiftnessBoost.setVisible(true);
+    
+        // Set the visibility of enemy stats
         this.enemyHealthText.setVisible(true);
         this.enemyPowerBoost.setVisible(true);
         this.enemyStaminaText.setVisible(true);
         this.enemySwiftnessBoost.setVisible(true);
-
+    
+        // Set the visibility of health and stamina bars
+        this.heroHealthBar.setVisible(true);
+        this.heroStaminaBar.setVisible(true);
+        this.enemyHealthBar.setVisible(true);
+        this.enemyStaminaBar.setVisible(true);
+    
         this.events.emit("showRoundCounter");
-
+    
         this.fightStateMachine = new FightRoundsStateMachine(this);
         this.fightStateMachine.start();
-
+    
         this.isInitialized = true;
         EventBus.emit("fightStateMachineInitialized");
     }
@@ -524,7 +534,7 @@ export class Spar extends Scene {
     updateBars() {
         const barWidth = 375; // 25% wider than 300
         const barHeight = 30; // 50% taller than 20
-        const borderColor = 0x000000; // White border color
+        const borderColor = 0x000000; // Black border color
         const borderThickness = 3; // Thickness of the border
         const backgroundColor = 0x000000; // Very dark, almost black background for empty bars
     
@@ -538,10 +548,10 @@ export class Spar extends Scene {
     
         const heroHealthX = offsetX;
         const heroHealthY = offsetY;
-        const heroStaminaY = heroHealthY + 50; // 50px below the health bar
+        const heroStaminaY = heroHealthY + 62.5; // 50px below the health bar
     
         // Positions for enemy bars (mirrored)
-        const enemyHealthX = this.cameras.main.width - barWidth - offsetX; // Align with right side
+        const enemyHealthX = this.cameras.main.width - barWidth - offsetX; // Align with the right side
         const enemyHealthY = heroHealthY;
         const enemyStaminaY = heroStaminaY;
     
@@ -582,7 +592,7 @@ export class Spar extends Scene {
         // Update enemy health bar smoothly
         this.tweens.add({
             targets: this.enemyHealthBar,
-            fillRectWidth: (this.enemy.currentHealth / this.enemy.totalHealth) * barWidth,
+            fillRectWidth: barWidth - (this.enemy.currentHealth / this.enemy.totalHealth) * barWidth,
             duration: 500,
             onUpdate: (tween) => {
                 const width = tween.getValue();
@@ -592,14 +602,14 @@ export class Spar extends Scene {
                 this.enemyHealthBar.fillRect(enemyHealthX, enemyHealthY, barWidth, barHeight); // Background rectangle
                 this.enemyHealthBar.strokeRect(enemyHealthX, enemyHealthY, barWidth, barHeight); // Border rectangle
                 this.enemyHealthBar.fillStyle(healthColor);
-                this.enemyHealthBar.fillRect(enemyHealthX, enemyHealthY, width, barHeight);
+                this.enemyHealthBar.fillRect(enemyHealthX + width, enemyHealthY, barWidth - width, barHeight);
             }
         });
     
         // Update enemy stamina bar smoothly
         this.tweens.add({
             targets: this.enemyStaminaBar,
-            fillRectWidth: (this.enemy.currentStamina / this.enemy.totalStamina) * barWidth,
+            fillRectWidth: barWidth - (this.enemy.currentStamina / this.enemy.totalStamina) * barWidth,
             duration: 500,
             onUpdate: (tween) => {
                 const width = tween.getValue();
@@ -609,7 +619,7 @@ export class Spar extends Scene {
                 this.enemyStaminaBar.fillRect(enemyHealthX, enemyStaminaY, barWidth, barHeight); // Background rectangle
                 this.enemyStaminaBar.strokeRect(enemyHealthX, enemyStaminaY, barWidth, barHeight); // Border rectangle
                 this.enemyStaminaBar.fillStyle(staminaColor);
-                this.enemyStaminaBar.fillRect(enemyHealthX, enemyStaminaY, width, barHeight);
+                this.enemyStaminaBar.fillRect(enemyHealthX + width, enemyStaminaY, barWidth - width, barHeight);
             }
         });
     }
@@ -635,36 +645,72 @@ export class Spar extends Scene {
     }
 
     updateTextElements() {
-        this.heroHealthText.setText(
-            `Hero Health: ${this.hero.currentHealth} / ${this.hero.totalHealth}`
-        );
-
-        this.heroPowerBoost.setText(
-            `Power Boost: ${((this.hero.powerBoost - 1) * 100).toFixed(0)}%`
-        );
-        this.heroStaminaText.setText(
-            `Hero Stamina: ${this.hero.currentStamina} / ${this.hero.totalStamina}`
-        );
-        this.heroSwiftnessBoost.setText(
-            `Swiftness Boost: +${((this.hero.swiftnessBoost - 1) * 100).toFixed(
-                0
-            )}%`
-        );
-        this.enemyHealthText.setText(
-            `Enemy Health: ${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
-        );
-        this.enemyPowerBoost.setText(
-            `Power Boost: ${((this.enemy.powerBoost - 1) * 100).toFixed(0)}%`
-        );
-        this.enemyStaminaText.setText(
-            `Enemy Stamina: ${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
-        );
-        this.enemySwiftnessBoost.setText(
-            `Swiftness Boost: +${(
-                (this.enemy.swiftnessBoost - 1) *
-                100
-            ).toFixed(0)}%`
-        );
+        const textStyle = {
+            fontFamily: 'Arial Black',
+            fontSize: '20px', // 25% smaller than 26px
+            color: '#ffffff',
+            stroke: '#000000', // Black stroke around the text
+            strokeThickness: 3, // Thickness of the stroke
+        };
+    
+        const labelOffsetX = 33; // Label position from the left
+        const valueOffsetX = 410; // Value position from the left
+        const offsetY = 64; // Position from the top
+        const spacingY = 62; // Vertical spacing between lines
+    
+        // Hero text positions
+        const heroHealthTextX = labelOffsetX;
+        const heroHealthValueX = valueOffsetX;
+        const heroHealthTextY = offsetY;
+        const heroStaminaTextY = heroHealthTextY + spacingY;
+    
+        // Enemy text positions (mirrored on the right side)
+        const enemyLabelOffsetX = this.cameras.main.width - labelOffsetX;
+        const enemyValueOffsetX = this.cameras.main.width - valueOffsetX;
+        const enemyHealthTextY = heroHealthTextY;
+        const enemyStaminaTextY = heroStaminaTextY;
+    
+        // Check if text objects already exist, if not, create them
+        if (!this.heroHealthValueText) {
+            this.heroHealthText = this.add.text(heroHealthTextX, heroHealthTextY, `HEALTH`, textStyle).setOrigin(0, 0).setVisible(false);
+            this.heroHealthValueText = this.add.text(heroHealthValueX, heroHealthTextY, `${this.hero.currentHealth} / ${this.hero.totalHealth}`, { ...textStyle, align: 'right' }).setOrigin(1, 0).setVisible(false);
+    
+            this.heroStaminaText = this.add.text(heroHealthTextX, heroStaminaTextY, `STAMINA`, textStyle).setOrigin(0, 0).setVisible(false);
+            this.heroStaminaValueText = this.add.text(heroHealthValueX, heroStaminaTextY, `${this.hero.currentStamina} / ${this.hero.totalStamina}`, { ...textStyle, align: 'right' }).setOrigin(1, 0).setVisible(false);
+            
+            this.enemyHealthText = this.add.text(enemyLabelOffsetX, enemyHealthTextY, `HEALTH`, textStyle).setOrigin(1, 0).setVisible(false);
+            this.enemyHealthValueText = this.add.text(enemyValueOffsetX, enemyHealthTextY, `${this.enemy.currentHealth} / ${this.enemy.totalHealth}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
+    
+            this.enemyStaminaText = this.add.text(enemyLabelOffsetX, enemyStaminaTextY, `STAMINA`, textStyle).setOrigin(1, 0).setVisible(false);
+            this.enemyStaminaValueText = this.add.text(enemyValueOffsetX, enemyStaminaTextY, `${this.enemy.currentStamina} / ${this.enemy.totalStamina}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
+        }
+    
+        // Update text values
+        this.heroHealthValueText.setText(`${this.hero.currentHealth} / ${this.hero.totalHealth}`);
+        this.heroStaminaValueText.setText(`${this.hero.currentStamina} / ${this.hero.totalStamina}`);
+        this.enemyHealthValueText.setText(`${this.enemy.currentHealth} / ${this.enemy.totalHealth}`);
+        this.enemyStaminaValueText.setText(`${this.enemy.currentStamina} / ${this.enemy.totalStamina}`);
+        
+        // Show the text elements if they should be visible
+        if (this.isInitialized) {
+            this.heroHealthText.setVisible(true);
+            this.heroHealthValueText.setVisible(true);
+            this.heroStaminaText.setVisible(true);
+            this.heroStaminaValueText.setVisible(true);
+            this.enemyHealthText.setVisible(true);
+            this.enemyHealthValueText.setVisible(true);
+            this.enemyStaminaText.setVisible(true);
+            this.enemyStaminaValueText.setVisible(true);
+        } else {
+            this.heroHealthText.setVisible(false);
+            this.heroHealthValueText.setVisible(false);
+            this.heroStaminaText.setVisible(false);
+            this.heroStaminaValueText.setVisible(false);
+            this.enemyHealthText.setVisible(false);
+            this.enemyHealthValueText.setVisible(false);
+            this.enemyStaminaText.setVisible(false);
+            this.enemyStaminaValueText.setVisible(false);
+        }
     }
 
     heroAction(action) {

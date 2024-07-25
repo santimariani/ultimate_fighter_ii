@@ -197,11 +197,9 @@ class CombatActions {
         const target = this.opponent.sprite;
     
         // Helper function to play the animation and sound
-        const playAnimation = (scale, spriteKey = 'punchReg') => {
-            let randomOffsetX = Phaser.Math.Between(-15, 15); // Randomness within model
-            let randomOffsetY = Phaser.Math.Between(-15, 15); // Randomness within model
+        const playAnimation = (offsetX, offsetY, scale, spriteKey = 'punchReg') => {
             const sprite = spriteKey === 'special' ? scene.specialSprite : scene.punchSprite;
-            sprite.setPosition(target.x + randomOffsetX, target.y + randomOffsetY);
+            sprite.setPosition(target.x + offsetX, target.y + offsetY);
             sprite.setScale(scale); // Adjust size
             sprite.setDepth(10); // Ensure it appears above other elements
             sprite.setVisible(true).play(spriteKey);
@@ -217,24 +215,32 @@ class CombatActions {
                 scene.time.delayedCall(250, () => {
                     let soundNumber = Phaser.Math.Between(10, 18);
                     scene.sound.play("special");
-                    playAnimation(0.50, 'special'); // Regular size, special animation
+                    let offsetX = Phaser.Math.Between(-150, 150);
+                    let offsetY = Phaser.Math.Between(-150, 150);
+                    playAnimation(offsetX, offsetY, 0.50, 'special'); // Regular size, special animation
                 });
     
                 scene.time.delayedCall(750, () => {
                     scene.sound.play("special");
-                    playAnimation(1, 'special'); // Massive size, special animation
+                    let offsetX = Phaser.Math.Between(-150, 150);
+                    let offsetY = Phaser.Math.Between(-150, 150);
+                    playAnimation(offsetX, offsetY, 1, 'special'); // Massive size, special animation
                 });
     
                 scene.time.delayedCall(1250, () => {
                     let soundNumber = Phaser.Math.Between(10, 18);
                     scene.sound.play("special");
-                    playAnimation(0.5, 'special'); // Regular size, special animation
+                    let offsetX = Phaser.Math.Between(-150, 150);
+                    let offsetY = Phaser.Math.Between(-150, 150);
+                    playAnimation(offsetX, offsetY, 0.5, 'special'); // Regular size, special animation
                 });
             } else {
                 // Regular special attack sequence
                 let soundNumber = Phaser.Math.Between(10, 18);
                 scene.sound.play("special");
-                playAnimation(0.35, 'special'); // Regular size, special animation
+                let offsetX = Phaser.Math.Between(-150, 150);
+                let offsetY = Phaser.Math.Between(-150, 150);
+                playAnimation(offsetX, offsetY, 0.35, 'special'); // Regular size, special animation
             }
         } else {
             // Handle punch/kick attacks
@@ -243,26 +249,32 @@ class CombatActions {
             if (!isMassive) {
                 let soundNumber = Phaser.Math.Between(1, 9);
                 scene.sound.play(`${soundPrefix}${soundNumber}`);
-                playAnimation(0.35); // Regular size
+                let offsetX = Phaser.Math.Between(-150, 150);
+                let offsetY = Phaser.Math.Between(-150, 150);
+                playAnimation(offsetX, offsetY, 0.35); // Regular size
             } else {
                 // Massive attack sequence
-                let soundNumber = Phaser.Math.Between(1, 9);
-    
                 scene.time.delayedCall(250, () => {
-                    soundNumber = Phaser.Math.Between(1, 9);
+                    let soundNumber = Phaser.Math.Between(1, 9);
                     scene.sound.play(`${soundPrefix}${soundNumber}`);
-                    playAnimation(0.35); // Regular size
+                    let offsetX = Phaser.Math.Between(-150, 150);
+                    let offsetY = Phaser.Math.Between(-150, 150);
+                    playAnimation(offsetX, offsetY, 0.35); // Regular size
                 });
     
                 scene.time.delayedCall(750, () => {
                     scene.sound.play(`massive${soundPrefix.charAt(0).toUpperCase() + soundPrefix.slice(1)}`);
-                    playAnimation(.85); // Massive size
+                    let offsetX = Phaser.Math.Between(-150, 150);
+                    let offsetY = Phaser.Math.Between(-150, 150);
+                    playAnimation(offsetX, offsetY, .85); // Massive size
                 });
     
                 scene.time.delayedCall(1250, () => {
-                    soundNumber = Phaser.Math.Between(1, 9);
+                    let soundNumber = Phaser.Math.Between(1, 9);
                     scene.sound.play(`${soundPrefix}${soundNumber}`);
-                    playAnimation(0.35); // Regular size
+                    let offsetX = Phaser.Math.Between(-150, 150);
+                    let offsetY = Phaser.Math.Between(-150, 150);
+                    playAnimation(offsetX, offsetY, 0.35); // Regular size
                 });
             }
         }
