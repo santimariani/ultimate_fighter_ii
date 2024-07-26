@@ -854,15 +854,6 @@ export class Spar extends Scene {
             }
         }, 2000);
     }
-    
-    handleNextScene() {
-        // Check if we are trying to switch to the correct scene
-        console.log("Transitioning to PostFight scene");
-        this.changePostFightScene({
-            roundOut: this.fightStateMachine?.roundOut || false,
-            knockOut: this.fightStateMachine?.knockOut || "tie",
-        });
-    }
 
     changePostFightScene({ roundOut, knockOut }) {
         this.scene.start("PostFight", {
@@ -871,7 +862,7 @@ export class Spar extends Scene {
             enemyTotalDamageCaused: this.enemyTotalDamageCaused,
             enemyTotalDamageBlocked: this.enemyTotalDamageBlocked,
             roundOut: this.fightStateMachine,
-            knockOut: this.fightStateMachine
+            knockOut: this.fightStateMachine.knockOut,
         });
     }
 }

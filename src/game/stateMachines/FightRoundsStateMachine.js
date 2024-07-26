@@ -11,7 +11,7 @@ export class FightRoundsStateMachine {
     constructor(scene) {
         this.scene = scene;
         this.roundStateMachine = null;
-        this.roundNumber = 1;
+        this.roundNumber = 10;
         this.maxRounds = 10;
         this.currentState = null;
         this.hero = this.scene.registry.get("hero");
@@ -28,7 +28,7 @@ export class FightRoundsStateMachine {
         this.currentState = state;
         switch (state) {
             case FightRoundsStateMachine.ROUND_STATES.START:
-                this.roundNumber = 1;
+                this.roundNumber;
                 this.setState(
                     FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS
                 );
@@ -51,28 +51,28 @@ export class FightRoundsStateMachine {
                     this.endFight(true, null);
                 }
                 break;
-            case FightRoundsStateMachine.ROUND_STATES.END:
-                let endText;
-                if (this.knockOut) {
-                    const winner =
-                        this.knockOut === "hero"
-                            ? this.hero.name
-                            : this.enemy.name;
-                    const loser =
-                        this.knockOut === "hero"
-                            ? this.enemy.name
-                            : this.hero.name;
-                    endText = `${loser} was \nknocked out \nby ${winner}!\n\nEND OF FIGHT`;
-                } else if (this.roundOut) {
-                    endText = `No more rounds!\n\nEND OF FIGHT`;
-                } else {
-                    endText = `END OF FIGHT!`;
-                }
-                this.scene.updatePopupText(endText);
-                this.scene.time.delayedCall(4000, () => {
-                    this.endFight(this.roundOut, this.knockOut);
-                });
-                break;
+                case FightRoundsStateMachine.ROUND_STATES.END:
+                    let endText;
+                    if (typeof this.knockOut === 'string' && this.knockOut) {
+                        const winner =
+                            this.knockOut === "hero"
+                                ? this.hero.name
+                                : this.enemy.name;
+                        const loser =
+                            this.knockOut === "hero"
+                                ? this.enemy.name
+                                : this.hero.name;
+                        endText = `${loser} was \nknocked out \nby ${winner}!\n\nEND OF FIGHT`;
+                    } else if (this.roundOut) {
+                        endText = `No more rounds!\n\nEND OF FIGHT`;
+                    } else {
+                        endText = `END OF FIGHT!`;
+                    }
+                    this.scene.updatePopupText(endText);
+                    this.scene.time.delayedCall(4000, () => {
+                        this.endFight(this.roundOut, this.knockOut);
+                    });
+                    break;
         }
     }
 
@@ -98,6 +98,8 @@ export class FightRoundsStateMachine {
     }
 
     endFight(roundOut, knockOut) {
+        console.log("endFight called with roundOut:", roundOut);
+        console.log("endFight called with knockOut:", knockOut);
         this.scene.events.emit("fightEnded", { roundOut, knockOut });
     }
 }
