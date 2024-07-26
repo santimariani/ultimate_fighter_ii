@@ -183,7 +183,11 @@ function App() {
         <div id="app">
             {/* Left Column */}
             <div id="leftColumn">
-                <div id="leftShoulderButton" onClick={handleBackButton} style={{ cursor: "pointer" }}>
+                <div
+                    id="leftShoulderButton"
+                    onClick={handleBackButton}
+                    style={{ cursor: "pointer" }}
+                >
                     <p className="fowardItalics">BACK</p>
                 </div>
                 <div id="outerCircleLeft">
@@ -196,7 +200,13 @@ function App() {
                         style={{ cursor: "pointer" }}
                     ></button>
                 </div>
-                <p id="leftStickText" style={{ cursor: "pointer" }} onClick={() => setShowLogin(true)}>SIGN IN</p>
+                <p
+                    id="leftStickText"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowLogin(true)}
+                >
+                    SIGN IN
+                </p>
                 <div id="outerKeyPad">
                     <button
                         onClick={() => {
@@ -207,16 +217,32 @@ function App() {
                         style={{ cursor: "pointer" }}
                     ></button>
                 </div>
-                <p id="keyPadText" style={{ cursor: "pointer" }} onClick={() => setShowRegister(true)}>NEW USER</p>
+                <p
+                    id="keyPadText"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowRegister(true)}
+                >
+                    NEW USER
+                </p>
                 <div id="leftShoulderHole"></div>
-                <button type="button" onClick={toggleSound} id="sound" style={{ cursor: "pointer" }}>
+                <button
+                    type="button"
+                    onClick={toggleSound}
+                    id="sound"
+                    style={{ cursor: "pointer" }}
+                >
                     {isGameMuted ? "SOUND" : "MUTE"}
                 </button>
-                <button type="button" onClick={togglePauseResume} id="pause" style={{ cursor: "pointer" }}>
+                <button
+                    type="button"
+                    onClick={togglePauseResume}
+                    id="pause"
+                    style={{ cursor: "pointer" }}
+                >
                     {isGamePaused ? "RESUME" : "PAUSE"}
                 </button>
             </div>
-    
+
             {/* Center Column */}
             <div id="center">
                 <div id="centerCenter">
@@ -235,66 +261,94 @@ function App() {
                             />
                         </>
                     ) : (
-                        <div style={{ width: "50%", alignItems: "center" }}>
+                        <div className="center-content">
                             {!showRegister && !showLogin && (
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        textAlign: "center",
-                                        height: "100vh",
-                                        width: "1080px",
-                                        fontSize: "8vh",
-                                    }}
-                                >
-                                    <p>WELCOME!</p>
-                                    <p>
-                                        CREATE NEW USER OR <br></br>SIGN IN TO PLAY
-                                        THE GAME!
+                                <div>
+                                    <p className="welcome-text">WELCOME!</p>
+                                    <p className="info-text">
+                                        CREATE NEW USER OR <br /> SIGN IN TO
+                                        PLAY THE GAME!
                                     </p>
                                 </div>
                             )}
                             {showRegister && (
-                                <Auth
-                                    view="sign_up"
-                                    supabaseClient={supabase}
-                                    appearance={{ theme: ThemeSupa }}
-                                    theme="dark"
-                                    providers={[]}
-                                />
+                                <div className="auth-container">
+                                    <p className="info-text">
+                                        CREATE A NEW ACCOUNT <br /> TO PLAY THE GAME!
+                                    </p>
+                                    <Auth
+                                        view="sign_up"
+                                        supabaseClient={supabase}
+                                        appearance={{ theme: ThemeSupa }}
+                                        theme="dark"
+                                        providers={[]}
+                                    />
+                                </div>
                             )}
                             {showLogin && (
-                                <Auth
-                                    supabaseClient={supabase}
-                                    appearance={{ theme: ThemeSupa }}
-                                    theme="dark"
-                                    providers={[]}
-                                />
+                                <div className="auth-container">
+                                    <p className="info-text">
+                                        SIGN IN TO YOUR ACCOUNT <br /> TO PLAY THE GAME!
+                                    </p>
+                                    <Auth
+                                        supabaseClient={supabase}
+                                        appearance={{ theme: ThemeSupa }}
+                                        theme="dark"
+                                        providers={[]}
+                                    />
+                                </div>
                             )}
                         </div>
                     )}
                 </div>
             </div>
-    
+
             {/* Right Column */}
             <div id="rightColumn">
-                <div id="rightShoulderButton" onClick={handleNextButton} style={{ cursor: "pointer" }}>
+                <div
+                    id="rightShoulderButton"
+                    onClick={handleNextButton}
+                    style={{ cursor: "pointer" }}
+                >
                     <p className="backwardItalics">NEXT</p>
                 </div>
                 <div id="outerCircleRight">
-                    <button id="innerCircleRight" onClick={logOut} style={{ cursor: "pointer" }}></button>
+                    <button
+                        id="innerCircleRight"
+                        onClick={logOut}
+                        style={{ cursor: "pointer" }}
+                    ></button>
                 </div>
-                <p id="rightStickText" style={{ cursor: "pointer" }} onClick={logOut}>SIGN OUT</p>
+                <p
+                    id="rightStickText"
+                    style={{ cursor: "pointer" }}
+                    onClick={logOut}
+                >
+                    SIGN OUT
+                </p>
                 <div id="fourButtons">
-                    <button type="button" onClick={handleRefresh} id="square1" style={{ cursor: "pointer" }}>
+                    <button
+                        type="button"
+                        onClick={handleRefresh}
+                        id="square1"
+                        style={{ cursor: "pointer" }}
+                    >
                         <p className="buttonText">R</p>
                     </button>
-                    <button type="button" onClick={loadGameState} id="square2" style={{ cursor: "pointer" }}>
+                    <button
+                        type="button"
+                        onClick={loadGameState}
+                        id="square2"
+                        style={{ cursor: "pointer" }}
+                    >
                         <p className="buttonText">L</p>
                     </button>
-                    <button type="button" onClick={saveGameState} id="square3" style={{ cursor: "pointer" }}>
+                    <button
+                        type="button"
+                        onClick={saveGameState}
+                        id="square3"
+                        style={{ cursor: "pointer" }}
+                    >
                         <p className="buttonText">S</p>
                     </button>
                     <button
@@ -360,7 +414,6 @@ function App() {
             </div>
         </div>
     );
-    
 }
 export default App;
 
