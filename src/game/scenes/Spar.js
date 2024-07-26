@@ -13,8 +13,7 @@ export class Spar extends Scene {
         this.enemyTotalDamageCaused = 0;
         this.enemyTotalDamageBlocked = 0;
         this.isGamePaused = false;
-        this.notificationText = null; 
-
+        this.notificationText = null; // Add this line to declare notificationText
     }
 
     init(data) {
@@ -25,7 +24,7 @@ export class Spar extends Scene {
             this.enemy,
             this.hero,
             this
-        ); 
+        );
 
         this.hero.updateHealth = (amount) => {
             if (amount < 0) {
@@ -50,7 +49,7 @@ export class Spar extends Scene {
             } else if (this.enemy.currentHealth < 0) {
                 this.enemy.currentHealth = 0;
             }
-            this.updateBars(); 
+            this.updateBars();
         };
 
         this.hero.updateStamina = (amount) => {
@@ -60,7 +59,7 @@ export class Spar extends Scene {
             } else if (this.hero.currentStamina < 0) {
                 this.hero.currentStamina = 0;
             }
-            this.updateBars(); 
+            this.updateBars();
         };
 
         this.enemy.updateStamina = (amount) => {
@@ -70,55 +69,63 @@ export class Spar extends Scene {
             } else if (this.enemy.currentStamina < 0) {
                 this.enemy.currentStamina = 0;
             }
-            this.updateBars(); 
+            this.updateBars();
         };
     }
 
     create() {
-
         const notificationStyle = {
-            fontFamily: 'Arial Black',
-            fontSize: '24px',
-            fontStyle: 'italic',
-            color: '#ffffff',
-            align: 'right',
+            fontFamily: "Arial Black",
+            fontSize: "24px",
+            fontStyle: "italic",
+            color: "#ffffff",
+            align: "right",
         };
-    
-        this.notificationText = this.add.text(
-            this.cameras.main.width - 10, 
-            this.cameras.main.height - 10,
-            "", 
-            notificationStyle
-        )
-        .setOrigin(1, 1) 
-        .setVisible(false)
-        .setDepth(100);
-    
-        console.log('Notification text created:', this.notificationText);
-    
+
+        this.notificationText = this.add
+            .text(
+                this.cameras.main.width - 10, // Offset by 10 pixels from the right edge
+                this.cameras.main.height - 10, // Offset by 10 pixels from the bottom edge
+                "",
+                notificationStyle
+            )
+            .setOrigin(1, 1) // Set origin to the bottom right corner
+            .setVisible(false)
+            .setDepth(100); // Increased depth for visibility
+
+        console.log("Notification text created:", this.notificationText); // Debugging log
+
+        // Event listeners for showing notification
         EventBus.on("gameStateSaved", () => {
-            console.log('gameStateSaved event triggered'); 
+            console.log("gameStateSaved event triggered"); // Debugging log
             this.showNotification("GAME STATE SAVED");
         });
         EventBus.on("gameStateLoaded", () => {
-            console.log('gameStateLoaded event triggered'); 
+            console.log("gameStateLoaded event triggered"); // Debugging log
             this.showNotification("GAME STATE LOADED");
         });
 
-        this.hero.sprite = this.add.image(100, 100, 'heroSprite').setVisible(false);
-        this.enemy.sprite = this.add.image(500, 100, 'enemySprite').setVisible(false);
-        this.punchSprite = this.add.sprite(400, 300, 'punchReg').setVisible(false);
-        this.specialSprite = this.add.sprite(600, 100, 'special').setVisible(false);
+        // Initialize hero and enemy sprites
+        this.hero.sprite = this.add
+            .image(100, 100, "heroSprite")
+            .setVisible(false);
+        this.enemy.sprite = this.add
+            .image(500, 100, "enemySprite")
+            .setVisible(false);
+        this.punchSprite = this.add
+            .sprite(400, 300, "punchReg")
+            .setVisible(false);
+        this.specialSprite = this.add
+            .sprite(600, 100, "special")
+            .setVisible(false);
 
         this.heroHealthBar = this.add.graphics().setVisible(false);
         this.heroStaminaBar = this.add.graphics().setVisible(false);
         this.enemyHealthBar = this.add.graphics().setVisible(false);
         this.enemyStaminaBar = this.add.graphics().setVisible(false);
 
-        this.updateBars(); 
+        this.updateBars();
 
-
-        
         const centerPopUpX = this.cameras.main.width / 2;
         const centerPopUpY = this.cameras.main.height / 2;
         this.popupBackground = this.add.graphics();
@@ -343,12 +350,15 @@ export class Spar extends Scene {
 
         EventBus.on("playerAction", this.heroAction.bind(this));
 
-        EventBus.on('goToNextScene', () => {
-            this.scene.start('PostFight');
+        // this.fightStateMachine = new FightRoundsStateMachine(this);
+        // this.fightStateMachine.start();
+
+        EventBus.on("goToNextScene", () => {
+            this.scene.start("PostFight");
         });
 
-        EventBus.on('goToPreviousScene', () => {
-            this.scene.start('CharacterSelectionScene');
+        EventBus.on("goToPreviousScene", () => {
+            this.scene.start("CharacterSelectionScene");
         });
 
         EventBus.emit("current-scene-ready", this);
@@ -361,7 +371,7 @@ export class Spar extends Scene {
         const centerY = this.cameras.main.height / 8;
 
         this.roundText = this.add
-            .text(centerX, centerY + 27, "8", {
+            .text(centerX, centerY + 27, "10", {
                 fontFamily: "Arial Black",
                 fontSize: 48,
                 color: "#ffffff",
@@ -418,7 +428,7 @@ export class Spar extends Scene {
             200
         );
         this.pauseBackground.setVisible(false);
-        this.pauseBackground.setDepth(14); 
+        this.pauseBackground.setDepth(14);
 
         this.pauseText = this.add
             .text(centerPauseX, centerPauseY, "Game Paused", {
@@ -436,7 +446,7 @@ export class Spar extends Scene {
                 this.resumeGame();
                 EventBus.emit("resumeGame");
             });
-        this.pauseText.setDepth(15); 
+        this.pauseText.setDepth(15);
     }
 
     updatePopupText(text) {
@@ -473,12 +483,12 @@ export class Spar extends Scene {
     }
 
     showNotification(message) {
-        console.log("Displaying notification:", message); 
+        console.log("Displaying notification:", message);
         this.notificationText.setText(message);
         this.notificationText.setVisible(true);
-    
-        console.log("Notification text:", this.notificationText); 
-    
+
+        console.log("Notification text:", this.notificationText); // Debugging log
+
         this.time.delayedCall(3000, () => {
             this.notificationText.setVisible(false);
             console.log("Notification hidden");
@@ -487,15 +497,18 @@ export class Spar extends Scene {
 
     addLeftFighter() {
         this.sparIntro.play();
-        this.punchSprite.play('punchReg');
+        this.punchSprite.play("punchReg");
 
         if (this.hero && this.hero.sprite) {
             this.hero.sprite
-                .setPosition(this.cameras.main.width * 0.25, this.cameras.main.height * 0.625)
+                .setPosition(
+                    this.cameras.main.width * 0.25,
+                    this.cameras.main.height * 0.625
+                )
                 .setVisible(true)
                 .setOrigin(0.5)
                 .setDepth(13);
-            console.log('Hero sprite set in Spar:', this.hero.sprite); 
+            console.log("Hero sprite set in Spar:", this.hero.sprite); // Debugging line
         }
     }
 
@@ -520,12 +533,15 @@ export class Spar extends Scene {
     addRightFighter() {
         if (this.enemy && this.enemy.sprite) {
             this.enemy.sprite
-                .setPosition(this.cameras.main.width * 0.75, this.cameras.main.height * 0.625)
+                .setPosition(
+                    this.cameras.main.width * 0.75,
+                    this.cameras.main.height * 0.625
+                )
                 .setVisible(true)
                 .setOrigin(0.5)
                 .setDepth(13);
 
-            console.log('Enemy sprite set in Spar:', this.enemy.sprite); 
+            console.log("Enemy sprite set in Spar:", this.enemy.sprite); // Debugging line
         }
     }
 
@@ -537,118 +553,195 @@ export class Spar extends Scene {
     }
 
     showStatsAndRemoveFight() {
-        this.add.image(512, 384, "gym").setDepth(-1); 
+        this.add.image(512, 384, "gym").setDepth(-1);
         if (this.vsText) {
             this.vsText.destroy();
         }
-        
+
+        // Set the visibility of hero stats
         this.heroHealthText.setVisible(true);
         this.heroPowerBoost.setVisible(true);
         this.heroStaminaText.setVisible(true);
         this.heroSwiftnessBoost.setVisible(true);
-    
+
+        // Set the visibility of enemy stats
         this.enemyHealthText.setVisible(true);
         this.enemyPowerBoost.setVisible(true);
         this.enemyStaminaText.setVisible(true);
         this.enemySwiftnessBoost.setVisible(true);
-    
+
+        // Set the visibility of health and stamina bars
         this.heroHealthBar.setVisible(true);
         this.heroStaminaBar.setVisible(true);
         this.enemyHealthBar.setVisible(true);
         this.enemyStaminaBar.setVisible(true);
-    
+
         this.events.emit("showRoundCounter");
-    
+
         this.fightStateMachine = new FightRoundsStateMachine(this);
         this.fightStateMachine.start();
-    
+
         this.isInitialized = true;
         EventBus.emit("fightStateMachineInitialized");
     }
 
     updateBars() {
-        const barWidth = 375; 
-        const barHeight = 30; 
-        const borderColor = 0x000000; 
-        const borderThickness = 3; 
-        const backgroundColor = 0x000000; 
-    
-        const healthColor = 0x004d00; 
-        const staminaColor = 0x4da6ff; 
-     
-        const offsetX = 32; 
-        const offsetY = 32; 
-    
+        const barWidth = 375; // 25% wider than 300
+        const barHeight = 30; // 50% taller than 20
+        const borderColor = 0x000000; // Black border color
+        const borderThickness = 3; // Thickness of the border
+        const backgroundColor = 0x000000; // Very dark, almost black background for empty bars
+
+        // Subdued colors for the bars
+        const healthColor = 0x004d00; // Dark green for health
+        const staminaColor = 0x4da6ff; // Light blue for stamina
+
+        // Positions for hero bars (doubled distance from top and sides)
+        const offsetX = 32; // Twice the original 16
+        const offsetY = 32; // Twice thœe original 16
+
         const heroHealthX = offsetX;
         const heroHealthY = offsetY;
-        const heroStaminaY = heroHealthY + 62.5; 
-    
-        const enemyHealthX = this.cameras.main.width - barWidth - offsetX; 
+        const heroStaminaY = heroHealthY + 62.5; // 50px below the health bar
+
+        // Positions for enemy bars (mirrored)
+        const enemyHealthX = this.cameras.main.width - barWidth - offsetX; // Align with the right side
         const enemyHealthY = heroHealthY;
         const enemyStaminaY = heroStaminaY;
-    
+
+        // Update hero health bar smoothly
         this.tweens.add({
             targets: this.heroHealthBar,
-            fillRectWidth: (this.hero.currentHealth / this.hero.totalHealth) * barWidth,
+            fillRectWidth:
+                (this.hero.currentHealth / this.hero.totalHealth) * barWidth,
             duration: 500,
             onUpdate: (tween) => {
                 const width = tween.getValue();
                 this.heroHealthBar.clear();
                 this.heroHealthBar.lineStyle(borderThickness, borderColor);
-                this.heroHealthBar.fillStyle(backgroundColor, 0.9);
-                this.heroHealthBar.fillRect(heroHealthX, heroHealthY, barWidth, barHeight); 
-                this.heroHealthBar.strokeRect(heroHealthX, heroHealthY, barWidth, barHeight); 
+                this.heroHealthBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
+                this.heroHealthBar.fillRect(
+                    heroHealthX,
+                    heroHealthY,
+                    barWidth,
+                    barHeight
+                ); // Background rectangle
+                this.heroHealthBar.strokeRect(
+                    heroHealthX,
+                    heroHealthY,
+                    barWidth,
+                    barHeight
+                ); // Border rectangle
                 this.heroHealthBar.fillStyle(healthColor);
-                this.heroHealthBar.fillRect(heroHealthX, heroHealthY, width, barHeight);
-            }
+                this.heroHealthBar.fillRect(
+                    heroHealthX,
+                    heroHealthY,
+                    width,
+                    barHeight
+                );
+            },
         });
-    
+
+        // Update hero stamina bar smoothly
         this.tweens.add({
             targets: this.heroStaminaBar,
-            fillRectWidth: (this.hero.currentStamina / this.hero.totalStamina) * barWidth,
+            fillRectWidth:
+                (this.hero.currentStamina / this.hero.totalStamina) * barWidth,
             duration: 500,
             onUpdate: (tween) => {
                 const width = tween.getValue();
                 this.heroStaminaBar.clear();
                 this.heroStaminaBar.lineStyle(borderThickness, borderColor);
                 this.heroStaminaBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
-                this.heroStaminaBar.fillRect(heroHealthX, heroStaminaY, barWidth, barHeight); // Background rectangle
-                this.heroStaminaBar.strokeRect(heroHealthX, heroStaminaY, barWidth, barHeight); // Border rectangle
+                this.heroStaminaBar.fillRect(
+                    heroHealthX,
+                    heroStaminaY,
+                    barWidth,
+                    barHeight
+                ); // Background rectangle
+                this.heroStaminaBar.strokeRect(
+                    heroHealthX,
+                    heroStaminaY,
+                    barWidth,
+                    barHeight
+                ); // Border rectangle
                 this.heroStaminaBar.fillStyle(staminaColor);
-                this.heroStaminaBar.fillRect(heroHealthX, heroStaminaY, width, barHeight);
-            }
+                this.heroStaminaBar.fillRect(
+                    heroHealthX,
+                    heroStaminaY,
+                    width,
+                    barHeight
+                );
+            },
         });
-    
+
+        // Update enemy health bar smoothly
         this.tweens.add({
             targets: this.enemyHealthBar,
-            fillRectWidth: barWidth - (this.enemy.currentHealth / this.enemy.totalHealth) * barWidth,
+            fillRectWidth:
+                barWidth -
+                (this.enemy.currentHealth / this.enemy.totalHealth) * barWidth,
             duration: 500,
             onUpdate: (tween) => {
                 const width = tween.getValue();
                 this.enemyHealthBar.clear();
                 this.enemyHealthBar.lineStyle(borderThickness, borderColor);
                 this.enemyHealthBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
-                this.enemyHealthBar.fillRect(enemyHealthX, enemyHealthY, barWidth, barHeight); // Background rectangle
-                this.enemyHealthBar.strokeRect(enemyHealthX, enemyHealthY, barWidth, barHeight); // Border rectangle
+                this.enemyHealthBar.fillRect(
+                    enemyHealthX,
+                    enemyHealthY,
+                    barWidth,
+                    barHeight
+                ); // Background rectangle
+                this.enemyHealthBar.strokeRect(
+                    enemyHealthX,
+                    enemyHealthY,
+                    barWidth,
+                    barHeight
+                ); // Border rectangle
                 this.enemyHealthBar.fillStyle(healthColor);
-                this.enemyHealthBar.fillRect(enemyHealthX + width, enemyHealthY, barWidth - width, barHeight);
-            }
+                this.enemyHealthBar.fillRect(
+                    enemyHealthX + width,
+                    enemyHealthY,
+                    barWidth - width,
+                    barHeight
+                );
+            },
         });
-    
+
+        // Update enemy stamina bar smoothly
         this.tweens.add({
             targets: this.enemyStaminaBar,
-            fillRectWidth: barWidth - (this.enemy.currentStamina / this.enemy.totalStamina) * barWidth,
+            fillRectWidth:
+                barWidth -
+                (this.enemy.currentStamina / this.enemy.totalStamina) *
+                    barWidth,
             duration: 500,
             onUpdate: (tween) => {
                 const width = tween.getValue();
                 this.enemyStaminaBar.clear();
                 this.enemyStaminaBar.lineStyle(borderThickness, borderColor);
-                this.enemyStaminaBar.fillStyle(backgroundColor, 0.9);
-                this.enemyStaminaBar.fillRect(enemyHealthX, enemyStaminaY, barWidth, barHeight); 
-                this.enemyStaminaBar.strokeRect(enemyHealthX, enemyStaminaY, barWidth, barHeight); 
+                this.enemyStaminaBar.fillStyle(backgroundColor, 0.9); // Nearly opaque background
+                this.enemyStaminaBar.fillRect(
+                    enemyHealthX,
+                    enemyStaminaY,
+                    barWidth,
+                    barHeight
+                ); // Background rectangle
+                this.enemyStaminaBar.strokeRect(
+                    enemyHealthX,
+                    enemyStaminaY,
+                    barWidth,
+                    barHeight
+                ); // Border rectangle
                 this.enemyStaminaBar.fillStyle(staminaColor);
-                this.enemyStaminaBar.fillRect(enemyHealthX + width, enemyStaminaY, barWidth - width, barHeight);
-            }
+                this.enemyStaminaBar.fillRect(
+                    enemyHealthX + width,
+                    enemyStaminaY,
+                    barWidth - width,
+                    barHeight
+                );
+            },
         });
     }
 
@@ -669,61 +762,117 @@ export class Spar extends Scene {
         this.enemy.totalHealth = x.enemy.totalHealth;
         this.enemy.currentStamina = x.enemy.currentStamina;
         this.enemy.totalStamina = x.enemy.totalStamina;
-    
+
         this.updateBars();
-    
-        console.log('Current round number:', x.roundNumber);
-        const roundsLeft = 11 - x.roundNumber; 
-        console.log('Rounds left:', roundsLeft);
-    
+
+        console.log("Current round number:", x.roundNumber);
+        const roundsLeft = 10 - x.roundNumber;
+        console.log("Rounds left:", roundsLeft);
+
         this.roundText.setText(`${roundsLeft}`);
-        this.roundText.setVisible(true); 
+        this.roundText.setVisible(true);
         this.roundLabel.setVisible(true);
         this.roundLeft.setVisible(true);
     }
     updateTextElements() {
         const textStyle = {
-            fontFamily: 'Arial Black',
-            fontSize: '20px', 
-            color: '#ffffff',
-            stroke: '#000000', 
-            strokeThickness: 3, 
+            fontFamily: "Arial Black",
+            fontSize: "20px",
+            color: "#ffffff",
+            stroke: "#000000", // Black stroke around the text
+            strokeThickness: 3, // Thickness of the stroke
         };
-    
-        const labelOffsetX = 33; 
-        const valueOffsetX = 410; 
-        const offsetY = 64; 
-        const spacingY = 62; 
-    
+
+        const labelOffsetX = 33; // Label position from the left
+        const valueOffsetX = 410; // Value position from the left
+        const offsetY = 64; // Position from the top
+        const spacingY = 62; // Vertical spacing between lines
+
+        // Hero text positions
         const heroHealthTextX = labelOffsetX;
         const heroHealthValueX = valueOffsetX;
         const heroHealthTextY = offsetY;
         const heroStaminaTextY = heroHealthTextY + spacingY;
-    
         const enemyLabelOffsetX = this.cameras.main.width - labelOffsetX;
         const enemyValueOffsetX = this.cameras.main.width - valueOffsetX;
         const enemyHealthTextY = heroHealthTextY;
         const enemyStaminaTextY = heroStaminaTextY;
-    
         if (!this.heroHealthValueText) {
-            this.heroHealthText = this.add.text(heroHealthTextX, heroHealthTextY, `HEALTH`, textStyle).setOrigin(0, 0).setVisible(false);
-            this.heroHealthValueText = this.add.text(heroHealthValueX, heroHealthTextY, `${this.hero.currentHealth} / ${this.hero.totalHealth}`, { ...textStyle, align: 'right' }).setOrigin(1, 0).setVisible(false);
-    
-            this.heroStaminaText = this.add.text(heroHealthTextX, heroStaminaTextY, `STAMINA`, textStyle).setOrigin(0, 0).setVisible(false);
-            this.heroStaminaValueText = this.add.text(heroHealthValueX, heroStaminaTextY, `${this.hero.currentStamina} / ${this.hero.totalStamina}`, { ...textStyle, align: 'right' }).setOrigin(1, 0).setVisible(false);
-            
-            this.enemyHealthText = this.add.text(enemyLabelOffsetX, enemyHealthTextY, `HEALTH`, textStyle).setOrigin(1, 0).setVisible(false);
-            this.enemyHealthValueText = this.add.text(enemyValueOffsetX, enemyHealthTextY, `${this.enemy.currentHealth} / ${this.enemy.totalHealth}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
-    
-            this.enemyStaminaText = this.add.text(enemyLabelOffsetX, enemyStaminaTextY, `STAMINA`, textStyle).setOrigin(1, 0).setVisible(false);
-            this.enemyStaminaValueText = this.add.text(enemyValueOffsetX, enemyStaminaTextY, `${this.enemy.currentStamina} / ${this.enemy.totalStamina}`, { ...textStyle, align: 'left' }).setOrigin(0, 0).setVisible(false);
+            this.heroHealthText = this.add
+                .text(heroHealthTextX, heroHealthTextY, `HEALTH`, textStyle)
+                .setOrigin(0, 0)
+                .setVisible(false);
+            this.heroHealthValueText = this.add
+                .text(
+                    heroHealthValueX,
+                    heroHealthTextY,
+                    `${this.hero.currentHealth} / ${this.hero.totalHealth}`,
+                    { ...textStyle, align: "right" }
+                )
+                .setOrigin(1, 0)
+                .setVisible(false);
+
+            this.heroStaminaText = this.add
+                .text(heroHealthTextX, heroStaminaTextY, `STAMINA`, textStyle)
+                .setOrigin(0, 0)
+                .setVisible(false);
+            this.heroStaminaValueText = this.add
+                .text(
+                    heroHealthValueX,
+                    heroStaminaTextY,
+                    `${this.hero.currentStamina} / ${this.hero.totalStamina}`,
+                    { ...textStyle, align: "right" }
+                )
+                .setOrigin(1, 0)
+                .setVisible(false);
+
+            this.enemyHealthText = this.add
+                .text(enemyLabelOffsetX, enemyHealthTextY, `HEALTH`, textStyle)
+                .setOrigin(1, 0)
+                .setVisible(false);
+            this.enemyHealthValueText = this.add
+                .text(
+                    enemyValueOffsetX,
+                    enemyHealthTextY,
+                    `${this.enemy.totalHealth} / ${this.enemy.currentHealth}`,
+                    { ...textStyle, align: "left" }
+                )
+                .setOrigin(0, 0)
+                .setVisible(false);
+
+            this.enemyStaminaText = this.add
+                .text(
+                    enemyLabelOffsetX,
+                    enemyStaminaTextY,
+                    `STAMINA`,
+                    textStyle
+                )
+                .setOrigin(1, 0)
+                .setVisible(false);
+            this.enemyStaminaValueText = this.add
+                .text(
+                    enemyValueOffsetX,
+                    enemyStaminaTextY,
+                    `${this.enemy.totalStamina} / ${this.enemy.totalStamina}`,
+                    { ...textStyle, align: "left" }
+                )
+                .setOrigin(0, 0)
+                .setVisible(false);
         }
-    
-        this.heroHealthValueText.setText(`${this.hero.currentHealth} / ${this.hero.totalHealth}`);
-        this.heroStaminaValueText.setText(`${this.hero.currentStamina} / ${this.hero.totalStamina}`);
-        this.enemyHealthValueText.setText(`${this.enemy.currentHealth} / ${this.enemy.totalHealth}`);
-        this.enemyStaminaValueText.setText(`${this.enemy.currentStamina} / ${this.enemy.totalStamina}`);
-        
+
+        this.heroHealthValueText.setText(
+            `${this.hero.currentHealth} / ${this.hero.totalHealth}`
+        );
+        this.heroStaminaValueText.setText(
+            `${this.hero.currentStamina} / ${this.hero.totalStamina}`
+        );
+        this.enemyHealthValueText.setText(
+            `${this.enemy.currentHealth} / ${this.enemy.totalHealth}`
+        );
+        this.enemyStaminaValueText.setText(
+            `${this.enemy.currentStamina} / ${this.enemy.totalStamina}`
+        );
+
         if (this.isInitialized) {
             this.heroHealthText.setVisible(true);
             this.heroHealthValueText.setVisible(true);
@@ -777,9 +926,10 @@ export class Spar extends Scene {
         this.updatePopupText(`${this.enemy.name} considers \nhis options ...`);
         EventBus.emit("enemyTurn");
         setTimeout(() => {
-            const actions = ["punch", "kick", "special", "guard"]; // Added "special" here
+            const actions = ["punch", "kick", "guard"]; // Added "special" here
+            // const actions = ["punch", "kick", "special", "guard"]; // Added "special" here
             let action;
-    
+
             do {
                 action = actions[Math.floor(Math.random() * actions.length)];
             } while (
@@ -791,10 +941,10 @@ export class Spar extends Scene {
                     this.enemy.currentStamina <
                         this.enemyCombatActions.attackTypes.kick
                             .requiredStamina) ||
-                (action === "special" &&
-                    this.enemy.currentStamina <
-                        this.enemyCombatActions.attackTypes.special
-                            .requiredStamina) || 
+                // (action === "special" &&
+                //     this.enemy.currentStamina <
+                //         this.enemyCombatActions.attackTypes.special
+                //             .requiredStamina) || // Check stamina for "special"
                 (action === "guard" &&
                     !(
                         this.enemy.currentHealth <
@@ -803,12 +953,12 @@ export class Spar extends Scene {
                             this.enemy.totalStamina * 0.5
                     ))
             );
-    
+
             const onComplete = () => {
                 this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
                 this.events.emit("enemyActionComplete");
             };
-    
+
             switch (action) {
                 case "punch":
                     this.enemyCombatActions.punch(onComplete);
@@ -816,7 +966,7 @@ export class Spar extends Scene {
                 case "kick":
                     this.enemyCombatActions.kick(onComplete);
                     break;
-                case "special": 
+                case "special":
                     this.enemyCombatActions.special(onComplete);
                     break;
                 case "guard":
@@ -827,16 +977,15 @@ export class Spar extends Scene {
             }
         }, 2000);
     }
-    
 
-    changePostFightScene({ tie, winner }) {
+    changePostFightScene({ roundOut, knockOut }) {
         this.scene.start("PostFight", {
             heroTotalDamageCaused: this.heroTotalDamageCaused,
             heroTotalDamageBlocked: this.heroTotalDamageBlocked,
             enemyTotalDamageCaused: this.enemyTotalDamageCaused,
             enemyTotalDamageBlocked: this.enemyTotalDamageBlocked,
-            tie: tie,
-            winner: winner,
+            roundOut: this.fightStateMachine,
+            knockOut: this.fightStateMachine.knockOut,
         });
     }
 }

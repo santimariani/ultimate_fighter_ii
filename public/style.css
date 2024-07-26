@@ -35,6 +35,44 @@ body {
     z-index: 1;
 }
 
+.center-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    box-sizing: border-box;
+    border-top: 1vh solid rgb(0, 0, 0);
+    border-bottom: 1vh solid rgb(0, 0, 0);
+    border-left: 0.75vh solid rgb(0, 0, 0);
+    border-right: 1vh solid rgb(0, 0, 0);
+    width: 100%;
+    background-color: #0e33c92a;
+    font-size: 1vw; /* Responsive font size based on viewport width */
+}
+
+.center-content .welcome-text {
+    color: rgb(255, 255, 255);
+    font-size: 5vw; /* Larger text for the welcome message */
+    margin: 0;
+    font-family: "Arial Black", sans-serif;
+}
+
+.center-content .info-text {
+    color: rgb(255, 255, 255);
+    font-size: 2vw; /* Responsive font size for the information text */
+}
+
+.auth-container {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
 #leftColumn {
     height: 100vh;
     width: 15vw;

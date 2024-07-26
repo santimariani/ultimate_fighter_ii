@@ -11,10 +11,8 @@ import { createClient } from "@supabase/supabase-js";
 import StartGame from "./main";
 import { EventBus } from "./EventBus";
 
-const supabase = createClient(
-    "https://kqzjchdvriyxuaxybphk.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
-);
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+
 
 export const PhaserGame = forwardRef(function PhaserGame(
     { currentActiveScene },
@@ -48,7 +46,7 @@ export const PhaserGame = forwardRef(function PhaserGame(
             return (baseHero, baseEnemy)
         };
         
-        const roundNumber = 1;
+        // const roundNumber = 1;
 
         ref.current.scene.fightStateMachine.roundNumber = game.roundNumber;
         ref.current.scene.fightStateMachine.hero = game.baseHero;

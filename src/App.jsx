@@ -6,10 +6,12 @@ import UIMenus from "./components/UIMenus";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
 
-const supabase = createClient(
-    "https://kqzjchdvriyxuaxybphk.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
-);
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+//     "https://kqzjchdvriyxuaxybphk.supabase.co",
+//     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
+// );
+
+// const supabase = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 function App() {
     const phaserRef = useRef();
@@ -25,7 +27,6 @@ function App() {
     const [isGameMuted, setIsGameMuted] = useState(false); // State to manage pause/resume
     const sceneChangeCooldown = 500; // 500 ms cooldown
 
-
     const [isInitialized, setIsInitialized] = useState(false);
 
     EventBus.on("fightStateMachineInitialized", () => {
@@ -34,7 +35,7 @@ function App() {
 
     const handleRefresh = () => {
         window.location.reload();
-        setIsGamePaused(false); 
+        setIsGamePaused(false);
         setIsGameMuted(false);
     };
 
@@ -50,7 +51,7 @@ function App() {
             EventBus.emit("pauseGame");
         }
         setIsGamePaused(!isGamePaused);
-        setButtonDisabled(!buttonDisabled)
+        setButtonDisabled(!buttonDisabled);
     };
 
     async function getScores() {
@@ -172,18 +173,23 @@ function App() {
     }
 
     const handleBackButton = () => {
-        EventBus.emit('goToPreviousScene');
+        EventBus.emit("goToPreviousScene");
     };
 
     const handleNextButton = () => {
-        EventBus.emit('goToNextScene');
+        EventBus.emit("goToNextScene");
     };
 
     // console.log("GAME STATE", gameState, phaserRef.current);
     return (
         <div id="app">
+            {/* Left Column */}
             <div id="leftColumn">
-                <div id="leftShoulderButton" onClick={handleBackButton}>
+                <div
+                    id="leftShoulderButton"
+                    onClick={handleBackButton}
+                    style={{ cursor: "pointer" }}
+                >
                     <p className="fowardItalics">BACK</p>
                 </div>
                 <div id="outerCircleLeft">
@@ -193,9 +199,16 @@ function App() {
                             setShowRegister(false);
                         }}
                         id="innerCircleLeft"
+                        style={{ cursor: "pointer" }}
                     ></button>
                 </div>
-                <p id="leftStickText">SIGN IN</p>
+                <p
+                    id="leftStickText"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowLogin(true)}
+                >
+                    SIGN IN
+                </p>
                 <div id="outerKeyPad">
                     <button
                         onClick={() => {
@@ -203,17 +216,36 @@ function App() {
                             setShowLogin(false);
                         }}
                         id="innerKeyPad"
+                        style={{ cursor: "pointer" }}
                     ></button>
                 </div>
-                <p id="keyPadText">NEW USER</p>
+                <p
+                    id="keyPadText"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowRegister(true)}
+                >
+                    NEW USER
+                </p>
                 <div id="leftShoulderHole"></div>
-                <button type="button" onClick={toggleSound} id="sound">
+                <button
+                    type="button"
+                    onClick={toggleSound}
+                    id="sound"
+                    style={{ cursor: "pointer" }}
+                >
                     {isGameMuted ? "SOUND" : "MUTE"}
                 </button>
-                <button type="button" onClick={togglePauseResume} id="pause">
+                <button
+                    type="button"
+                    onClick={togglePauseResume}
+                    id="pause"
+                    style={{ cursor: "pointer" }}
+                >
                     {isGamePaused ? "RESUME" : "PAUSE"}
                 </button>
             </div>
+
+            {/* Center Column */}
             <div id="center">
                 <div id="centerCenter">
                     {session ? (
@@ -231,112 +263,153 @@ function App() {
                             />
                         </>
                     ) : (
-                        <div style={{ width: "50%", alignItems: "center" }}>
+                        <div className="center-content">
                             {!showRegister && !showLogin && (
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        textAlign: "center",
-                                        height: "100vh",
-                                        width: "1080px",
-                                        fontSize: "8vh",
-                                    }}
-                                >
-                                    <p>WELCOME!</p>
-                                    <p>
-                                        CREATE NEW USER OR <br></br>SIGN IN TO
+                                <div>
+                                    <p className="welcome-text">WELCOME!</p>
+                                    <p className="info-text">
+                                        CREATE NEW USER OR <br /> SIGN IN TO
                                         PLAY THE GAME!
                                     </p>
                                 </div>
                             )}
                             {showRegister && (
-                                <Auth
-                                    view="sign_up"
-                                    supabaseClient={supabase}
-                                    appearance={{ theme: ThemeSupa }}
-                                    theme="dark"
-                                    providers={[]}
-                                />
+                                <div className="auth-container">
+                                    <p className="info-text">
+                                        CREATE A NEW ACCOUNT <br /> TO PLAY THE GAME!
+                                    </p>
+                                    <Auth
+                                        view="sign_up"
+                                        supabaseClient={supabase}
+                                        appearance={{ theme: ThemeSupa }}
+                                        theme="dark"
+                                        providers={[]}
+                                    />
+                                </div>
                             )}
                             {showLogin && (
-                                <Auth
-                                    supabaseClient={supabase}
-                                    appearance={{ theme: ThemeSupa }}
-                                    theme="dark"
-                                    providers={[]}
-                                />
+                                <div className="auth-container">
+                                    <p className="info-text">
+                                        SIGN IN TO YOUR ACCOUNT <br /> TO PLAY THE GAME!
+                                    </p>
+                                    <Auth
+                                        supabaseClient={supabase}
+                                        appearance={{ theme: ThemeSupa }}
+                                        theme="dark"
+                                        providers={[]}
+                                    />
+                                </div>
                             )}
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* Right Column */}
             <div id="rightColumn">
-            <div id="rightShoulderButton" onClick={handleNextButton}>
+                <div
+                    id="rightShoulderButton"
+                    onClick={handleNextButton}
+                    style={{ cursor: "pointer" }}
+                >
                     <p className="backwardItalics">NEXT</p>
                 </div>
                 <div id="outerCircleRight">
-                    <button id="innerCircleRight" onClick={logOut}></button>
+                    <button
+                        id="innerCircleRight"
+                        onClick={logOut}
+                        style={{ cursor: "pointer" }}
+                    ></button>
                 </div>
-                <p id="rightStickText">SIGN OUT</p>
+                <p
+                    id="rightStickText"
+                    style={{ cursor: "pointer" }}
+                    onClick={logOut}
+                >
+                    SIGN OUT
+                </p>
                 <div id="fourButtons">
-                    <button type="button" onClick={handleRefresh} id="square1">
+                    <button
+                        type="button"
+                        onClick={handleRefresh}
+                        id="square1"
+                        style={{ cursor: "pointer" }}
+                    >
                         <p className="buttonText">R</p>
                     </button>
-                    <button type="button" onClick={loadGameState} id="square2">
+                    <button
+                        type="button"
+                        onClick={loadGameState}
+                        id="square2"
+                        style={{ cursor: "pointer" }}
+                    >
                         <p className="buttonText">L</p>
                     </button>
-                    <button type="button" onClick={saveGameState} id="square3">
+                    <button
+                        type="button"
+                        onClick={saveGameState}
+                        id="square3"
+                        style={{ cursor: "pointer" }}
+                    >
                         <p className="buttonText">S</p>
                     </button>
-                    <div id="square4">
-                        <p className="buttonText">A</p>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={togglePauseResume}
+                        id="square4"
+                        style={{ cursor: "pointer" }}
+                    >
+                        <p className="buttonText">P</p>
+                    </button>
                 </div>
                 <div id="gridContainerRight">
                     <div
                         className="gridItemRight"
-                        style={{ gridArea: "2 / 2" }}
+                        style={{ gridArea: "2 / 2", cursor: "pointer" }}
+                        onClick={handleRefresh}
                     ></div>
                     <div
                         className="gridItemRight"
-                        style={{ gridArea: "4 / 2" }}
+                        style={{ gridArea: "4 / 2", cursor: "pointer" }}
+                        onClick={saveGameState}
                     ></div>
                     <div
                         className="gridItemRight"
-                        style={{ gridArea: "6 / 2" }}
+                        style={{ gridArea: "6 / 2", cursor: "pointer" }}
+                        onClick={loadGameState}
                     ></div>
                     <div
                         className="gridItemRight"
-                        style={{ gridArea: "8 / 2" }}
+                        style={{ gridArea: "8 / 2", cursor: "pointer" }}
+                        onClick={togglePauseResume}
                     ></div>
                     <div
                         className="gridTextRight"
-                        style={{ gridArea: "2 / 4" }}
+                        style={{ gridArea: "2 / 4", cursor: "pointer" }}
+                        onClick={handleRefresh}
                     >
                         REFRESH
                     </div>
-                    <button
-                        type="button"
-                        onClick={saveGameState}
-                        className="gridTextRight"
-                        style={{ gridArea: "4 / 4" }}
-                    >
-                        SAVE
-                    </button>
                     <div
                         className="gridTextRight"
-                        style={{ gridArea: "6 / 4" }}
+                        style={{ gridArea: "4 / 4", cursor: "pointer" }}
+                        onClick={saveGameState}
+                    >
+                        SAVE
+                    </div>
+                    <div
+                        className="gridTextRight"
+                        style={{ gridArea: "6 / 4", cursor: "pointer" }}
+                        onClick={loadGameState}
                     >
                         LOAD
                     </div>
                     <div
                         className="gridTextRight"
-                        style={{ gridArea: "8 / 4" }}
+                        style={{ gridArea: "8 / 4", cursor: "pointer" }}
+                        onClick={togglePauseResume}
                     >
-                        ACCOUNT
+                        PAUSE
                     </div>
                 </div>
                 <div id="rightShoulderHole"></div>
