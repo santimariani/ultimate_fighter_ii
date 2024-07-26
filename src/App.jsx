@@ -6,10 +6,12 @@ import UIMenus from "./components/UIMenus";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
 
-const supabase = createClient(
-    "https://kqzjchdvriyxuaxybphk.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
-);
+const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+//     "https://kqzjchdvriyxuaxybphk.supabase.co",
+//     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
+// );
+
+// const supabase = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 function App() {
     const phaserRef = useRef();

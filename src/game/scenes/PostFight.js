@@ -61,7 +61,8 @@ export class PostFight extends Scene {
                 fightEndText = `FIGHT OVER\nBY KO!`;
             } else if (this.roundOut) {
                 this.winner = this.determineWinner();
-                fightEndText = "FIGHT OVER\nBY ROUNDS!";
+                // fightEndText = "FIGHT OVER\nBY ROUNDS!";
+                fightEndText = "FIGHT OVER!";
             } else {
                 fightEndText = "FIGHT OVER!";
             }
@@ -268,7 +269,7 @@ export class PostFight extends Scene {
             }
 
             const winnerTextObj = this.add
-                .text(512, 450, winnerText, {
+                .text(520, 450, winnerText, {
                     fontFamily: "Arial Black",
                     fontSize: 31,
                     color: "#ffffff",

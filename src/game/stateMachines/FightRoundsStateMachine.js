@@ -11,7 +11,7 @@ export class FightRoundsStateMachine {
     constructor(scene) {
         this.scene = scene;
         this.roundStateMachine = null;
-        this.roundNumber = 10;
+        this.roundNumber = 1;
         this.maxRounds = 10;
         this.currentState = null;
         this.hero = this.scene.registry.get("hero");
