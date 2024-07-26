@@ -69,7 +69,7 @@ export class FightRoundsStateMachine {
                         endText = `END OF FIGHT!`;
                     }
                     this.scene.updatePopupText(endText);
-                    this.scene.time.delayedCall(4000, () => {
+                    this.scene.time.delayedCall(3000, () => {
                         this.endFight(this.roundOut, this.knockOut);
                     });
                     break;
