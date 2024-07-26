@@ -16,16 +16,65 @@ export class CharacterSelectionScene extends Scene {
     create() {
         // Set background
         this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'backgroundSelect');
+        EventBus.on("muteGame", this.muteGame, this);
+        EventBus.on("pauseGame", this.pauseGame, this);
+        EventBus.on("resumeGame", this.resumeGame, this);
 
-        // Title Text
-        this.add.text(this.cameras.main.width / 2, 60, 'CHOOSE YOUR CHARACTER', {
-            fontFamily: 'Arial Black',
-            fontSize: 48,
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 7,
-            align: 'center'
-        }).setOrigin(0.5);
+        const centerPauseX = this.cameras.main.width / 2;
+        const centerPauseY = this.cameras.main.height / 2;
+        this.pauseBackground = this.add.graphics();
+        this.pauseBackground.fillStyle(0x000000, 0.9);
+        this.pauseBackground.fillRect(
+            centerPauseX - 200,
+            centerPauseY - 100,
+            400,
+            200
+        );
+        this.pauseBackground.setVisible(false);
+        this.pauseBackground.setDepth(14); 
+
+        this.pauseText = this.add
+            .text(centerPauseX, centerPauseY, "Game Paused", {
+                fontFamily: "Arial Black",
+                fontSize: 32,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 6,
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setVisible(false)
+            .setInteractive()
+            .on("pointerdown", () => {
+                this.resumeGame();
+                EventBus.emit("resumeGame");
+            });
+        this.pauseText.setDepth(15); // Set a high depth value
+
+        const titleText = this.add.text(
+            this.cameras.main.width / 2,
+            60,
+            'CHOOSE YOUR CHARACTER',
+            {
+                fontFamily: 'Arial Black',
+                fontSize: 48,
+                color: '#ffffff',
+                stroke: '#000000',
+                strokeThickness: 7,
+                align: 'center'
+            }
+        ).setOrigin(0.5);
+
+        // Apply the same grow-and-shrink animation to the title text
+        this.tweens.add({
+            targets: titleText,
+            scaleX: 1.02,
+            scaleY: 1.02,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
 
         // Fetch character data from the registry
         const hero = this.registry.get('hero');
@@ -59,6 +108,17 @@ export class CharacterSelectionScene extends Scene {
         const heroStatsBg = this.add.graphics()
             .fillStyle(heroStatsBgStyle.color, heroStatsBgStyle.alpha)
             .fillRect(heroStatsBgStyle.x - heroStatsBgStyle.width / 2, heroStatsBgStyle.y - heroStatsBgStyle.height / 2, heroStatsBgStyle.width, heroStatsBgStyle.height);
+
+        // Apply the grow-and-shrink animation to the hero stats background
+        this.tweens.add({
+            targets: heroStatsBg,
+            scaleX: 1.00,
+            scaleY: 1.01,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
 
         // Character 1: Hero
         const heroSprite = this.add.image(200 + sideMargin, 300, 'heroSprite').setInteractive();
@@ -101,6 +161,17 @@ export class CharacterSelectionScene extends Scene {
             .fillStyle(enemyStatsBgStyle.color, enemyStatsBgStyle.alpha)
             .fillRect(enemyStatsBgStyle.x - enemyStatsBgStyle.width / 2, enemyStatsBgStyle.y - enemyStatsBgStyle.height / 2, enemyStatsBgStyle.width, enemyStatsBgStyle.height);
 
+        // Apply the grow-and-shrink animation to the enemy stats background
+        this.tweens.add({
+            targets: enemyStatsBg,
+            scaleX: 1.00,
+            scaleY: 1.01,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+
         // Character 2: Enemy
         const enemySprite = this.add.image(this.cameras.main.width - (200 + sideMargin), 300, 'enemySprite').setInteractive();
 
@@ -135,10 +206,12 @@ export class CharacterSelectionScene extends Scene {
         });
 
         EventBus.on('goToNextScene', () => {
+            this.stopMusic(); // Stop music when transitioning to Spar scene
             this.scene.start('Spar');
         });
 
         EventBus.on('goToPreviousScene', () => {
+            this.stopMusic(); // Stop music when transitioning to Spar scene
             this.scene.start('MainMenu');
         });
     }
@@ -146,6 +219,36 @@ export class CharacterSelectionScene extends Scene {
     selectCharacter(characterName) {
         console.log('Character selected:', characterName);
         // Save selected character and transition to the next scene
+        this.stopMusic(); // Stop music when transitioning to Spar scene
         this.scene.start('Spar', { selectedCharacter: characterName });
+    }
+
+    stopMusic() {
+        if (this.sound.get('menuIntro')) {
+            this.sound.stopByKey('menuIntro');
+        }
+        if (this.sound.get('menuLoop')) {
+            this.sound.stopByKey('menuLoop');
+        }
+    }
+
+    muteGame() {
+        this.sound.mute = !this.sound.mute;
+    }
+
+    pauseGame() {
+        this.scene.pause();
+
+        this.isGamePaused = true;
+        this.pauseBackground.setVisible(true);
+        this.pauseText.setVisible(true);
+    }
+
+    resumeGame() {
+        this.scene.resume();
+
+        this.isGamePaused = false;
+        this.pauseBackground.setVisible(false);
+        this.pauseText.setVisible(false);
     }
 }

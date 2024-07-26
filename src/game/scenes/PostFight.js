@@ -19,8 +19,42 @@ export class PostFight extends Scene {
     create() {
         // Add background image
         this.add.image(512, 384, "background").setAlpha(0.7);
+        EventBus.on("muteGame", this.muteGame, this);
+        EventBus.on("pauseGame", this.pauseGame, this);
+        EventBus.on("resumeGame", this.resumeGame, this);
 
-        // Display "FIGHT OVER BY" text
+        const centerPauseX = this.cameras.main.width / 2;
+        const centerPauseY = this.cameras.main.height / 2;
+        this.pauseBackground = this.add.graphics();
+        this.pauseBackground.fillStyle(0x000000, 0.9);
+        this.pauseBackground.fillRect(
+            centerPauseX - 200,
+            centerPauseY - 100,
+            400,
+            200
+        );
+        this.pauseBackground.setVisible(false);
+        this.pauseBackground.setDepth(14); 
+
+        this.pauseText = this.add
+            .text(centerPauseX, centerPauseY, "Game Paused", {
+                fontFamily: "Arial Black",
+                fontSize: 32,
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 6,
+                align: "center",
+            })
+            .setOrigin(0.5)
+            .setVisible(false)
+            .setInteractive()
+            .on("pointerdown", () => {
+                this.resumeGame();
+                EventBus.emit("resumeGame");
+            });
+        this.pauseText.setDepth(15); // Set a high depth value
+
+        // Display "FIGHT OVER" title with animation
         this.time.delayedCall(750, () => {
             let fightEndText;
             if (this.knockOut) {
@@ -32,7 +66,7 @@ export class PostFight extends Scene {
                 fightEndText = "FIGHT OVER!";
             }
 
-            this.add
+            const fightOverText = this.add
                 .text(512, 100, fightEndText, {
                     fontFamily: "Arial Black",
                     fontSize: 48,
@@ -43,13 +77,24 @@ export class PostFight extends Scene {
                 })
                 .setOrigin(0.5)
                 .setDepth(100);
+
+            // Apply grow-and-shrink animation to the "FIGHT OVER" title
+            this.tweens.add({
+                targets: fightOverText,
+                scaleX: 1.005,
+                scaleY: 1.005,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         });
 
         // Show Hero Stats Title and Background Box
         this.time.delayedCall(2250, () => {
             this.createHeroStatsBox();
             this.createHeroSprite();
-            this.add
+            const heroStatsText = this.add
                 .text(256, 450, "HERO STATS", {
                     fontFamily: "Arial Black",
                     fontSize: 32,
@@ -60,6 +105,17 @@ export class PostFight extends Scene {
                 })
                 .setOrigin(0.5)
                 .setDepth(100);
+
+            // Apply grow-and-shrink animation to the hero stats title
+            this.tweens.add({
+                targets: heroStatsText,
+                scaleX: 1.005,
+                scaleY: 1.005,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         });
 
         // Display Hero Stats
@@ -122,7 +178,7 @@ export class PostFight extends Scene {
         this.time.delayedCall(6750, () => {
             this.createEnemyStatsBox();
             this.createEnemySprite();
-            this.add
+            const enemyStatsText = this.add
                 .text(768, 450, "ENEMY STATS", {
                     fontFamily: "Arial Black",
                     fontSize: 32,
@@ -133,6 +189,17 @@ export class PostFight extends Scene {
                 })
                 .setOrigin(0.5)
                 .setDepth(100);
+
+            // Apply grow-and-shrink animation to the enemy stats title
+            this.tweens.add({
+                targets: enemyStatsText,
+                scaleX: 1.005,
+                scaleY: 1.005,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         });
 
         // Display Enemy Stats
@@ -200,8 +267,8 @@ export class PostFight extends Scene {
                 winnerText = `WINNER: \n${this.knockOut ? this.knockOut.toUpperCase() : 'NONE'}`;
             }
 
-            this.add
-                .text(518, 450, winnerText, {
+            const winnerTextObj = this.add
+                .text(512, 450, winnerText, {
                     fontFamily: "Arial Black",
                     fontSize: 31,
                     color: "#ffffff",
@@ -211,6 +278,17 @@ export class PostFight extends Scene {
                 })
                 .setOrigin(0.5)
                 .setDepth(100);
+
+            // Apply grow-and-shrink animation to the winner announcement
+            this.tweens.add({
+                targets: winnerTextObj,
+                scaleX: 1.005,
+                scaleY: 1.005,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
 
             // Call highlightWinner() within the same delayed call
             this.highlightWinner();
@@ -228,6 +306,17 @@ export class PostFight extends Scene {
         this.heroStatsBg = this.add.graphics()
             .fillStyle(0x000000, 0.6)
             .fillRect(80, 200, 350, 500);
+
+        // Apply grow-and-shrink animation to the hero stats background
+        this.tweens.add({
+            targets: this.heroStatsBg,
+            scaleX: 1.005,
+            scaleY: 1.005,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
     }
 
     createHeroSprite() {
@@ -243,6 +332,17 @@ export class PostFight extends Scene {
         this.enemyStatsBg = this.add.graphics()
             .fillStyle(0x000000, 0.6)
             .fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500);
+
+        // Apply grow-and-shrink animation to the enemy stats background
+        this.tweens.add({
+            targets: this.enemyStatsBg,
+            scaleX: 1.005,
+            scaleY: 1.005,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
     }
 
     createEnemySprite() {
@@ -281,5 +381,23 @@ export class PostFight extends Scene {
         if (heroScore > enemyScore) return 'hero';
         if (enemyScore > heroScore) return 'enemy';
         return 'tie';
+    }
+
+    muteGame() {
+        this.sound.mute = !this.sound.mute;
+    }
+
+    pauseGame() {
+        this.scene.pause();
+        this.isGamePaused = true;
+        this.pauseBackground.setVisible(true);
+        this.pauseText.setVisible(true);
+    }
+
+    resumeGame() {
+        this.scene.resume();
+        this.isGamePaused = false;
+        this.pauseBackground.setVisible(false);
+        this.pauseText.setVisible(false);
     }
 }
