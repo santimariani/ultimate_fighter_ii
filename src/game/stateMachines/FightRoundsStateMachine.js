@@ -12,7 +12,7 @@ export class FightRoundsStateMachine {
         this.scene = scene;
         this.roundStateMachine = null;
         this.roundNumber = 1;
-        this.maxRounds = 10;
+        this.maxRounds = 2;
         this.currentState = null;
         this.hero = this.scene.registry.get("hero");
         this.enemy = this.scene.registry.get("enemy");

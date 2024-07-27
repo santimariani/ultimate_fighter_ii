@@ -919,7 +919,7 @@ export class Spar extends Scene {
             default:
                 console.log("Unknown action:", action);
         }
-        this.heroTotalDamageBlocked = this.hero.damageBlocked;
+        this.enemyTotalDamageBlocked += this.enemy.damageBlocked;
     }
 
     enemyAction() {
@@ -927,7 +927,6 @@ export class Spar extends Scene {
         EventBus.emit("enemyTurn");
         setTimeout(() => {
             const actions = ["punch", "kick", "guard"]; // Added "special" here
-            // const actions = ["punch", "kick", "special", "guard"]; // Added "special" here
             let action;
 
             do {
@@ -955,7 +954,7 @@ export class Spar extends Scene {
             );
 
             const onComplete = () => {
-                this.enemyTotalDamageBlocked = this.enemy.damageBlocked;
+                this.heroTotalDamageBlocked += this.hero.damageBlocked;
                 this.events.emit("enemyActionComplete");
             };
 

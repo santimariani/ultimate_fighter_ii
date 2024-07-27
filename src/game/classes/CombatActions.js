@@ -8,18 +8,21 @@ class CombatActions {
         this.attackTypes = {
             punch: {
                 requiredStamina: 10,
-                damageMultiplier: 2,
+                attackMin: 0.25,
+                damageMultiplier: 1.5,
                 luckFactor: 0.75,
             },
             kick: {
                 requiredStamina: 25,
-                damageMultiplier: 4,
+                attackMin: 0.5,
+                damageMultiplier: 2,
                 luckFactor: 0.5,
             },
             special: {
-                requiredStamina: 75,
-                damageMultiplier: 150,
-                luckFactor: 0,
+                requiredStamina: 50,
+                attackMin: 0.75,
+                damageMultiplier: 2.5,
+                luckFactor: 0.25,
             },
         };
         this.character.damageBlocked = 0;
@@ -50,7 +53,7 @@ class CombatActions {
     }
 
     performAttack(attackType, onComplete) {
-        const { requiredStamina, damageMultiplier, luckFactor } =
+        const { requiredStamina, damageMultiplier, attackMin, luckFactor } =
             this.attackTypes[attackType];
         const characterName = this.character.name;
         const opponentName = this.opponent.name;
@@ -79,6 +82,7 @@ class CombatActions {
                     this.calculateDamage(
                         damageMultiplier,
                         luckFactor,
+                        attackMin,
                         attackType,
                         onComplete
                     );
@@ -116,15 +120,25 @@ class CombatActions {
         return characterAgility > opponentReflexes;
     }
 
-    calculateDamage(damageMultiplier, luckFactor, attackType, onComplete) {
+    calculateDamage(
+        damageMultiplier,
+        luckFactor,
+        attackMin,
+        attackType,
+        onComplete
+    ) {
         const characterName = this.character.name;
         const opponentName = this.opponent.name;
         const scene = this.scene;
 
         scene.time.delayedCall(500, () => {
+            console.log("damageMultiplier", damageMultiplier);
+            console.log("attackBase", attackMin);
             let characterStrength = Math.ceil(
-                Math.random() * (this.character.strength / 2) +
-                    (this.character.strength / 2) * this.character.powerBoost
+                Math.random() * (this.character.strength * attackMin) +
+                    this.character.strength *
+                        attackMin *
+                        this.character.powerBoost
             );
             scene.updatePopupText(
                 `${characterName}'s power \nsurges to ${characterStrength}!`
@@ -144,9 +158,10 @@ class CombatActions {
             let basicDamage = characterStrength - opponentDefense;
             if (basicDamage <= 0) {
                 scene.updatePopupText(
-                    `${opponentName} BLOCKS \nthe attack FULLY, \nlosing stamina. \n\n${characterName} deals \nNO DAMAGE!`
+                    `${opponentName} BLOCKS \nthe attack FULLY, \nlosing ${characterStrength} stamina. \n\n${characterName} deals \nNO DAMAGE!`
                 );
                 this.opponent.updateStamina(-characterStrength);
+                this.opponent.damageBlocked -= -characterStrength;
                 scene.time.delayedCall(3500, () => {
                     if (onComplete) onComplete();
                 });
@@ -163,6 +178,7 @@ class CombatActions {
 
                     this.opponent.updateHealth(totalDamage * -1);
                     this.opponent.updateStamina(-opponentDefense);
+                    this.opponent.damageBlocked -= opponentDefense;
 
                     scene.time.delayedCall(2500, () => {
                         console.log("text about damage blocked");
@@ -180,12 +196,15 @@ class CombatActions {
                             if (totalDamage === 0) {
                                 console.log("Total Damage is 0", totalDamage);
                                 scene.updatePopupText(
-                                    `${opponentName} BLOCKS \nthe attack FULLY, \nlosing stamina. \n\n${characterName} deals \nNO DAMAGE!`
+                                    `${opponentName} BLOCKS \nthe attack FULLY, \nlosing ${characterStrength} stamina. \n\n${characterName} deals \nNO DAMAGE!`
                                 );
                             } else {
-                                console.log("Total Damage is not 0", totalDamage);
+                                console.log(
+                                    "Total Damage is not 0",
+                                    totalDamage
+                                );
                                 scene.updatePopupText(
-                                    `${opponentName} blocks some\nof the damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
+                                    `${opponentName} blocks some\nof the damage, \nlosing ${opponentDefense} stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                                 );
                             }
                         }
@@ -203,6 +222,7 @@ class CombatActions {
 
                     this.opponent.updateHealth(totalDamage * -1);
                     this.opponent.updateStamina(-opponentDefense);
+                    this.opponent.damageBlocked -= opponentDefense;
                     console.log("OD reduced from stamina", opponentDefense);
 
                     scene.time.delayedCall(2500, () => {
@@ -215,11 +235,11 @@ class CombatActions {
                         } else {
                             if (totalDamage === 0) {
                                 scene.updatePopupText(
-                                    `${opponentName} BLOCKS \nthe attack FULLY, \nlosing stamina. \n\n${characterName} deals \nNO DAMAGE!`
+                                    `${opponentName} BLOCKS \nthe attack FULLY, \nlosing ${characterStrength} stamina. \n\n${characterName} deals \nNO DAMAGE!`
                                 );
                             } else {
                                 scene.updatePopupText(
-                                    `${opponentName} blocks some\nof the damage, \nlosing stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
+                                    `${opponentName} blocks some\nof the damage, \nlosing ${opponentDefense} stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                                 );
                             }
                         }
