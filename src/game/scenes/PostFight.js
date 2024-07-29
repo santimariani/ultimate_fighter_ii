@@ -34,7 +34,7 @@ export class PostFight extends Scene {
             200
         );
         this.pauseBackground.setVisible(false);
-        this.pauseBackground.setDepth(14); 
+        this.pauseBackground.setDepth(14);
 
         this.pauseText = this.add
             .text(centerPauseX, centerPauseY, "Game Paused", {
@@ -87,7 +87,7 @@ export class PostFight extends Scene {
                 duration: 1000,
                 yoyo: true,
                 repeat: -1,
-                ease: 'Sine.easeInOut'
+                ease: "Sine.easeInOut",
             });
         });
 
@@ -115,7 +115,7 @@ export class PostFight extends Scene {
                 duration: 1000,
                 yoyo: true,
                 repeat: -1,
-                ease: 'Sine.easeInOut'
+                ease: "Sine.easeInOut",
             });
         });
 
@@ -163,7 +163,7 @@ export class PostFight extends Scene {
                 this.heroTotalDamageCaused + this.heroTotalDamageBlocked;
 
             this.add
-                .text(256, 650, `FINAL SCORE: ${heroFinalScore}`, {
+                .text(256, 650, `TOTAL POINTS: ${heroFinalScore}`, {
                     fontFamily: "Arial Black",
                     fontSize: 24,
                     color: "#ffffff",
@@ -199,7 +199,7 @@ export class PostFight extends Scene {
                 duration: 1000,
                 yoyo: true,
                 repeat: -1,
-                ease: 'Sine.easeInOut'
+                ease: "Sine.easeInOut",
             });
         });
 
@@ -247,7 +247,7 @@ export class PostFight extends Scene {
                 this.enemyTotalDamageCaused + this.enemyTotalDamageBlocked;
 
             this.add
-                .text(768, 650, `FINAL SCORE: ${enemyFinalScore}`, {
+                .text(768, 650, `TOTAL POINTS: ${enemyFinalScore}`, {
                     fontFamily: "Arial Black",
                     fontSize: 24,
                     color: "#ffffff",
@@ -265,11 +265,13 @@ export class PostFight extends Scene {
             if (this.winner && this.winner !== "tie") {
                 winnerText = `WINNER: \n${this.winner.toUpperCase()}!`;
             } else {
-                winnerText = `WINNER: \n${this.knockOut ? this.knockOut.toUpperCase() : 'NONE'}`;
+                winnerText = `WINNER: \n${
+                    this.knockOut ? this.knockOut.toUpperCase() : "NONE"
+                }`;
             }
 
             const winnerTextObj = this.add
-                .text(520, 450, winnerText, {
+                .text(520, 380, winnerText, {
                     fontFamily: "Arial Black",
                     fontSize: 31,
                     color: "#ffffff",
@@ -288,7 +290,7 @@ export class PostFight extends Scene {
                 duration: 1000,
                 yoyo: true,
                 repeat: -1,
-                ease: 'Sine.easeInOut'
+                ease: "Sine.easeInOut",
             });
 
             // Call highlightWinner() within the same delayed call
@@ -304,7 +306,8 @@ export class PostFight extends Scene {
 
     createHeroStatsBox() {
         // Create Hero Stats Background Box
-        this.heroStatsBg = this.add.graphics()
+        this.heroStatsBg = this.add
+            .graphics()
             .fillStyle(0x000000, 0.6)
             .fillRect(80, 200, 350, 500);
 
@@ -316,21 +319,25 @@ export class PostFight extends Scene {
             duration: 1000,
             yoyo: true,
             repeat: -1,
-            ease: 'Sine.easeInOut'
+            ease: "Sine.easeInOut",
         });
     }
 
     createHeroSprite() {
         // Define scaling factor
-        const scaleFactor = 0.80; // Adjusted scale factor for larger sprites
+        const scaleFactor = 0.8; // Adjusted scale factor for larger sprites
 
         // Add Hero Sprite
-        this.heroSprite = this.add.image(256, 255, 'heroSprite').setScale(scaleFactor).setDepth(150);
+        this.heroSprite = this.add
+            .image(256, 255, "heroSprite")
+            .setScale(scaleFactor)
+            .setDepth(150);
     }
 
     createEnemyStatsBox() {
         // Create Enemy Stats Background Box
-        this.enemyStatsBg = this.add.graphics()
+        this.enemyStatsBg = this.add
+            .graphics()
             .fillStyle(0x000000, 0.6)
             .fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500);
 
@@ -342,46 +349,81 @@ export class PostFight extends Scene {
             duration: 1000,
             yoyo: true,
             repeat: -1,
-            ease: 'Sine.easeInOut'
+            ease: "Sine.easeInOut",
         });
     }
 
     createEnemySprite() {
         // Define scaling factor
-        const scaleFactor = 0.80; // Adjusted scale factor for larger sprites
+        const scaleFactor = 0.8; // Adjusted scale factor for larger sprites
 
         // Add Enemy Sprite
-        this.enemySprite = this.add.image(768, 255, 'enemySprite').setScale(scaleFactor).setDepth(150);
+        this.enemySprite = this.add
+            .image(768, 255, "enemySprite")
+            .setScale(scaleFactor)
+            .setDepth(150);
     }
 
     highlightWinner() {
-        const heroScore = this.heroTotalDamageCaused + this.heroTotalDamageBlocked;
-        const enemyScore = this.enemyTotalDamageCaused + this.enemyTotalDamageBlocked;
+        const heroScore =
+            this.heroTotalDamageCaused + this.heroTotalDamageBlocked;
+        const enemyScore =
+            this.enemyTotalDamageCaused + this.enemyTotalDamageBlocked;
 
-        if (this.winner === 'hero') {
+        if (this.winner === "hero") {
             this.heroStatsBg.clear();
-            this.heroStatsBg.fillStyle(0x1a1c42, 0.8).fillRect(80, 200, 350, 500); // Highlight hero
+            this.heroStatsBg
+                .fillStyle(0x1a1c42, 0.8)
+                .fillRect(80, 200, 350, 500); // Highlight hero
+            const finalScore = heroScore - enemyScore;
+            this.add
+                .text(520, 550, `FINAL \nSCORE:\n${finalScore}`, {
+                    fontFamily: "Arial Black",
+                    fontSize: 27,
+                    color: "#ffffff",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                    align: "center",
+                })
+                .setOrigin(0.5)
+                .setDepth(100);
+        } else if (this.winner === "enemy") {
+            const finalScore = this.heroScore - this.enemyScore;
+            this.add
+                .text(520, 550, `FINAL \nSCORE:\n${this.finalScore}`, {
+                    fontFamily: "Arial Black",
+                    fontSize: 27,
+                    color: "#ffffff",
+                    stroke: "#000000",
+                    strokeThickness: 8,
+                    align: "center",
+                })
+                .setOrigin(0.5)
+                .setDepth(100);
             this.enemyStatsBg.clear();
-            this.enemyStatsBg.fillStyle(0x701010, 0.8).fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500); // Red for enemy
-        } else if (this.winner === 'enemy') {
-            this.heroStatsBg.clear();
-            this.heroStatsBg.fillStyle(0x701010, 0.8).fillRect(80, 200, 350, 500); // Red for hero
-            this.enemyStatsBg.clear();
-            this.enemyStatsBg.fillStyle(0x1a1c42, 0.8).fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500); // Highlight enemy
+            this.enemyStatsBg
+                .fillStyle(0x1a1c42, 0.8)
+                .fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500); // Highlight enemy
         } else {
             this.heroStatsBg.clear();
-            this.heroStatsBg.fillStyle(0x000000, 0.6).fillRect(80, 200, 350, 500); // Default hero
+            this.heroStatsBg
+                .fillStyle(0x1a1c42, 0.8)
+                .fillRect(80, 200, 350, 500); // Highlight hero
             this.enemyStatsBg.clear();
-            this.enemyStatsBg.fillStyle(0x000000, 0.6).fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500); // Default enemy
+            this.enemyStatsBg
+                .fillStyle(0x1a1c42, 0.8)
+                .fillRect(this.cameras.main.width - (80 + 350), 200, 350, 500); // Highlight enemy
         }
     }
 
     determineWinner() {
-        const heroScore = this.heroTotalDamageCaused + this.heroTotalDamageBlocked;
-        const enemyScore = this.enemyTotalDamageCaused + this.enemyTotalDamageBlocked;
-        if (heroScore > enemyScore) return 'hero';
-        if (enemyScore > heroScore) return 'enemy';
-        return 'tie';
+        const heroScore =
+            this.heroTotalDamageCaused + this.heroTotalDamageBlocked;
+        const enemyScore =
+            this.enemyTotalDamageCaused + this.enemyTotalDamageBlocked;
+        if (heroScore > enemyScore) return "hero";
+        if (enemyScore > heroScore) return "enemy";
+        return "tie";
     }
 
     muteGame() {
@@ -402,3 +444,4 @@ export class PostFight extends Scene {
         this.pauseText.setVisible(false);
     }
 }
+

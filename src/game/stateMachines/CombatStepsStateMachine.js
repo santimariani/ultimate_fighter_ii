@@ -69,12 +69,14 @@ export class CombatStepsStateMachine {
             this.scene.updatePopupText(`${this.hero.name} takes \nthe initiative!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
+                this.scene.events.off("heroActionComplete", this.handleHeroActionComplete); // Remove any previous listener
                 this.scene.events.once("heroActionComplete", this.handleHeroActionComplete);
             });
         } else {
             this.scene.updatePopupText(`${this.enemy.name} takes \nthe initiative!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
+                this.scene.events.off("enemyActionComplete", this.handleEnemyActionComplete); // Remove any previous listener
                 this.scene.events.once("enemyActionComplete", this.handleEnemyActionComplete);
             });
         }
@@ -85,12 +87,14 @@ export class CombatStepsStateMachine {
             this.scene.updatePopupText(`${this.hero.name} goes next!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("heroGo");
+                this.scene.events.off("heroActionComplete", this.handleHeroActionComplete); // Remove any previous listener
                 this.scene.events.once("heroActionComplete", this.handleHeroActionComplete);
             });
         } else {
             this.scene.updatePopupText(`${this.enemy.name} goes next!`);
             this.scene.time.delayedCall(1500, () => {
                 this.scene.events.emit("enemyGo");
+                this.scene.events.off("enemyActionComplete", this.handleEnemyActionComplete); // Remove any previous listener
                 this.scene.events.once("enemyActionComplete", this.handleEnemyActionComplete);
             });
         }

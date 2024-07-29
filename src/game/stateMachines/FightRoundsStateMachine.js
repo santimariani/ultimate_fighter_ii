@@ -11,8 +11,8 @@ export class FightRoundsStateMachine {
     constructor(scene) {
         this.scene = scene;
         this.roundStateMachine = null;
-        this.roundNumber = 1;
-        this.maxRounds = 2;
+        this.roundNumber = 10;
+        this.maxRounds = 10;
         this.currentState = null;
         this.hero = this.scene.registry.get("hero");
         this.enemy = this.scene.registry.get("enemy");
@@ -35,6 +35,8 @@ export class FightRoundsStateMachine {
                 break;
             case FightRoundsStateMachine.ROUND_STATES.ROUND_IN_PROGRESS:
                 if (this.roundNumber <= this.maxRounds) {
+                    this.hero.damageBlocked = 0;
+                    this.enemy.damageBlocked = 0;
                     this.scene.updatePopupText(`— ROUND ${this.roundNumber} —`);
                     this.scene.events.emit("roundChanged", this.roundNumber);
                     this.roundStateMachine = new CombatStepsStateMachine(

@@ -9,23 +9,22 @@ class CombatActions {
             punch: {
                 requiredStamina: 10,
                 attackMin: 0.25,
-                damageMultiplier: 1.5,
+                damageMultiplier: 2,
                 luckFactor: 0.75,
             },
             kick: {
                 requiredStamina: 25,
                 attackMin: 0.5,
-                damageMultiplier: 2,
+                damageMultiplier: 2.5,
                 luckFactor: 0.5,
             },
             special: {
                 requiredStamina: 50,
                 attackMin: 0.75,
-                damageMultiplier: 2.5,
+                damageMultiplier: 3,
                 luckFactor: 0.25,
             },
         };
-        this.character.damageBlocked = 0;
         this.opponent.damageBlocked = 0;
     }
 
@@ -161,7 +160,7 @@ class CombatActions {
                     `${opponentName} BLOCKS \nthe attack FULLY, \nlosing ${characterStrength} stamina. \n\n${characterName} deals \nNO DAMAGE!`
                 );
                 this.opponent.updateStamina(-characterStrength);
-                this.opponent.damageBlocked -= -characterStrength;
+                this.opponent.damageBlocked += characterStrength;
                 scene.time.delayedCall(3500, () => {
                     if (onComplete) onComplete();
                 });
@@ -178,31 +177,21 @@ class CombatActions {
 
                     this.opponent.updateHealth(totalDamage * -1);
                     this.opponent.updateStamina(-opponentDefense);
-                    this.opponent.damageBlocked -= opponentDefense;
+                    this.opponent.damageBlocked += opponentDefense;
 
                     scene.time.delayedCall(2500, () => {
                         console.log("text about damage blocked");
 
-                        // Debug output to verify values
-                        console.log("opponentDefense:", opponentDefense);
-                        console.log("totalDamage:", totalDamage);
-
                         if (opponentDefense === 0) {
-                            console.log("OD = 0", opponentDefense);
                             scene.updatePopupText(
                                 `${opponentName} is caught \noff guard and \nblocks no damage. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                             );
                         } else {
                             if (totalDamage === 0) {
-                                console.log("Total Damage is 0", totalDamage);
                                 scene.updatePopupText(
                                     `${opponentName} BLOCKS \nthe attack FULLY, \nlosing ${characterStrength} stamina. \n\n${characterName} deals \nNO DAMAGE!`
                                 );
                             } else {
-                                console.log(
-                                    "Total Damage is not 0",
-                                    totalDamage
-                                );
                                 scene.updatePopupText(
                                     `${opponentName} blocks some\nof the damage, \nlosing ${opponentDefense} stamina. \n\n${characterName} deals \n${totalDamage} DAMAGE!`
                                 );
@@ -222,9 +211,8 @@ class CombatActions {
 
                     this.opponent.updateHealth(totalDamage * -1);
                     this.opponent.updateStamina(-opponentDefense);
-                    this.opponent.damageBlocked -= opponentDefense;
-                    console.log("OD reduced from stamina", opponentDefense);
-
+                    this.opponent.damageBlocked += opponentDefense;
+                    
                     scene.time.delayedCall(2500, () => {
                         console.log("text about damage blocked");
                         if (opponentDefense === 0) {
