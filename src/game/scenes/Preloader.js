@@ -8,72 +8,58 @@ export class Preloader extends Scene {
 
     init() {
         this.add.image(512, 384, "background");
-
         this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
-
-        const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
-
-        this.load.on("progress", (progress) => {
-            bar.width = 4 + 460 * progress;
-        });
     }
 
     preload() {
         this.load.setPath("assets");
 
-        this.load.image("logo", "logo.png");
-        this.load.image("star", "star.png");
-        this.load.image("heroSprite", "assets/hero.png");
-        this.load.image("enemySprite", "assets/enemy.png");
+        // Essential assets for initial gameplay
+        this.load.image("heroSprite", "hero.png");
+        this.load.image("enemySprite", "enemy.png");
 
-        this.load.image("punchReg1", "assets/punchReg1.png");
-        this.load.image("punchReg2", "assets/punchReg2.png");
-        this.load.image("punchReg3", "assets/punchReg3.png");
-        this.load.image("punchReg4", "assets/punchReg4.png");
-        this.load.image("punchReg5", "assets/punchReg5.png");
-        this.load.image("punchReg6", "assets/punchReg6.png");
+        // Only load the first frame of animations
+        this.load.image("punchReg1", "punchReg1.png");
     }
 
     create() {
+        this.createAnimations();
+        this.initializeCharacters();
+
+        this.scene.start("MainMenu");
+    }
+
+    createAnimations() {
         this.anims.create({
             key: "punchReg",
-            frames: [
-                { key: "punchReg1" },
-                { key: "punchReg2" },
-                { key: "punchReg3" },
-                { key: "punchReg4" },
-                { key: "punchReg5" },
-                { key: "punchReg6" },
-
-                // Add more frames as needed
-            ],
-            frameRate: 30, // Adjust the frame rate as needed
-            repeat: 0, // Set to -1 to loop the animation indefinitely
-            hideOnComplete: true // Hides the sprite on animation complete
+            frames: this.anims.generateFrameNames('punchReg', {
+                start: 1,
+                end: 6,
+                prefix: 'punchReg',
+                suffix: '.png'
+            }),
+            frameRate: 30,
+            repeat: 0,
+            hideOnComplete: true
         });
 
         this.anims.create({
             key: "special",
-            frames: [
-                { key: "punchMas1" },
-                { key: "punchMas2" },
-                { key: "punchMas3" },
-                { key: "punchMas4" },
-                { key: "punchMas5" },
-                { key: "punchMas6" },
-                // Add more frames as needed
-            ],
-            frameRate: 50, // Adjust the frame rate as needed
-            repeat: 0, // Set to -1 to loop the animation indefinitely
-            hideOnComplete: true // Hides the sprite on animation complete
+            frames: this.anims.generateFrameNames('punchMas', {
+                start: 1,
+                end: 6,
+                prefix: 'punchMas',
+                suffix: '.png'
+            }),
+            frameRate: 50,
+            repeat: 0,
+            hideOnComplete: true
         });
+    }
 
-        const heroSprite = this.add
-            .image(100, 100, "heroSprite")
-            .setVisible(false);
-        const enemySprite = this.add
-            .image(500, 100, "enemySprite")
-            .setVisible(false);
+    initializeCharacters() {
+        const heroSprite = this.add.image(100, 100, "heroSprite").setVisible(false);
+        const enemySprite = this.add.image(500, 100, "enemySprite").setVisible(false);
 
         const hero = new Character({
             name: "Santi",
@@ -85,7 +71,7 @@ export class Preloader extends Scene {
             defense: 10,
             agility: 10,
             reflexes: 10,
-            sprite: heroSprite, // Assign the sprite to the character
+            sprite: heroSprite,
         });
 
         const enemy = new Character({
@@ -98,16 +84,10 @@ export class Preloader extends Scene {
             defense: 6,
             agility: 12,
             reflexes: 8,
-            sprite: enemySprite, // Assign the sprite to the character
+            sprite: enemySprite,
         });
-
-        console.log("Hero sprite:", hero.sprite); // Debugging line
-        console.log("Enemy sprite:", enemy.sprite); // Debugging line
 
         this.registry.set("hero", hero);
         this.registry.set("enemy", enemy);
-
-        this.scene.start("MainMenu");
     }
 }
-
