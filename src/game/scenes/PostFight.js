@@ -125,7 +125,7 @@ export class PostFight extends Scene {
                 .text(
                     256,
                     513,
-                    `TOTAL DAMAGE CAUSED:\n${this.heroTotalDamageCaused}`,
+                    `DAMAGE CAUSED:\n${this.heroTotalDamageCaused}`,
                     {
                         fontFamily: "Arial Black",
                         fontSize: 20,
@@ -144,7 +144,7 @@ export class PostFight extends Scene {
                 .text(
                     256,
                     587,
-                    `TOTAL DAMAGE BLOCKED:\n${this.heroTotalDamageBlocked}`,
+                    `DAMAGE BLOCKED:\n${this.heroTotalDamageBlocked}`,
                     {
                         fontFamily: "Arial Black",
                         fontSize: 20,
@@ -209,7 +209,7 @@ export class PostFight extends Scene {
                 .text(
                     768,
                     513,
-                    `TOTAL DAMAGE CAUSED:\n${this.enemyTotalDamageCaused}`,
+                    `DAMAGE CAUSED:\n${this.enemyTotalDamageCaused}`,
                     {
                         fontFamily: "Arial Black",
                         fontSize: 20,
@@ -228,7 +228,7 @@ export class PostFight extends Scene {
                 .text(
                     768,
                     587,
-                    `TOTAL DAMAGE BLOCKED:\n${this.enemyTotalDamageBlocked}`,
+                    `DAMAGE BLOCKED:\n${this.enemyTotalDamageBlocked}`,
                     {
                         fontFamily: "Arial Black",
                         fontSize: 20,
@@ -298,6 +298,7 @@ export class PostFight extends Scene {
         });
 
         EventBus.on("goToPreviousScene", () => {
+            this.scene.stop();
             this.scene.start("Spar");
         });
 
@@ -388,9 +389,9 @@ export class PostFight extends Scene {
                 .setOrigin(0.5)
                 .setDepth(100);
         } else if (this.winner === "enemy") {
-            const finalScore = this.heroScore - this.enemyScore;
+            const finalScore =  enemyScore - heroScore;
             this.add
-                .text(520, 550, `FINAL \nSCORE:\n${this.finalScore}`, {
+                .text(520, 550, `FINAL \nSCORE:\n${finalScore}`, {
                     fontFamily: "Arial Black",
                     fontSize: 27,
                     color: "#ffffff",

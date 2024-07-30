@@ -359,10 +359,12 @@ export class Spar extends Scene {
         // this.fightStateMachine.start();
 
         EventBus.on("goToNextScene", () => {
+            this.scene.stop;
             this.scene.start("PostFight");
         });
 
         EventBus.on("goToPreviousScene", () => {
+            this.scene.stop();
             this.scene.start("CharacterSelectionScene");
         });
 
@@ -986,6 +988,7 @@ export class Spar extends Scene {
     }
 
     changePostFightScene({ roundOut, knockOut }) {
+        this.scene.stop();
         this.scene.start("PostFight", {
             heroTotalDamageCaused: this.heroTotalDamageCaused,
             heroTotalDamageBlocked: this.heroTotalDamageBlocked,
