@@ -8,23 +8,20 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
     EventBus.on("playerTurn", () => {
         setIsHeroTurn(true);
         setIsEnemyTurn(false);
-        EventBus.off("playerTurn", handlePlayerTurn);
     });
 
     EventBus.on("enemyTurn", () => {
         setIsHeroTurn(false);
         setIsEnemyTurn(true);
-        EventBus.off("enemyTurn", handleEnemyTurn);
     });
 
     return (
         <>
             {isHeroTurn && (
                 <div id="hero-options">
-                    {/* <p>CHOOSE YOUR ACTION!</p> */}
                     <button
                         disabled={buttonDisabled}
-                        onClick={() => triggerPhaserEvent("punch")}
+                        onClick={() => {triggerPhaserEvent("punch"); EventBus.off("playerTurn", handlePlayerTurn)}}
                     >
                         PUNCH: 10SP
                     </button>
