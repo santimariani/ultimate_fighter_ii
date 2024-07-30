@@ -21,7 +21,7 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
                 <div id="hero-options">
                     <button
                         disabled={buttonDisabled}
-                        onClick={() => {triggerPhaserEvent("punch"); EventBus.off("playerTurn", handlePlayerTurn)}}
+                        onClick={() => triggerPhaserEvent("punch")}
                     >
                         PUNCH: 10SP
                     </button>
@@ -59,3 +59,4 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
 };
 
 export default SparMenu;
+
