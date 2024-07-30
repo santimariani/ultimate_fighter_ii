@@ -8,13 +8,11 @@ const SparMenu = ({ buttonDisabled, triggerPhaserEvent }) => {
     EventBus.on("playerTurn", () => {
         setIsHeroTurn(true);
         setIsEnemyTurn(false);
-        EventBus.off("playerTurn", handlePlayerTurn);
     });
 
     EventBus.on("enemyTurn", () => {
         setIsHeroTurn(false);
         setIsEnemyTurn(true);
-        EventBus.off("enemyTurn", handlePlayerTurn);
     });
 
     return (
