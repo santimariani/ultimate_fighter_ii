@@ -298,7 +298,7 @@ body {
 } */
 
 #center {
-    height: 100vh;
+    height: 98vh;
     background-color: white;
     border-top: 1vw solid rgb(0, 0, 0);
     border-bottom: 1vw solid rgb(0, 0, 0);
@@ -312,10 +312,11 @@ body {
     background-color: black;
     height: 100%;
     box-sizing: border-box;
-    border-top: 1vh solid rgb(255, 255, 255);
-    border-bottom: 1vh solid rgb(255, 255, 255);
-    border-left: 0.75vh solid rgb(255, 255, 255);
-    border-right: 1vh solid rgb(255, 255, 255);
+    outline: 1vh solid rgb(255, 255, 255); /* Second border */
+    border-top: 1vh solid rgb(0, 0, 0);
+    border-bottom: 1vh solid rgb(0, 0, 0);
+    border-left: 0.75vh solid rgb(0, 0, 0);
+    border-right: 1vh solid rgb(0, 0, 0);
     justify-content: center;
     align-items: center;
 }

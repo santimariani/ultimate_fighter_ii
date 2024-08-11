@@ -6,6 +6,41 @@ export class Boot extends Scene {
     }
 
     preload() {
+                // Create the loading bar graphics
+                const width = this.cameras.main.width;
+                const height = this.cameras.main.height;
+                
+                const loadingBarBg = this.add.graphics();
+                loadingBarBg.fillStyle(0x222222, 0.8);
+                loadingBarBg.fillRect(width / 4, height / 2 - 25, width / 2, 50);
+                
+                const loadingBar = this.add.graphics();
+                
+                // Display the progress percentage text
+                const loadingText = this.make.text({
+                    x: width / 2,
+                    y: height / 2 - 50,
+                    text: 'Loading...',
+                    style: {
+                        font: '20px monospace',
+                        fill: '#ffffff'
+                    }
+                });
+                loadingText.setOrigin(0.5, 0.5);
+        
+                // Update the loading bar as assets load
+                this.load.on('progress', (value) => {
+                    loadingBar.clear();
+                    loadingBar.fillStyle(0xffffff, 1);
+                    loadingBar.fillRect(width / 4, height / 2 - 25, (width / 2) * value, 50);
+                });
+        
+                // Remove loading graphics when complete
+                this.load.on('complete', () => {
+                    loadingBar.destroy();
+                    loadingBarBg.destroy();
+                    loadingText.destroy();
+                });
         //  The Boot Scene is typically used to load in any assets you require for your Preloader, such as a game logo or background.
         //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
         this.load.image('backgroundSelect', 'assets/gym3.png');
