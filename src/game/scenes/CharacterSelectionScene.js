@@ -206,20 +206,20 @@ export class CharacterSelectionScene extends Scene {
         });
 
         EventBus.on('goToNextScene', () => {
-            this.stopMusic(); // Stop music when transitioning to Spar scene
+            this.scene.stop();
             this.scene.start('Spar');
         });
 
         EventBus.on('goToPreviousScene', () => {
-            this.stopMusic(); // Stop music when transitioning to Spar scene
+            this.scene.stop();
             this.scene.start('MainMenu');
         });
     }
 
     selectCharacter(characterName) {
         console.log('Character selected:', characterName);
-        // Save selected character and transition to the next scene
-        this.stopMusic(); // Stop music when transitioning to Spar scene
+        this.stopMusic(); 
+        this.scene.stop();
         this.scene.start('Spar', { selectedCharacter: characterName });
     }
 

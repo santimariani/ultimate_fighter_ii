@@ -1,3 +1,5 @@
+// add containers for Health Bars
+
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 import { FightRoundsStateMachine } from "../stateMachines/FightRoundsStateMachine";
@@ -13,13 +15,18 @@ export class Spar extends Scene {
         this.enemyTotalDamageCaused = 0;
         this.enemyTotalDamageBlocked = 0;
         this.isGamePaused = false;
-        this.notificationText = null; // Add this line to declare notificationText
+        this.notificationText = null;
     }
 
     init(data) {
         this.hero = this.registry.get("hero");
         this.enemy = this.registry.get("enemy");
-        this.heroCombatActions = new CombatActions(this.hero, this.enemy, this);
+
+        this.heroCombatActions = new CombatActions(
+            this.hero, 
+            this.enemy, 
+            this);
+
         this.enemyCombatActions = new CombatActions(
             this.enemy,
             this.hero,
@@ -84,24 +91,22 @@ export class Spar extends Scene {
 
         this.notificationText = this.add
             .text(
-                this.cameras.main.width - 10, // Offset by 10 pixels from the right edge
-                this.cameras.main.height - 10, // Offset by 10 pixels from the bottom edge
+                this.cameras.main.width - 10, 
+                this.cameras.main.height - 10, 
                 "",
                 notificationStyle
             )
-            .setOrigin(1, 1) // Set origin to the bottom right corner
+            .setOrigin(1, 1) 
             .setVisible(false)
-            .setDepth(100); // Increased depth for visibility
+            .setDepth(100); 
 
-        console.log("Notification text created:", this.notificationText); // Debugging log
+
 
         // Event listeners for showing notification
         EventBus.on("gameStateSaved", () => {
-            console.log("gameStateSaved event triggered"); // Debugging log
             this.showNotification("GAME STATE SAVED");
         });
         EventBus.on("gameStateLoaded", () => {
-            console.log("gameStateLoaded event triggered"); // Debugging log
             this.showNotification("GAME STATE LOADED");
         });
 
@@ -354,10 +359,12 @@ export class Spar extends Scene {
         // this.fightStateMachine.start();
 
         EventBus.on("goToNextScene", () => {
+            this.scene.stop;
             this.scene.start("PostFight");
         });
 
         EventBus.on("goToPreviousScene", () => {
+            this.scene.stop();
             this.scene.start("CharacterSelectionScene");
         });
 
@@ -898,35 +905,38 @@ export class Spar extends Scene {
         switch (action) {
             case "punch":
                 this.heroCombatActions.punch(() => {
+                    this.enemyTotalDamageBlocked += this.enemy.damageBlocked;
                     this.events.emit("heroActionComplete");
                 });
                 break;
             case "kick":
                 this.heroCombatActions.kick(() => {
+                    this.enemyTotalDamageBlocked += this.enemy.damageBlocked;
                     this.events.emit("heroActionComplete");
                 });
                 break;
             case "special":
                 this.heroCombatActions.special(() => {
+                    this.enemyTotalDamageBlocked += this.enemy.damageBlocked;
                     this.events.emit("heroActionComplete");
                 });
                 break;
             case "guard":
                 this.heroCombatActions.guard(() => {
+                    this.enemyTotalDamageBlocked += this.enemy.damageBlocked;
                     this.events.emit("heroActionComplete");
                 });
                 break;
             default:
                 console.log("Unknown action:", action);
         }
-        this.enemyTotalDamageBlocked += this.enemy.damageBlocked;
     }
 
     enemyAction() {
         this.updatePopupText(`${this.enemy.name} considers \nhis options ...`);
         EventBus.emit("enemyTurn");
         setTimeout(() => {
-            const actions = ["punch", "kick", "guard"]; // Added "special" here
+            const actions = ["punch", "kick", "special", "guard"];
             let action;
 
             do {
@@ -940,10 +950,10 @@ export class Spar extends Scene {
                     this.enemy.currentStamina <
                         this.enemyCombatActions.attackTypes.kick
                             .requiredStamina) ||
-                // (action === "special" &&
-                //     this.enemy.currentStamina <
-                //         this.enemyCombatActions.attackTypes.special
-                //             .requiredStamina) || // Check stamina for "special"
+                (action === "special" &&
+                    this.enemy.currentStamina <
+                        this.enemyCombatActions.attackTypes.special
+                            .requiredStamina) || 
                 (action === "guard" &&
                     !(
                         this.enemy.currentHealth <
@@ -978,6 +988,7 @@ export class Spar extends Scene {
     }
 
     changePostFightScene({ roundOut, knockOut }) {
+        this.scene.stop();
         this.scene.start("PostFight", {
             heroTotalDamageCaused: this.heroTotalDamageCaused,
             heroTotalDamageBlocked: this.heroTotalDamageBlocked,
