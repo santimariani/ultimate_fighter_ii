@@ -112,36 +112,21 @@ body {
     }
 }
 
-#outerCircleLeft {
-    background-color: rgba(0, 0, 0, 0.696);
-    border-radius: 50%;
+#keyPad {
     position: absolute;
-    height: 7vw;
-    width: 7vw;
     z-index: 5;
-    top: 35vh;
-    left: 3.5vw;
+    top: 10vh;
+    left: 3.6vw;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    display: flex;
-}
-
-#innerCircleLeft {
-    background-color: rgb(53, 49, 49);
-    border-radius: 50%;
-    border: 0.1vw solid white;
-    height: 5.5vw;
-    width: 5.5vw;
-    &:hover {
-        border: 0.2vw solid #5eacd5;
-    }
 }
 
 #outerKeyPad {
     height: 7vw;
     width: 7vw;
     background-color: rgba(0, 0, 0, 0.696);
-    position: absolute;
     clip-path: polygon(
         0% 30%,
         30% 30%,
@@ -156,9 +141,6 @@ body {
         30% 70%,
         0% 70%
     );
-    z-index: 5;
-    top: 15vh;
-    left: 3.6vw;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -193,33 +175,48 @@ body {
     }
 }
 
-#leftStickText {
-    position: absolute;
-    z-index: 5;
-    top: 48.1vh;
-    left: 4.5vw;
-    margin: 0;
-    color: rgb(7, 7, 7);
-    font-family: Arial Black;
-    font-size: 2vh;
-}
-
-#rightStickText {
-    position: absolute;
-    z-index: 5;
-    top: 28vh;
-    right: 4vw;
-    margin: 0;
-    color: rgb(7, 7, 7);
-    font-family: Arial Black;
-    font-size: 2vh;
-}
-
 #keyPadText {
+    padding-top: 0.5vh;
+    margin: 0;
+    color: rgb(7, 7, 7);
+    font-family: Arial Black;
+    font-size: 2vh;
+}
+
+#leftStick {
     position: absolute;
     z-index: 5;
-    top: 28vh;
-    left: 3.75vw;
+    top: 30vh;
+    left: 3.5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#outerCircleLeft {
+    background-color: rgba(0, 0, 0, 0.696);
+    border-radius: 50%;
+    height: 7vw;
+    width: 7vw;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+#innerCircleLeft {
+    background-color: rgb(53, 49, 49);
+    border-radius: 50%;
+    border: 0.1vw solid white;
+    height: 5.5vw;
+    width: 5.5vw;
+    &:hover {
+        border: 0.2vw solid #5eacd5;
+    }
+}
+
+#leftStickText {
+    padding-top: 0.5vh;
     margin: 0;
     color: rgb(7, 7, 7);
     font-family: Arial Black;
@@ -361,15 +358,22 @@ body {
     }
 }
 
+#rightStick {
+    position: absolute;
+    z-index: 5;
+    top: 10vh;
+    right: 3.5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #outerCircleRight {
     background-color: rgba(0, 0, 0, 0.696);
     border-radius: 50%;
-    position: absolute;
     height: 7vw;
     width: 7vw;
-    z-index: 5;
-    top: 15vh;
-    right: 3.5vw;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -388,17 +392,32 @@ body {
     }
 }
 
+#rightStickText {
+    padding-top: 0.5vh;
+    margin: 0;
+    color: rgb(7, 7, 7);
+    font-family: Arial Black;
+    font-size: 2vh;
+}
+
+#buttonsGrid {
+    position: absolute;
+    z-index: 5;
+    top: 50vh;
+    right: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #fourButtons {
     background-color: rgba(0, 0, 0, 0.696);
-    position: absolute;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     height: 8vw;
     width: 8vw;
-    z-index: 5;
-    top: 36vh;
-    right: 3vw;
     border-radius: 20%;
     transform: rotate(45deg);
 }
@@ -476,12 +495,9 @@ body {
 }
 
 #gridContainerRight {
-    position: absolute;
+    padding-top: 5vh;
     height: 7vw;
     width: 10vw;
-    z-index: 5;
-    bottom: 10vh;
-    right: 2.25vw;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(9, 1fr);

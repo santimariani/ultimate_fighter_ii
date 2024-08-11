@@ -6,7 +6,10 @@ import UIMenus from "./components/UIMenus";
 import { EventBus } from "./game/EventBus";
 import { PhaserGame } from "./game/PhaserGame";
 
-const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+const supabase = createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 //     "https://kqzjchdvriyxuaxybphk.supabase.co",
 //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtxempjaGR2cml5eHVheHlicGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE0MDQ0ODgsImV4cCI6MjAzNjk4MDQ4OH0.dTf4QKwAwFjSxvk2D_a3yuk-gFjgiH8sOLRt7HHGZv0"
 // );
@@ -187,45 +190,49 @@ function App() {
             <div id="leftColumn">
                 <div
                     id="leftShoulderButton"
-                    onClick={handleBackButton}
-                    style={{ cursor: "pointer" }}
+                    // onClick={handleBackButton}
+                    // style={{ cursor: "pointer" }}
                 >
-                    <p className="fowardItalics">BACK</p>
+                    {/* <p className="fowardItalics">BACK</p> */}
                 </div>
-                <div id="outerCircleLeft">
-                    <button
-                        onClick={() => {
-                            setShowLogin(true);
-                            setShowRegister(false);
-                        }}
-                        id="innerCircleLeft"
+                <div id="leftStick">
+                    <div id="outerCircleLeft">
+                        <button
+                            onClick={() => {
+                                setShowLogin(true);
+                                setShowRegister(false);
+                            }}
+                            id="innerCircleLeft"
+                            style={{ cursor: "pointer" }}
+                        ></button>
+                    </div>
+                    <p
+                        id="leftStickText"
                         style={{ cursor: "pointer" }}
-                    ></button>
+                        onClick={() => setShowLogin(true)}
+                    >
+                        SIGN IN
+                    </p>
                 </div>
-                <p
-                    id="leftStickText"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setShowLogin(true)}
-                >
-                    SIGN IN
-                </p>
-                <div id="outerKeyPad">
-                    <button
-                        onClick={() => {
-                            setShowRegister(true);
-                            setShowLogin(false);
-                        }}
-                        id="innerKeyPad"
+                <div id="keyPad">
+                    <div id="outerKeyPad">
+                        <button
+                            onClick={() => {
+                                setShowRegister(true);
+                                setShowLogin(false);
+                            }}
+                            id="innerKeyPad"
+                            style={{ cursor: "pointer" }}
+                        ></button>
+                    </div>
+                    <p
+                        id="keyPadText"
                         style={{ cursor: "pointer" }}
-                    ></button>
+                        onClick={() => setShowRegister(true)}
+                    >
+                        NEW USER
+                    </p>
                 </div>
-                <p
-                    id="keyPadText"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setShowRegister(true)}
-                >
-                    NEW USER
-                </p>
                 <div id="leftShoulderHole"></div>
                 <button
                     type="button"
@@ -276,7 +283,8 @@ function App() {
                             {showRegister && (
                                 <div className="auth-container">
                                     <p className="info-text">
-                                        CREATE A NEW ACCOUNT <br /> TO PLAY THE GAME!
+                                        CREATE A NEW ACCOUNT <br /> TO PLAY THE
+                                        GAME!
                                     </p>
                                     <Auth
                                         view="sign_up"
@@ -290,7 +298,8 @@ function App() {
                             {showLogin && (
                                 <div className="auth-container">
                                     <p className="info-text">
-                                        SIGN IN TO YOUR ACCOUNT <br /> TO PLAY THE GAME!
+                                        SIGN IN TO YOUR ACCOUNT <br /> TO PLAY
+                                        THE GAME!
                                     </p>
                                     <Auth
                                         supabaseClient={supabase}
@@ -309,107 +318,111 @@ function App() {
             <div id="rightColumn">
                 <div
                     id="rightShoulderButton"
-                    onClick={handleNextButton}
-                    style={{ cursor: "pointer" }}
+                    // onClick={handleNextButton}
+                    // style={{ cursor: "pointer" }}
                 >
-                    <p className="backwardItalics">NEXT</p>
+                    {/* <p className="backwardItalics">NEXT</p> */}
                 </div>
-                <div id="outerCircleRight">
-                    <button
-                        id="innerCircleRight"
+                <div id="rightStick">
+                    <div id="outerCircleRight">
+                        <button
+                            id="innerCircleRight"
+                            onClick={logOut}
+                            style={{ cursor: "pointer" }}
+                        ></button>
+                    </div>
+                    <p
+                        id="rightStickText"
+                        style={{ cursor: "pointer" }}
                         onClick={logOut}
-                        style={{ cursor: "pointer" }}
-                    ></button>
+                    >
+                        SIGN OUT
+                    </p>
                 </div>
-                <p
-                    id="rightStickText"
-                    style={{ cursor: "pointer" }}
-                    onClick={logOut}
-                >
-                    SIGN OUT
-                </p>
-                <div id="fourButtons">
-                    <button
-                        type="button"
-                        onClick={handleRefresh}
-                        id="square1"
-                        style={{ cursor: "pointer" }}
-                    >
-                        <p className="buttonText">R</p>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={loadGameState}
-                        id="square2"
-                        style={{ cursor: "pointer" }}
-                    >
-                        <p className="buttonText">L</p>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={saveGameState}
-                        id="square3"
-                        style={{ cursor: "pointer" }}
-                    >
-                        <p className="buttonText">S</p>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={togglePauseResume}
-                        id="square4"
-                        style={{ cursor: "pointer" }}
-                    >
-                        <p className="buttonText">P</p>
-                    </button>
-                </div>
-                <div id="gridContainerRight">
-                    <div
-                        className="gridItemRight"
-                        style={{ gridArea: "2 / 2", cursor: "pointer" }}
-                        onClick={handleRefresh}
-                    ></div>
-                    <div
-                        className="gridItemRight"
-                        style={{ gridArea: "4 / 2", cursor: "pointer" }}
-                        onClick={saveGameState}
-                    ></div>
-                    <div
-                        className="gridItemRight"
-                        style={{ gridArea: "6 / 2", cursor: "pointer" }}
-                        onClick={loadGameState}
-                    ></div>
-                    <div
-                        className="gridItemRight"
-                        style={{ gridArea: "8 / 2", cursor: "pointer" }}
-                        onClick={togglePauseResume}
-                    ></div>
-                    <div
-                        className="gridTextRight"
-                        style={{ gridArea: "2 / 4", cursor: "pointer" }}
-                        onClick={handleRefresh}
-                    >
-                        REFRESH
+                <div id="buttonsGrid">
+                    <div id="fourButtons">
+                        <button
+                            type="button"
+                            onClick={handleRefresh}
+                            id="square1"
+                            style={{ cursor: "pointer" }}
+                        >
+                            <p className="buttonText">R</p>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={loadGameState}
+                            id="square2"
+                            style={{ cursor: "pointer" }}
+                        >
+                            <p className="buttonText">L</p>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={saveGameState}
+                            id="square3"
+                            style={{ cursor: "pointer" }}
+                        >
+                            <p className="buttonText">S</p>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={togglePauseResume}
+                            id="square4"
+                            style={{ cursor: "pointer" }}
+                        >
+                            <p className="buttonText">P</p>
+                        </button>
                     </div>
-                    <div
-                        className="gridTextRight"
-                        style={{ gridArea: "4 / 4", cursor: "pointer" }}
-                        onClick={saveGameState}
-                    >
-                        SAVE
-                    </div>
-                    <div
-                        className="gridTextRight"
-                        style={{ gridArea: "6 / 4", cursor: "pointer" }}
-                        onClick={loadGameState}
-                    >
-                        LOAD
-                    </div>
-                    <div
-                        className="gridTextRight"
-                        style={{ gridArea: "8 / 4", cursor: "pointer" }}
-                        onClick={togglePauseResume}
-                    >
-                        PAUSE
+                    <div id="gridContainerRight">
+                        <div
+                            className="gridItemRight"
+                            style={{ gridArea: "2 / 2", cursor: "pointer" }}
+                            onClick={handleRefresh}
+                        ></div>
+                        <div
+                            className="gridItemRight"
+                            style={{ gridArea: "4 / 2", cursor: "pointer" }}
+                            onClick={saveGameState}
+                        ></div>
+                        <div
+                            className="gridItemRight"
+                            style={{ gridArea: "6 / 2", cursor: "pointer" }}
+                            onClick={loadGameState}
+                        ></div>
+                        <div
+                            className="gridItemRight"
+                            style={{ gridArea: "8 / 2", cursor: "pointer" }}
+                            onClick={togglePauseResume}
+                        ></div>
+                        <div
+                            className="gridTextRight"
+                            style={{ gridArea: "2 / 4", cursor: "pointer" }}
+                            onClick={handleRefresh}
+                        >
+                            REFRESH
+                        </div>
+                        <div
+                            className="gridTextRight"
+                            style={{ gridArea: "4 / 4", cursor: "pointer" }}
+                            onClick={saveGameState}
+                        >
+                            SAVE
+                        </div>
+                        <div
+                            className="gridTextRight"
+                            style={{ gridArea: "6 / 4", cursor: "pointer" }}
+                            onClick={loadGameState}
+                        >
+                            LOAD
+                        </div>
+                        <div
+                            className="gridTextRight"
+                            style={{ gridArea: "8 / 4", cursor: "pointer" }}
+                            onClick={togglePauseResume}
+                        >
+                            PAUSE
+                        </div>
                     </div>
                 </div>
                 <div id="rightShoulderHole"></div>
