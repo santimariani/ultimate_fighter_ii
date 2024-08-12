@@ -144,6 +144,7 @@ function App() {
     };
 
     useEffect(() => {
+        setButtonDisabled(true);
         getScores();
         getUser();
     }, []);
