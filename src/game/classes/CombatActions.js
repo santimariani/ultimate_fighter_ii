@@ -15,14 +15,14 @@ class CombatActions {
             kick: {
                 requiredStamina: 25,
                 attackMin: 0.5,
-                damageMultiplier: 2.5,
+                damageMultiplier: 3,
                 luckFactor: 0.5,
             },
             special: {
                 requiredStamina: 50,
                 attackMin: 0.75,
-                damageMultiplier: 3,
-                luckFactor: 0,
+                damageMultiplier: 4,
+                luckFactor: .25,
             },
         };
         this.opponent.damageBlocked = 0;

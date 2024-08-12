@@ -32,6 +32,7 @@ export class Preloader extends Scene {
         this.load.image("punchReg4", "assets/punchReg4.png");
         this.load.image("punchReg5", "assets/punchReg5.png");
         this.load.image("punchReg6", "assets/punchReg6.png");
+        
     }
 
     create() {

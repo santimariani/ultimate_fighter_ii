@@ -6,49 +6,54 @@ export class Boot extends Scene {
     }
 
     preload() {
-                // Create the loading bar graphics
-                const width = this.cameras.main.width;
-                const height = this.cameras.main.height;
-                
-                const loadingBarBg = this.add.graphics();
-                loadingBarBg.fillStyle(0x222222, 0.8);
-                loadingBarBg.fillRect(width / 4, height / 2 - 25, width / 2, 50);
-                
-                const loadingBar = this.add.graphics();
-                
-                // Display the progress percentage text
-                const loadingText = this.make.text({
-                    x: width / 2,
-                    y: height / 2 - 50,
-                    text: 'Loading...',
-                    style: {
-                        font: '20px monospace',
-                        fill: '#ffffff'
-                    }
-                });
-                loadingText.setOrigin(0.5, 0.5);
-        
-                // Update the loading bar as assets load
-                this.load.on('progress', (value) => {
-                    loadingBar.clear();
-                    loadingBar.fillStyle(0xffffff, 1);
-                    loadingBar.fillRect(width / 4, height / 2 - 25, (width / 2) * value, 50);
-                });
-        
-                // Remove loading graphics when complete
-                this.load.on('complete', () => {
-                    loadingBar.destroy();
-                    loadingBarBg.destroy();
-                    loadingText.destroy();
-                });
         //  The Boot Scene is typically used to load in any assets you require for your Preloader, such as a game logo or background.
         //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
-        this.load.image('backgroundSelect', 'assets/gym3.png');
+
+        // Create the loading bar graphics
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+
+        const loadingBarBg = this.add.graphics();
+        loadingBarBg.fillStyle(0x222222, 0.8);
+        loadingBarBg.fillRect(width / 4, height / 2 - 25, width / 2, 50);
+
+        const loadingBar = this.add.graphics();
+
+        // Display the progress percentage text
+        const loadingText = this.make.text({
+            x: width / 2,
+            y: height / 2 - 50,
+            text: "Loading...",
+            style: {
+                font: "20px monospace",
+                fill: "#ffffff",
+            },
+        });
+        loadingText.setOrigin(0.5, 0.5);
+
+        // Update the loading bar as assets load
+        this.load.on("progress", (value) => {
+            loadingBar.clear();
+            loadingBar.fillStyle(0xffffff, 1);
+            loadingBar.fillRect(
+                width / 4,
+                height / 2 - 25,
+                (width / 2) * value,
+                50
+            );
+        });
+
+        // Remove loading graphics when complete
+        this.load.on("complete", () => {
+            loadingBar.destroy();
+            loadingBarBg.destroy();
+            loadingText.destroy();
+        });
+        this.load.image("backgroundSelect", "assets/gym3.png");
 
         this.load.image("introFirst", "assets/introFirst.png");
         this.load.image("introSecond", "assets/introSecond.png");
         this.load.image("subtitle", "assets/subtitle.png");
-
 
         this.load.image("background", "assets/bg.png");
         this.load.image("gym", "assets/gym.png");
@@ -62,7 +67,6 @@ export class Boot extends Scene {
         this.load.audio("sparLoop", "assets/sparLoop.wav");
         this.load.audio("menuIntro", "assets/menuIntro.wav");
         this.load.audio("menuLoop", "assets/menuLoop.wav");
-        
 
         this.load.image("punchReg1", "assets/punchReg1.png");
         this.load.image("punchReg2", "assets/punchReg2.png");
@@ -77,8 +81,6 @@ export class Boot extends Scene {
         this.load.image("punchMas4", "assets/punchMas4.png");
         this.load.image("punchMas5", "assets/punchMas5.png");
         this.load.image("punchMas6", "assets/punchMas6.png");
-
-
 
         this.load.audio("punch1", "assets/hit01.mp3.flac");
         this.load.audio("punch2", "assets/hit02.mp3.flac");
