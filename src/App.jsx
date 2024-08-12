@@ -121,6 +121,7 @@ function App() {
         if (scene) {
             scene.changeScene();
         }
+        setButtonDisabled(true);
     };
 
     const handleCurrentScene = (scene) => {
