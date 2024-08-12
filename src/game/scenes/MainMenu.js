@@ -14,6 +14,8 @@ export class MainMenu extends Scene {
     }
 
     create() {
+        this.cameras.main.setBackgroundColor('#000000'); // Set to black or any other color
+
         this.setupBackground();
         this.setupPauseScreenElements();
         this.playIntroMusic();

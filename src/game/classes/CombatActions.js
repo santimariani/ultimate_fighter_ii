@@ -22,7 +22,7 @@ class CombatActions {
                 requiredStamina: 50,
                 attackMin: 0.75,
                 damageMultiplier: 3,
-                luckFactor: 0.25,
+                luckFactor: 0,
             },
         };
         this.opponent.damageBlocked = 0;
