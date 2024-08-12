@@ -38,6 +38,7 @@ function App() {
 
     const handleRefresh = () => {
         window.location.reload();
+        setButtonDisabled(true);
         setIsGamePaused(false);
         setIsGameMuted(false);
     };
@@ -400,7 +401,7 @@ function App() {
                             style={{ gridArea: "2 / 4", cursor: "pointer" }}
                             onClick={handleRefresh}
                         >
-                            REFRESH
+                            RELOAD
                         </div>
                         <div
                             className="gridTextRight"
