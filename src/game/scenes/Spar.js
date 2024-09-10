@@ -65,7 +65,6 @@ export class Spar extends Scene {
     create() {
         this.setupUIElements();
 
-        // Initialize popup elements early in the create() method
         const centerPopUpX = this.cameras.main.width / 2;
         const centerPopUpY = this.cameras.main.height / 2;
 
@@ -95,22 +94,18 @@ export class Spar extends Scene {
         EventBus.emit("current-scene-ready", this);
     }
 
-    // Helper method to create a sound instance
     initSound(name, volume = 1, loop = false) {
         return this.sound.add(name, { loop, volume });
     }
 
-    // Setup all sounds
     setupSounds() {
         this.sparIntro = this.initSound("sparIntro", 0.5);
         this.sparLoop = this.initSound("sparLoop", 0.5, true);
         
-        // Punch sounds
         this.punchSounds = Array(9)
             .fill()
             .map((_, i) => this.initSound(`punch${i + 1}`, 0.5));
 
-        // Kick sounds
         this.kickSounds = Array(9)
             .fill()
             .map((_, i) => this.initSound(`kick${i + 1}`, 0.5));
@@ -120,7 +115,6 @@ export class Spar extends Scene {
         this.special = this.initSound("special", 1.5);
     }
 
-    // Setup all event listeners
     setupEventListeners() {
         EventBus.on("gameStateSaved", () => this.showNotification("GAME STATE SAVED"));
         EventBus.on("gameStateLoaded", () => this.showNotification("GAME STATE LOADED"));
