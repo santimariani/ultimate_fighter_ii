@@ -20,7 +20,7 @@ function App() {
     const phaserRef = useRef();
     const [session, setSession] = useState(null);
     const [currentScene, setCurrentScene] = useState("MainMenu");
-    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(true);
     const [showRegister, setShowRegister] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [userId, setUserId] = useState("");
