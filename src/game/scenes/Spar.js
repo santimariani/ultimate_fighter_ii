@@ -63,29 +63,32 @@ export class Spar extends Scene {
     }
 
     create() {
-        this.setupSounds();
-        this.setupEventListeners();
         this.setupUIElements();
 
-        const notificationStyle = {
-            fontFamily: "Arial Black",
-            fontSize: "24px",
-            fontStyle: "italic",
-            color: "#ffffff",
-            align: "right",
-        };
+        // Initialize popup elements early in the create() method
+        const centerPopUpX = this.cameras.main.width / 2;
+        const centerPopUpY = this.cameras.main.height / 2;
 
-        this.notificationText = this.add
-            .text(
-                this.cameras.main.width - 10, 
-                this.cameras.main.height - 10, 
-                "",
-                notificationStyle
-            )
-            .setOrigin(1, 1) 
+        this.popupBackground = this.add.graphics();
+        this.popupBackground.fillStyle(0x000000, 0.7);
+        this.popupBackground.fillRect(centerPopUpX - 200, centerPopUpY - 100, 400, 200);
+        this.popupBackground.setVisible(false);
+        this.popupBackground.setDepth(10);
+
+        this.popupText = this.add
+            .text(centerPopUpX, centerPopUpY, "", {
+                fontFamily: "Arial Black",
+                fontSize: 24,
+                color: "#ffffff",
+                align: "center",
+                wordWrap: { width: 300, useAdvancedWrap: true },
+            })
+            .setOrigin(0.5)
             .setVisible(false)
-            .setDepth(100); 
+            .setDepth(13);
 
+        this.setupSounds();
+        this.setupEventListeners();
         this.updateBars();
         this.showStatsAndRemoveFight();
 
@@ -174,7 +177,7 @@ export class Spar extends Scene {
     }
 
     updatePopupText(text) {
-        this.popupText.setText(text);
+        this.popupText.setText(text);  // Ensure popupText is available here
         this.popupBackground.setVisible(true);
         this.popupText.setVisible(true);
     }
